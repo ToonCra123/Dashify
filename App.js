@@ -91,7 +91,7 @@ function CenterbarWindow(props){
       <Image 
               style={styles.barImage}
               source={require("./images/png/library.png")}/>
-      <text style={styles.libraryHeader}>Your Library</text>
+      <Text style={styles.libraryHeader}>Your Library</Text>
       </View>
     );
 }

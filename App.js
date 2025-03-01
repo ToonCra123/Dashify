@@ -86,11 +86,14 @@ function Centerbar(props)
 }
 
 function CenterbarWindow(props){
-  return(
-    <View style={styles.centerbarWindow}>
-      <Text>Poop</Text>
-    </View>
-  );
+    return(
+      <View style={styles.centerbarWindow}>
+      <Image 
+              style={styles.barImage}
+              source={require("./images/png/library.png")}/>
+      <text style={styles.libraryHeader}>Your Library</text>
+      </View>
+    );
 }
 
 function BarButton(props){
@@ -204,6 +207,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#08090A",
     alignItems: "center"
     
+  },
+
+  libraryHeader:{
+    fontWeight: "bold",
+    color: "white",
   },
 
   songInfo_name:{

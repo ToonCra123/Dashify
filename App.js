@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import {Slider} from '@miblanchard/react-native-slider';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Animated, PanResponder } from 'react-native';
 
@@ -19,9 +19,9 @@ function Topbar(props)
   return(
     <View style={styles.topBar}>
 
-      <TopbarButton imageSource={require('./images/png/more.png')} activation={button_test2}></TopbarButton>
-      <TopbarButton imageSource={require('./images/png/arrow_back.png')} activation={button_test}></TopbarButton>
-      <TopbarButton imageSource={require('./images/png/arrow_forward.png')} activation={button_test}></TopbarButton>
+      <BarButton imageSource={require('./images/png/more.png')} activation={button_test2}></BarButton>
+      <BarButton imageSource={require('./images/png/arrow_back.png')} activation={button_test}></BarButton>
+      <BarButton imageSource={require('./images/png/arrow_forward.png')} activation={button_test}></BarButton>
 
 
     </View>
@@ -49,15 +49,25 @@ function BottomBar()
 
       </View>
 
-
+      
       <View style={styles.bottomBarGroupCenter}>
-        <TopbarButton imageSource={require('./images/png/skip_previous.png')} activation={button_test2}></TopbarButton>
-        <TopbarButton imageSource={require('./images/png/play_arrow.png')} activation={button_test}></TopbarButton>
-        <TopbarButton imageSource={require('./images/png/skip_forward.png')} activation={button_test}></TopbarButton>
+
+        <View style={styles.bottomBarGroupCenter_Top}>
+          <BarButtonUI imageSource={require('./images/png/skip_previous.png')} activation={button_test2}></BarButtonUI>
+          <BarButtonUI imageSource={require('./images/png/play_arrow.png')} activation={button_test}></BarButtonUI>
+          <BarButtonUI imageSource={require('./images/png/skip_forward.png')} activation={button_test}></BarButtonUI>
+        </View>
+
+        <View style={styles.bottomBarGroupCenter_Bottom}>
+          <SideBar></SideBar>
+        </View>
       </View>
 
+
+
       <View style={styles.bottomBarGroupRight}>
-        
+        <BarButtonUI imageSource={require('./images/png/volume_high.png')} activation={button_test}></BarButtonUI>
+        <SideBar></SideBar>
       </View>
 
     </View>
@@ -83,7 +93,7 @@ function CenterbarWindow(props){
   );
 }
 
-function TopbarButton(props){
+function BarButton(props){
   return(
     <TouchableOpacity onPress={props.activation}>
       <View style={styles.icon_container}>
@@ -96,6 +106,49 @@ function TopbarButton(props){
     </TouchableOpacity>
   );
 }
+
+
+function BarButtonUI(props){
+  return(
+    <TouchableOpacity onPress={props.activation}>
+      <View>
+
+      <Image 
+        style={styles.icon2}
+        source={props.imageSource}/>
+      
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+
+function SideBar(props)
+{
+
+  const [value, setValue] = useState(0.5);
+
+
+
+  return(
+    <View style={styles.volumeSlider}>
+      <Slider
+        value={value}
+        onValueChange={value => setValue(value)}
+        thumbTintColor='white'
+        maximumTrackTintColor='#222823'
+        minimumTrackTintColor='white'
+        thumbStyle={{width:15, height:15}}
+        containerStyle={{
+          height:15,
+        }}
+        
+        //thumbTouchSize={{width:30, height: 30}}
+      />
+    </View>
+  );
+}
+
 
 
 
@@ -125,6 +178,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#08090A',
+  },
+
+  icon2:{
+    height: "3vh",
+    width: "1.5vw",
+    resizeMode: "contain",
+    padding:0,
+    
   },
 
   icon: {
@@ -181,18 +242,26 @@ const styles = StyleSheet.create({
 
   bottomBarGroupCenter:{
     flex: 0.8,
-    flexDirection: "row",
-    gap: 15,
-    paddingHorizontal: 10,
+    flexDirection: "column",
     justifyContent: "center",
+  },
+
+  bottomBarGroupCenter_Bottom:{
+    flexDirection:"row",
+    justifyContent:"center",
+  },
+
+  bottomBarGroupCenter_Top:{
+    flexDirection:"row",
+    justifyContent:"center",
   },
 
   bottomBarGroupRight:{
     flex: 0.1,
     justifyContent: "flex-end",
     flexDirection: "row",
-    gap: 15,
     paddingHorizontal: 10,
+    gap: 15,
   },
 
   barImage:{
@@ -225,7 +294,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#222823",
     height: "100%",
     borderRadius: 10,
-  }
+  },
+
+  volumeSlider:{
+    width: "20vw",
+    justifyContent: "center",
+  },
 
 });
 

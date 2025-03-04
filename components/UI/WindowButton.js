@@ -4,7 +4,7 @@ import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
 //Image is only rendered if an image source is provided
 let Window_Button = (props) => {
     return(
-        <TouchableOpacity onPress={props.activation ? (props.activation) : null}>
+        <TouchableOpacity onPress={props.activation}>
             
             <View style={styles.window_button}>
 

@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { BarButtonUI, WindowBarButtonUI, BarButton, WindowBarButton2UI } from './UI/BarButton';
 import { Window_Button } from './UI/WindowButton';
+import { WindowInput } from './UI/WindowInputField'
 
 function Centerbar(props)
 {
@@ -43,8 +44,45 @@ function CenterbarWindow(props){
           <Window_Button content="Artists"></Window_Button>
         </View>
 
+        <View style={styles.PlaylistSearchbar}>
+          <View style={styles.PlaylistBarGroupLeft}>
+            <WindowInput placeholder="Search in Your Library"></WindowInput>
+          </View>
+
+          <View style={styles.PlaylistSearchbarGroupRight}>
+            <RecentsButton></RecentsButton>
+          </View>
+        </View>
+
+
+
       </View>
     );
+}
+
+let RecentsButton = () => {
+  return(
+  
+  <TouchableOpacity>
+
+    <View style={styles.recentsGroup}>
+
+      <View>
+        <Text style={styles.recentsText}>
+          Recents
+        </Text>
+      </View>
+
+      <View>
+        <Image
+          source={require("./../images/png/list.png")}
+          style={styles.recentsImage}
+        />
+      </View>
+
+    </View>
+  </TouchableOpacity>
+  );
 }
 
 
@@ -76,7 +114,8 @@ const styles = StyleSheet.create({
         height: "100%",
         borderRadius: 10,
 
-        padding: 10,
+        paddingHorizontal: 10,
+        rowGap: 10,
       },
 
       PlaylistBar:{
@@ -86,7 +125,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
 
-        gap: 10,
 
 
       },
@@ -110,7 +148,41 @@ const styles = StyleSheet.create({
       WindowButtonsGroup:{
         flexDirection: "row",
         gap: 10,
-      }
+      },
+
+      PlaylistSearchbar:{
+        flexDirection: "row",
+        width: "100%",
+        alignItems: "center",
+        paddingRight: 0,
+      },
+
+      PlaylistSearchbarGroupLeft:{
+        flex: 1,
+        alignItems: "flex-start",
+      },
+
+      PlaylistSearchbarGroupRight:{
+        flex: 1,
+        alignItems: "flex-end",
+      },
+
+      recentsGroup:{
+        flexDirection: "row",
+        alignItems: "center",
+        paddingRight: 0,
+        paddingLeft: 0,
+      },
+
+      recentsImage:{
+        height: "2rem",
+        height: "2rem",
+        resizeMode: "contain",
+      },
+
+      recentsText:{
+        color: "white",
+      },
 });
 
 export { Centerbar };

@@ -4,6 +4,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { BarButtonUI, WindowBarButtonUI, BarButton, WindowBarButton2UI } from './UI/BarButton';
 import { Window_Button } from './UI/WindowButton';
 import { WindowInput } from './UI/WindowInputField'
+import { ScrollView } from 'react-native-web';
 
 function Centerbar(props)
 {
@@ -55,12 +56,25 @@ function CenterbarWindow(props){
           </View>
         </View>
 
-        <View style={styles.libraryContents}>
-          <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
-          <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
-          <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
-          <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-        </View>
+        {/* library rows examples*/}
+        {/* replace with a for loop that gets songs from back end vvv */}
+
+        <ScrollView style={{width:"100%"}}>
+          <View style={styles.libraryContents}>
+            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
+            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
+            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+          </View>
+        </ScrollView>
 
 
 
@@ -228,6 +242,7 @@ const styles = StyleSheet.create({
 
       libraryContents:{
         width: "100%",
+
       },
 
       libraryPlaylistImage:{

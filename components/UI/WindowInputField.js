@@ -20,12 +20,8 @@ let WindowInput = (props) => {
 
 
 
-
-
     return(
         <View style={!isToggled ? styles.fieldViewHidden : styles.fieldView}>
-
-            <Pressable onPress={() => handlePress()}></Pressable>
             
             <TouchableOpacity 
                 onPress={handlePress} 

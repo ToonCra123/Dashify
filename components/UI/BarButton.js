@@ -27,6 +27,32 @@ let BarButton = (props) => {
     );
 }
 
+let WindowBarButtonUI = (props) =>{
+    return(
+        <TouchableOpacity onPress={props.activation}>
+            <View>
+                <Image 
+                    style={styles.window_icon}
+                    source={props.imageSource}
+                />
+            </View>
+        </TouchableOpacity>
+    );
+}
+
+let WindowBarButton2UI = (props) =>{
+    return(
+        <TouchableOpacity onPress={props.activation}>
+            <View>
+                <Image 
+                    style={styles.window_icon2}
+                    source={props.imageSource}
+                />
+            </View>
+        </TouchableOpacity>
+    );
+}
+
 const styles = StyleSheet.create({
     icon: {
         height: "2vh",
@@ -38,6 +64,18 @@ const styles = StyleSheet.create({
         width: "1vw",
         resizeMode: "contain",
     },
+
+    window_icon:{
+        height: "4vh",
+        width: "2vw",
+        resizeMode: "contain",
+    },
+
+    window_icon2:{
+        height: "3vh",
+        width: "1.5vw",
+        resizeMode: "contain",
+    },
     
     icon_container:{
         padding: 10,
@@ -45,4 +83,4 @@ const styles = StyleSheet.create({
 });
 
 
-export { BarButton, BarButtonUI };
+export { BarButton, BarButtonUI, WindowBarButtonUI, WindowBarButton2UI };

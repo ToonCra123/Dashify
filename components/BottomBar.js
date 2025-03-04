@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
-import { BarButtonUI } from './UI/BarButton';
+import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
 
 
@@ -24,9 +24,9 @@ let BottomBar = () => {
       <View style={styles.bottomBarGroupCenter}>
 
         <View style={styles.bottomBarGroupCenter_Top}>
-          <BarButtonUI imageSource={require('../images/png/skip_previous.png')} activation={button_test2}></BarButtonUI>
-          <BarButtonUI imageSource={require('../images/png/play_arrow.png')} activation={button_test}></BarButtonUI>
-          <BarButtonUI imageSource={require('../images/png/skip_forward.png')} activation={button_test}></BarButtonUI>
+          <WindowBarButton2UI imageSource={require('../images/png/skip_previous.png')} activation={button_test2}></WindowBarButton2UI>
+          <WindowBarButton2UI imageSource={require('../images/png/play_arrow.png')} activation={button_test}></WindowBarButton2UI>
+          <WindowBarButton2UI imageSource={require('../images/png/skip_forward.png')} activation={button_test}></WindowBarButton2UI>
         </View>
 
         <View style={styles.bottomBarGroupCenter_Bottom}>
@@ -36,7 +36,7 @@ let BottomBar = () => {
 
 
       <View style={styles.bottomBarGroupRight}>
-        <BarButtonUI imageSource={require('../images/png/volume_high.png')} activation={button_test}></BarButtonUI>
+        <WindowBarButton2UI imageSource={require('../images/png/volume_high.png')} activation={button_test}></WindowBarButton2UI>
         <SlideBar></SlideBar>
       </View>
 

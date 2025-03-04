@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
+import { BarButtonUI, WindowBarButtonUI, BarButton, WindowBarButton2UI } from './UI/BarButton';
+import { Window_Button } from './UI/WindowButton';
 
 function Centerbar(props)
 {
@@ -15,19 +17,42 @@ function Centerbar(props)
 function CenterbarWindow(props){
     return(
       <View style={styles.centerbarWindow}>
-        <Image 
-                style={styles.barImage}
-                source={require("../images/png/library.png")}/>
-        <Text style={styles.libraryHeader}>Your Library</Text>
+
+        <View style={styles.PlaylistBar}>
+
+          <View style={styles.PlaylistBarGroupLeft}>
+              <WindowBarButtonUI
+                imageSource={require('../images/png/left_panel_open.png')}
+              ></WindowBarButtonUI>
+            <Text style={styles.libraryHeader}>Your Library</Text>
+          </View>
+
+          <View style={styles.PlaylistBarGroupRight}>
+            <WindowBarButton2UI
+              imageSource={require('../images/png/add.png')}
+            ></WindowBarButton2UI>
+            <WindowBarButton2UI
+              imageSource={require('../images/png/arrow_forward_alt.png')}
+            ></WindowBarButton2UI>
+          </View>
+        
+        </View>
+
+        <View style={styles.WindowButtonsGroup}>
+          <Window_Button content="Playlists"></Window_Button>
+          <Window_Button content="Artists"></Window_Button>
+        </View>
+
       </View>
     );
 }
 
 
 const styles = StyleSheet.create({
-    libraryHeader:{
+      libraryHeader:{
         fontWeight: "bold",
         color: "white",
+        fontSize: "1.1rem"
       },
       barImage:{
         height: "2.25vw",
@@ -45,12 +70,47 @@ const styles = StyleSheet.create({
     
       centerbarWindow:{
         flex:1,
-        flexDirection:"row",
-        alignItems: "center",
+        flexDirection:"column",
+        alignItems: "flex-start",
         backgroundColor: "#222823",
         height: "100%",
         borderRadius: 10,
+
+        padding: 10,
       },
+
+      PlaylistBar:{
+        width: "100%",
+        height: "10%",
+
+        flexDirection: "row",
+        alignItems: "center",
+
+        gap: 10,
+
+
+      },
+
+      PlaylistBarGroupLeft:{
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        gap: 2.5,
+
+      },
+
+      PlaylistBarGroupRight:{
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "center",
+
+      },
+
+      WindowButtonsGroup:{
+        flexDirection: "row",
+        gap: 10,
+      }
 });
 
 export { Centerbar };

@@ -1,4 +1,5 @@
 import React from 'react';
+import {useState} from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { BarButtonUI, WindowBarButtonUI, BarButton, WindowBarButton2UI } from './UI/BarButton';
 import { Window_Button } from './UI/WindowButton';
@@ -54,10 +55,50 @@ function CenterbarWindow(props){
           </View>
         </View>
 
+        <View style={styles.libraryContents}>
+          <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
+          <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
+          <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
+          <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+        </View>
+
 
 
       </View>
     );
+}
+
+let LibraryRow = (props) => {
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+
+  return(
+    <TouchableOpacity onPress={() => props.activation}>
+
+      <View 
+        style={isHovered ? styles.libraryRowHovered : styles.libraryRow} 
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        >
+        <Image
+          source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
+          style={props.isArtst ? styles.libraryArtistImage : styles.libraryPlaylistImage}
+          />
+        
+        <view>
+          <View>
+            <Text style={styles.libraryPlaylistTextHeader}>{props.rowName ? props.rowName: "Playlist Name"}</Text>
+          </View>
+
+          <View>
+            <Text style={styles.libraryPlaylistTextDescription}>{props.rowDesc ? props.rowDesc : "Description"}</Text>
+          </View>
+        </view>
+      </View>
+
+    </TouchableOpacity>
+  );
 }
 
 let RecentsButton = () => {
@@ -184,6 +225,68 @@ const styles = StyleSheet.create({
       recentsText:{
         color: "white",
       },
+
+      libraryContents:{
+        width: "100%",
+      },
+
+      libraryPlaylistImage:{
+        height: "2.7rem",
+        width: "2.7rem",
+        resizeMode: "contain",
+        borderRadius: 6,
+      },
+      libraryArtistImage:{
+        height: "2.7rem",
+        width: "2.7rem",
+        resizeMode: "contain",
+        borderRadius: 40,
+      },
+      libraryPlaylistTextHeader:{
+        color: "white",
+        fontWeight: "bold",
+      },
+      libraryPlaylistTextDescription:{
+        color: "white",
+      },
+
+      libraryRow:{
+        flexDirection: "row",
+        alignItems: "center",
+        columnGap: 10,
+
+        width: "100%",
+        height: "4rem",
+        paddingLeft: 10,
+        paddingRight: 10,
+      },
+      libraryRowHovered:{
+        flexDirection: "row",
+        alignItems: "center",
+        columnGap: 10,
+
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+
+        width: "100%",
+        height: "4rem",
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderRadius: 6,
+      },
+
+      libraryRowSelected:{
+        flexDirection: "row",
+        alignItems: "center",
+        columnGap: 10,
+
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+
+        width: "100%",
+        height: "4rem",
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderRadius: 6,
+      },
 });
 
-export { Centerbar };
+export { Centerbar, LibraryRow };

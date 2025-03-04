@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, Pressable } from 'react-native';
 
 
 let WindowInput = (props) => {
@@ -21,8 +21,11 @@ let WindowInput = (props) => {
 
 
 
+
     return(
         <View style={!isToggled ? styles.fieldViewHidden : styles.fieldView}>
+
+            <Pressable onPress={() => handlePress()}></Pressable>
             
             <TouchableOpacity 
                 onPress={handlePress} 
@@ -79,7 +82,7 @@ function isEmptyOrNull(str) {
 const styles = StyleSheet.create({
     windowInput:{
         height: 40,
-        width: 400,
+        width: "12rem",
         paddingHorizontal: 10,
         color:"white",
 

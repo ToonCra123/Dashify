@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
       PlaylistSearchbarGroupRight:{
         flex: 1,
         alignItems: "flex-end",
+        width: "50%",
       },
 
       recentsGroup:{

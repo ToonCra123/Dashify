@@ -8,6 +8,7 @@ let WindowInput = (props) => {
     const [isToggled, setIsToggled] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
+
     const handlePress = () => {
         setIsToggled(!isToggled); // Toggle the state
     };
@@ -53,8 +54,7 @@ let WindowInput = (props) => {
 
             }
 
-
-            {!isToggled || text === "" ? null :  
+            {isEmptyOrNull(text) || !isToggled ? null :  
 
             <TouchableOpacity onPress={() => setText('')}>
                     <Image 
@@ -71,9 +71,15 @@ let WindowInput = (props) => {
 }
 
 
+function isEmptyOrNull(str) {
+    return !str || str.trim() === "";
+}
+
+
 const styles = StyleSheet.create({
     windowInput:{
         height: 40,
+        width: 400,
         paddingHorizontal: 10,
         color:"white",
 

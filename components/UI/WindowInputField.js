@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, Pressable } from 'react-native';
 
-
 let WindowInput = (props) => {
 
     const [text, setText] = useState(props.initalValue);

@@ -1,9 +1,11 @@
 import React from 'react';
-import {useState} from "react";
+import {useState,  useRef, useEffect } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { BarButtonUI, WindowBarButtonUI, BarButton, WindowBarButton2UI } from './UI/BarButton';
 import { Window_Button } from './UI/WindowButton';
 import { WindowInput } from './UI/WindowInputField'
+import WebScrollView from './UI/WebScrollView';
+
 import { ScrollView } from 'react-native-web';
 
 function Centerbar(props)
@@ -11,8 +13,36 @@ function Centerbar(props)
   return(
     <View style={styles.centerbar}>
       <CenterbarWindow></CenterbarWindow>
+      <CenterbarWindowFeed></CenterbarWindowFeed>
       <CenterbarWindow></CenterbarWindow>
-      <CenterbarWindow></CenterbarWindow>
+    </View>
+  );
+}
+
+function CenterbarWindowFeed(props){
+  return(
+    <View style={styles.centerbarWindow}>
+
+      <View style={{paddingLeft: 10, flexDirection: "row", columnGap: 5}}>
+        <Window_Button content="All"></Window_Button>
+        <Window_Button content="Music"></Window_Button>
+        <Window_Button content="Podcasts"></Window_Button>
+        <Window_Button content="Audiobooks"></Window_Button>
+      </View>
+
+      <ScrollView style={{width:"100%"}}>
+
+        <Catagory name="Made For You"></Catagory>
+        <Catagory name="Trending Songs"></Catagory>
+        <Catagory name="Recently Played"></Catagory>
+        <Catagory name="Dashify's Picks"></Catagory>
+        <Catagory name="Popular Around You"></Catagory>
+        
+
+      </ScrollView>
+
+
+
     </View>
   );
 }
@@ -66,13 +96,22 @@ function CenterbarWindow(props){
             <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
             <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
             <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
+            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
+            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
             <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
             <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
             <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
             <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
+            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
+            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
+            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
+            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
+            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
+            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
+            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
+            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
+            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
           </View>
         </ScrollView>
 
@@ -115,6 +154,36 @@ let LibraryRow = (props) => {
   );
 }
 
+
+let FeedBox = (props) => {
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+
+  return(
+    <TouchableOpacity onPress={() => props.activation}>
+
+      <View 
+        style={isHovered ? styles.feedBoxHovered : styles.feedBox} 
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        >
+        <Image
+          source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
+          style={props.isArtst ? styles.feedArtistImage : styles.feedPlaylistImage}
+          />
+        
+        <view>
+          <View style={{paddingTop: 10}}>
+            <Text style={{color:"white"}}>{props.rowName ? props.rowName: "Playlist Name"}</Text>
+          </View>
+        </view>
+      </View>
+
+    </TouchableOpacity>
+  );
+}
+
 let RecentsButton = () => {
   return(
   
@@ -139,6 +208,36 @@ let RecentsButton = () => {
   </TouchableOpacity>
   );
 }
+
+
+let Catagory = (props) => {
+
+  return(
+    <View>
+      <View style={{paddingLeft: 10, paddingBottom: 10, paddingTop: 20}}>
+        <Text style={{color: "white", fontWeight: "bold", fontSize: "1.75rem"}}>{props.name ? props.name : "{Unnamed Catagory, please set 'name' property}"}</Text>
+      </View>
+
+      <WebScrollView disableShiftScrolling scrollSpeed={1} contentContainerStyle={{paddingBottom: 20,}}>
+        <View style={styles.feedContents}>
+          <FeedBox rowName="Skibity" rowDesc="very cool playlist"></FeedBox>
+          <FeedBox rowName="Sigma" rowDesc="skibity cool playlist"></FeedBox>
+          <FeedBox rowName="Dogma" rowDesc="this a artist" isArtst={true}></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+        </View>
+      </WebScrollView>
+    </View>
+  );
+
+};
 
 
 const styles = StyleSheet.create({
@@ -168,7 +267,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#222823",
         height: "100%",
         borderRadius: 10,
-
+        
+        paddingTop: 30,
         paddingHorizontal: 10,
         rowGap: 10,
       },
@@ -189,6 +289,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         gap: 2.5,
+        
 
       },
 
@@ -242,7 +343,11 @@ const styles = StyleSheet.create({
 
       libraryContents:{
         width: "100%",
+      },
 
+      feedContents:{
+        width: "100%",
+        flexDirection: "row"
       },
 
       libraryPlaylistImage:{
@@ -257,6 +362,21 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
         borderRadius: 40,
       },
+
+      feedPlaylistImage:{
+        height: "7rem",
+        width: "7rem",
+        resizeMode: "contain",
+        borderRadius: 6,
+      },
+      feedArtistImage:{
+        height: "7rem",
+        width: "7rem",
+        resizeMode: "contain",
+        borderRadius: 80,
+      },
+
+
       libraryPlaylistTextHeader:{
         color: "white",
         fontWeight: "bold",
@@ -286,6 +406,33 @@ const styles = StyleSheet.create({
         height: "4rem",
         paddingLeft: 10,
         paddingRight: 10,
+        borderRadius: 6,
+      },
+
+      feedBox:{
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+
+        columnGap: 10,
+
+        width: "10rem",
+        height: "10rem",
+      },
+      feedBoxHovered:{
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        columnGap: 10,
+
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+
+        width: "10rem",
+        height: "10rem",
+
+        rowGap:0,
+
+
         borderRadius: 6,
       },
 

@@ -14,14 +14,13 @@ function Centerbar(props)
     <View style={styles.centerbar}>
       <CenterbarWindow></CenterbarWindow>
       <CenterbarWindowFeed></CenterbarWindowFeed>
-      <CenterbarWindow></CenterbarWindow>
     </View>
   );
 }
 
 function CenterbarWindowFeed(props){
   return(
-    <View style={styles.centerbarWindow}>
+    <View style={styles.centerbarWindowFeed}>
 
       <View style={{paddingLeft: 10, flexDirection: "row", columnGap: 5}}>
         <Window_Button content="All"></Window_Button>
@@ -261,7 +260,20 @@ const styles = StyleSheet.create({
       },
     
       centerbarWindow:{
-        flex:1,
+        flex:0.75,
+        flexDirection:"column",
+        alignItems: "flex-start",
+        backgroundColor: "#222823",
+        height: "100%",
+        borderRadius: 10,
+        
+        paddingTop: 30,
+        paddingHorizontal: 10,
+        rowGap: 10,
+      },
+
+      centerbarWindowFeed:{
+        flex:3,
         flexDirection:"column",
         alignItems: "flex-start",
         backgroundColor: "#222823",

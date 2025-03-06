@@ -30,7 +30,7 @@ function CenterbarWindowFeed(props){
         <Window_Button content="Audiobooks"></Window_Button>
       </View>
 
-      <ScrollView style={{width:"100%"}}>
+      <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
 
         <Catagory name="Made For You"></Catagory>
         <Catagory name="Trending Songs"></Catagory>
@@ -89,7 +89,7 @@ function CenterbarWindow(props){
         {/* library rows examples*/}
         {/* replace with a for loop that gets songs from back end vvv */}
 
-        <ScrollView style={{width:"100%"}}>
+        <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
             <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
             <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>

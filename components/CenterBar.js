@@ -5,7 +5,7 @@ import { BarButtonUI, WindowBarButtonUI, BarButton, WindowBarButton2UI } from '.
 import { Window_Button } from './UI/WindowButton';
 import { WindowInput } from './UI/WindowInputField'
 import WebScrollView from './UI/WebScrollView';
-
+import Popup from './UI/UploadSong.js';
 import { ScrollView } from 'react-native-web';
 
 function Centerbar(props)
@@ -27,6 +27,7 @@ function CenterbarWindowFeed(props){
         <Window_Button content="Music"></Window_Button>
         <Window_Button content="Podcasts"></Window_Button>
         <Window_Button content="Audiobooks"></Window_Button>
+        <Popup title="Open Popup" content="Upload Song" />
       </View>
 
       <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>

@@ -21,12 +21,6 @@ let Window_Button = (props) => {
     );
 }
 
-
-function dude(){
-    console.log("dude");
-}
-
-
 const styles = StyleSheet.create({
     window_button_text:{
         color: "white",
@@ -38,8 +32,8 @@ const styles = StyleSheet.create({
         height: "100%",
         backgroundColor: "rgba(255, 255, 255, 0.1)",
         borderRadius: 20,
-
         padding: 10,
+        alignContent: "center"
     },
 });
 

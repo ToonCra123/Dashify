@@ -1,11 +1,13 @@
 import React from 'react';
 import {useState,  useRef, useEffect } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { BarButtonUI, WindowBarButtonUI, BarButton, WindowBarButton2UI } from './UI/BarButton';
 import { Window_Button } from './UI/WindowButton';
 import { WindowInput } from './UI/WindowInputField'
 import WebScrollView from './UI/WebScrollView';
-
+import Popup from './UI/UploadSong.js';
+import PlaylistPopup from './UI/CreatePlaylist.js';
+import ParentComponent from './UI/ParentComponents.js';
 import { ScrollView } from 'react-native-web';
 
 function Centerbar(props)
@@ -27,20 +29,16 @@ function CenterbarWindowFeed(props){
         <Window_Button content="Music"></Window_Button>
         <Window_Button content="Podcasts"></Window_Button>
         <Window_Button content="Audiobooks"></Window_Button>
+        <Popup content="Upload Song" />
       </View>
 
       <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
 
-        <Catagory name="Made For You"></Catagory>
         <Catagory name="Trending Songs"></Catagory>
         <Catagory name="Recently Played"></Catagory>
         <Catagory name="Dashify's Picks"></Catagory>
-        <Catagory name="Popular Around You"></Catagory>
         
-
       </ScrollView>
-
-
 
     </View>
   );
@@ -53,16 +51,14 @@ function CenterbarWindow(props){
         <View style={styles.PlaylistBar}>
 
           <View style={styles.PlaylistBarGroupLeft}>
-              <WindowBarButtonUI
-                imageSource={require('../images/png/left_panel_open.png')}
-              ></WindowBarButtonUI>
+          <WindowBarButtonUI
+                imageSource={require('../images/png/left_panel_open.png')}>
+                </WindowBarButtonUI>
             <Text style={styles.libraryHeader}>Your Library</Text>
           </View>
-
+          
           <View style={styles.PlaylistBarGroupRight}>
-            <WindowBarButton2UI
-              imageSource={require('../images/png/add.png')}
-            ></WindowBarButton2UI>
+            <PlaylistPopup/>
             <WindowBarButton2UI
               imageSource={require('../images/png/arrow_forward_alt.png')}
             ></WindowBarButton2UI>
@@ -90,27 +86,8 @@ function CenterbarWindow(props){
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
+          <ParentComponent />
             <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
-            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
-            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
-            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
-            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="John Pork" rowDesc="ye playlist"></LibraryRow>
-            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
-            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
-            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
-            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
-            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
-            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
-            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
-            <LibraryRow rowName="Sigma" rowDesc="skibity cool playlist"></LibraryRow>
-            <LibraryRow rowName="Dogma" rowDesc="this a artist" isArtst={true}></LibraryRow>
           </View>
         </ScrollView>
 
@@ -120,38 +97,49 @@ function CenterbarWindow(props){
     );
 }
 
-let LibraryRow = (props) => {
+const LibraryRow = (props) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
 
-  return(
-    <TouchableOpacity onPress={() => props.activation}>
+  // Add this handler function
+  const handlePress = () => {
+    console.log('Row pressed');
+    if (props.activation) {
+      props.activation();
+    }
+  };
 
+  return(
+    <TouchableOpacity 
+      onPress={handlePress} // Fixed: Directly use handler function
+    >
       <View 
-        style={isHovered ? styles.libraryRowHovered : styles.libraryRow} 
+        style={isHovered ? styles.libraryRowHovered : styles.libraryRow}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        >
+      >
         <Image
           source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
-          style={props.isArtst ? styles.libraryArtistImage : styles.libraryPlaylistImage}
-          />
+          style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
+        />
         
-        <view>
+        <View>
           <View>
-            <Text style={styles.libraryPlaylistTextHeader}>{props.rowName ? props.rowName: "Playlist Name"}</Text>
+            <Text style={styles.libraryPlaylistTextHeader}>
+              {props.rowName ? props.rowName : "Playlist Name"}
+            </Text>
           </View>
-
           <View>
-            <Text style={styles.libraryPlaylistTextDescription}>{props.rowDesc ? props.rowDesc : "Description"}</Text>
+            <Text style={styles.libraryPlaylistTextDescription}>
+              {props.rowDesc ? props.rowDesc : "Description"}
+            </Text>
           </View>
-        </view>
+        </View>
       </View>
-
     </TouchableOpacity>
   );
-}
+};
 
 
 let FeedBox = (props) => {
@@ -227,10 +215,6 @@ let Catagory = (props) => {
           <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
           <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
           <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
         </View>
       </WebScrollView>
     </View>
@@ -279,7 +263,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#222823",
         height: "100%",
         borderRadius: 10,
-        
         paddingTop: 30,
         paddingHorizontal: 10,
         rowGap: 10,
@@ -401,7 +384,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         columnGap: 10,
-
         width: "100%",
         height: "4rem",
         paddingLeft: 10,
@@ -411,9 +393,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         columnGap: 10,
-
         backgroundColor: "rgba(255, 255, 255, 0.1)",
-
         width: "100%",
         height: "4rem",
         paddingLeft: 10,
@@ -463,4 +443,4 @@ const styles = StyleSheet.create({
       },
 });
 
-export { Centerbar, LibraryRow };
+export { Centerbar, LibraryRow, CenterbarWindow };

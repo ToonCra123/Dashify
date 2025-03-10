@@ -40,6 +40,8 @@ const AlbumView = ({ route }) => {
   );
 };
 
+//test
+
 const styles = StyleSheet.create({
   bruh: {
     height: '100%'

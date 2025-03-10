@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { LibraryRow } from '../CenterBar';
 import PlaylistPopup from './CreatePlaylist';
+import { useNavigation } from '@react-navigation/native';
 
 const ParentComponent = () => {
+  const navigation = useNavigation();
   const [playlists, setPlaylists] = useState([]);
 
   const handleAddPlaylist = (newPlaylist) => {
     setPlaylists(prev => [...prev, {
+      id: Date.now().toString(),
     name: newPlaylist.playlistName, // Must match Popup's property name
     description: newPlaylist.description
     }]);
@@ -20,7 +23,10 @@ const ParentComponent = () => {
           key={playlist.id}
           rowName={playlist.name}
           rowDesc={playlist.description}
-          activation={() => console.log('Selected:', playlist.id)}
+          activation={() =>  navigation.navigate('AlbumView', { 
+            playlist: playlist
+          }
+        )}
         />
       ))}
       

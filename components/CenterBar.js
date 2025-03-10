@@ -38,10 +38,7 @@ function CenterbarWindowFeed(props){
         <Catagory name="Recently Played"></Catagory>
         <Catagory name="Dashify's Picks"></Catagory>
         
-
       </ScrollView>
-
-
 
     </View>
   );
@@ -105,33 +102,44 @@ const LibraryRow = (props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
 
-  return(
-    <TouchableOpacity onPress={() => props.activation}>
+  // Add this handler function
+  const handlePress = () => {
+    console.log('Row pressed');
+    if (props.activation) {
+      props.activation();
+    }
+  };
 
+  return(
+    <TouchableOpacity 
+      onPress={handlePress} // Fixed: Directly use handler function
+    >
       <View 
-        style={isHovered ? styles.libraryRowHovered : styles.libraryRow} 
+        style={isHovered ? styles.libraryRowHovered : styles.libraryRow}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        >
+      >
         <Image
           source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
-          style={props.isArtst ? styles.libraryArtistImage : styles.libraryPlaylistImage}
-          />
+          style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
+        />
         
-        <view>
+        <View>
           <View>
-            <Text style={styles.libraryPlaylistTextHeader}>{props.rowName ? props.rowName: "Playlist Name"}</Text>
+            <Text style={styles.libraryPlaylistTextHeader}>
+              {props.rowName ? props.rowName : "Playlist Name"}
+            </Text>
           </View>
-
           <View>
-            <Text style={styles.libraryPlaylistTextDescription}>{props.rowDesc ? props.rowDesc : "Description"}</Text>
+            <Text style={styles.libraryPlaylistTextDescription}>
+              {props.rowDesc ? props.rowDesc : "Description"}
+            </Text>
           </View>
-        </view>
+        </View>
       </View>
-
     </TouchableOpacity>
   );
-}
+};
 
 
 let FeedBox = (props) => {
@@ -255,7 +263,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#222823",
         height: "100%",
         borderRadius: 10,
-        
         paddingTop: 30,
         paddingHorizontal: 10,
         rowGap: 10,
@@ -377,7 +384,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         columnGap: 10,
-
         width: "100%",
         height: "4rem",
         paddingLeft: 10,
@@ -387,9 +393,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         columnGap: 10,
-
         backgroundColor: "rgba(255, 255, 255, 0.1)",
-
         width: "100%",
         height: "4rem",
         paddingLeft: 10,
@@ -439,4 +443,4 @@ const styles = StyleSheet.create({
       },
 });
 
-export { Centerbar, LibraryRow };
+export { Centerbar, LibraryRow, CenterbarWindow };

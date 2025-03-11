@@ -4,9 +4,8 @@ import { LibraryRow } from '../CenterBar';
 import PlaylistPopup from './CreatePlaylist';
 import { useNavigation } from '@react-navigation/native';
 
-const ParentComponent = () => {
+const ParentComponent = ({ playlists, setPlaylists}) => {
   const navigation = useNavigation();
-  const [playlists, setPlaylists] = useState([]);
 
   const handleAddPlaylist = (newPlaylist) => {
     setPlaylists(prev => [...prev, {
@@ -29,8 +28,6 @@ const ParentComponent = () => {
         )}
         />
       ))}
-      
-      <PlaylistPopup onCreatePlaylist={handleAddPlaylist} />
     </View>
   );
 };

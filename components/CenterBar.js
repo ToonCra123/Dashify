@@ -46,6 +46,21 @@ function CenterbarWindowFeed(props){
 }
 
 function CenterbarWindow(props){
+
+  // TODO: Add a call to get playlists from backend
+  const [playlists, setPlaylists] = useState([]);
+
+
+  // TODO: Add API call to add playlist to backend 
+  // and update the state with the new playlist
+  let playlistHandler = (newPlaylist) => {
+    setPlaylists(prev => [...prev, {
+      id: Date.now().toString(),
+      name: newPlaylist.playlistName,
+      description: newPlaylist.description
+    }]);
+  }
+  
     return(
       <View style={styles.centerbarWindow}>
 
@@ -59,7 +74,7 @@ function CenterbarWindow(props){
           </View>
           
           <View style={styles.PlaylistBarGroupRight}>
-            <PlaylistPopup></PlaylistPopup>
+            <PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>
           </View>
         
         </View>
@@ -84,6 +99,7 @@ function CenterbarWindow(props){
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
+            <ParentComponent playlists={playlists} setPlaylists={setPlaylists}></ParentComponent>
             <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
           </View>
         </ScrollView>

@@ -23,38 +23,46 @@ const Popup = () => {
   return (
     <TouchableOpacity onPress={() => setIsPopupVisible(true)} >
     <View style={styles.container}>
-    <Text style={styles.text2}>Upload Song</Text>
-      <Modal
-        visible={isPopupVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsPopupVisible(false)} 
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-          <TouchableOpacity style={styles.arrow} onPress={() => setIsPopupVisible(false)}>
-                <Image source={require('../../images/png/close.png')}/>
-              </TouchableOpacity>
-            <Text style={styles.text}>Upload a Song</Text>
-            <Text style={styles.text}>MP3 or WAV file format</Text>
-            <TouchableOpacity onPress={handlePress}>
-            <Image source={require('../../images/png/upload_icon.jpg')}/>
-            </TouchableOpacity>
-            <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        style={{ display: 'none' }} // Hide the input
-      />      {selectedFile && (
-        <Text style={styles.text}>
-          Selected: {selectedFile.name} (Size: {selectedFile.size} bytes)
-        </Text>
-      )}
+      <Text style={styles.text2}>Upload Song</Text>
+      <Image
+        source={require("./../../images/png/upload.png")}
+        style={{
+          width: "1.5rem",
+          height: "1.5rem",
+        }}
+      />
 
+        <Modal
+          visible={isPopupVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setIsPopupVisible(false)} 
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.arrow} onPress={() => setIsPopupVisible(false)}>
+                  <Image source={require('../../images/png/close.png')}/>
+                </TouchableOpacity>
+              <Text style={styles.text}>Upload a Song</Text>
+              <Text style={styles.text}>MP3 or WAV file format</Text>
+              <TouchableOpacity onPress={handlePress}>
+              <Image source={require('../../images/png/upload_icon.jpg')}/>
+              </TouchableOpacity>
+              <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: 'none' }} // Hide the input
+        />      {selectedFile && (
+          <Text style={styles.text}>
+            Selected: {selectedFile.name} (Size: {selectedFile.size} bytes)
+          </Text>
+        )}
+
+            </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -68,7 +76,10 @@ const styles = StyleSheet.create({
       backgroundColor: "rgba(255, 255, 255, 0.1)",
       borderRadius: 20,
       padding: 10,
-      alignItems: "center"
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "row",
+      gap: 2.5,
   },
   modalOverlay: {
     flex: 1,

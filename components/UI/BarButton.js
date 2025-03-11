@@ -55,25 +55,25 @@ let WindowBarButton2UI = (props) =>{
 
 const styles = StyleSheet.create({
     icon: {
-        height: "2vh",
-        width: "1vw",
+        height: "1.5rem",
+        width: "1.5rem",
         resizeMode: "contain",
     },
     icon2: {
-        height: "2vh",
-        width: "1vw",
+        height: "1.5rem",
+        width: "1.5rem",
         resizeMode: "contain",
     },
 
     window_icon:{
-        height: "4vh",
-        width: "2vw",
+        height: "3rem",
+        width: "3rem",
         resizeMode: "contain",
     },
 
     window_icon2:{
-        height: "3vh",
-        width: "1.5vw",
+        height: "2.5rem",
+        width: "2.5rem",
         resizeMode: "contain",
     },
     

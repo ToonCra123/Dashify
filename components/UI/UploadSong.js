@@ -32,25 +32,25 @@ const Popup = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-          <TouchableOpacity style={styles.arrow} onPress={() => setIsPopupVisible(false)}>
-                <Image source={require('../../images/png/close.png')}/>
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.arrow} onPress={() => setIsPopupVisible(false)}>
+              <Image source={require('../../images/png/close.png')}/>
+            </TouchableOpacity>
             <Text style={styles.text}>Upload a Song</Text>
             <Text style={styles.text}>MP3 or WAV file format</Text>
             <TouchableOpacity onPress={handlePress}>
-            <Image source={require('../../images/png/upload_icon.jpg')}/>
+              <Image source={require('../../images/png/upload_icon.jpg')}/>
             </TouchableOpacity>
             <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            style={{ display: 'none' }} // Hide the input element
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: 'none' }} // Hide the input element
             />      
-          {selectedFile && (
-                <Text style={styles.text}>
-                  Selected: {selectedFile.name} (Size: {selectedFile.size} bytes)
-                </Text>
-              )}
+            {selectedFile && (
+              <Text style={styles.text}>
+                Selected: {selectedFile.name} (Size: {selectedFile.size} bytes)
+              </Text>
+            )}
 
             </View>
           </View>

@@ -41,15 +41,16 @@ const Popup = () => {
             <Image source={require('../../images/png/upload_icon.jpg')}/>
             </TouchableOpacity>
             <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        style={{ display: 'none' }} // Hide the input
-      />      {selectedFile && (
-        <Text style={styles.text}>
-          Selected: {selectedFile.name} (Size: {selectedFile.size} bytes)
-        </Text>
-      )}
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }} // Hide the input element
+            />      
+          {selectedFile && (
+                <Text style={styles.text}>
+                  Selected: {selectedFile.name} (Size: {selectedFile.size} bytes)
+                </Text>
+              )}
 
           </View>
         </View>

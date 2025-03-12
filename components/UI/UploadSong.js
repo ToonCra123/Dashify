@@ -52,10 +52,10 @@ const Popup = () => {
                 </Text>
               )}
 
+            </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -69,7 +69,10 @@ const styles = StyleSheet.create({
       backgroundColor: "rgba(255, 255, 255, 0.1)",
       borderRadius: 20,
       padding: 10,
-      alignItems: "center"
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "row",
+      gap: 2.5,
   },
   modalOverlay: {
     flex: 1,

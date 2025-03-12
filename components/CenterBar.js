@@ -24,12 +24,13 @@ function CenterbarWindowFeed(props){
   return(
     <View style={styles.centerbarWindowFeed}>
 
-      <View style={{paddingLeft: 10, flexDirection: "row", columnGap: 5}}>
+      <View style={{paddingLeft: 10, flexDirection: "row", columnGap: 7}}>
         <Window_Button content="All"></Window_Button>
         <Window_Button content="Music"></Window_Button>
         <Window_Button content="Podcasts"></Window_Button>
         <Window_Button content="Audiobooks"></Window_Button>
-        <Popup content="Upload Song" />
+        
+        <Popup content="Upload Song"></Popup>
       </View>
 
       <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
@@ -45,6 +46,21 @@ function CenterbarWindowFeed(props){
 }
 
 function CenterbarWindow(props){
+
+  // TODO: Add a call to get playlists from backend
+  const [playlists, setPlaylists] = useState([]);
+
+
+  // TODO: Add API call to add playlist to backend 
+  // and update the state with the new playlist
+  let playlistHandler = (newPlaylist) => {
+    setPlaylists(prev => [...prev, {
+      id: Date.now().toString(),
+      name: newPlaylist.playlistName,
+      description: newPlaylist.description
+    }]);
+  }
+  
     return(
       <View style={styles.centerbarWindow}>
 
@@ -52,16 +68,13 @@ function CenterbarWindow(props){
 
           <View style={styles.PlaylistBarGroupLeft}>
           <WindowBarButtonUI
-                imageSource={require('../images/png/left_panel_open.png')}>
+                imageSource={require('../images/png/library.png')}>
                 </WindowBarButtonUI>
             <Text style={styles.libraryHeader}>Your Library</Text>
           </View>
           
           <View style={styles.PlaylistBarGroupRight}>
-            <PlaylistPopup/>
-            <WindowBarButton2UI
-              imageSource={require('../images/png/arrow_forward_alt.png')}
-            ></WindowBarButton2UI>
+            <PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>
           </View>
         
         </View>
@@ -86,7 +99,7 @@ function CenterbarWindow(props){
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
-          <ParentComponent />
+            <ParentComponent playlists={playlists} setPlaylists={setPlaylists}></ParentComponent>
             <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
           </View>
         </ScrollView>
@@ -283,7 +296,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
-        gap: 2.5,
+        gap: 10,
         
 
       },

@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
       },
     
       barImage:{
-        height: "2.25vw",
-        width: "2.25vw",
+        height: "4rem",
+        width: "4rem",
         borderRadius: 6,
       },
     

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TopBar } from './components/TopBar.js';
@@ -7,10 +7,12 @@ import { BottomBar } from './components/BottomBar.js';
 import { Centerbar } from './components/CenterBar.js';
 import AlbumView from './AlbumView.js';
 import 'react-native-gesture-handler';
+import MainMobile from "./components/mobile/MainMobile.js";
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  if(Platform.OS === 'web') {
   return (
     <NavigationContainer>
       <View style={styles.container}>
@@ -34,6 +36,13 @@ export default function App() {
       </View>
     </NavigationContainer>
   );
+  } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    return (
+      <View style={styles.container}>
+        <MainMobile />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

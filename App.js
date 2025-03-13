@@ -9,7 +9,7 @@ import MainMobile from "./components/mobile/MainMobile.js";
 import PlaylistPopup from "./components/UI/CreatePlaylist.js";
 
 // This is example for song 
-let currSong = {
+let currSongEx = {
   "_id": "67d25c5031ba33534c6a6e2b",
   "title": "Rape Me",
   "artist": "Nirvana",
@@ -21,17 +21,15 @@ let currSong = {
 }
 
 export default function App() {
+  const [currSong, setCurrSong] = useState(currSongEx);
   if(Platform.OS === 'web') {
-  return (
-    <View style={styles.container}>
-      <TopBar/>
-      <Centerbar/>
-      <BottomBar currSong={currSong} />
-      
-      
-
-    </View>
-  );
+    return (
+      <View style={styles.container}>
+        <TopBar/>
+        <Centerbar/>
+        <BottomBar currSong={currSong} />
+      </View>
+    );
   } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
     return (
       <View style={styles.container}>

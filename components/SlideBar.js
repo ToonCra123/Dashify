@@ -4,13 +4,23 @@ import { Slider } from '@miblanchard/react-native-slider';
 
 
 function SlideBar(props) {
-  const [value, setValue] = useState(0.5);
+  const [value, setValue] = useState(0);
+
+  const slideValueHandler = (value) => {
+    if(props.onSlide === undefined) {
+      setValue(value);
+      return;
+    } else {
+      setValue(value);
+      props.onSlide(value);
+    }
+  }
 
   return(
     <View style={styles.volumeSlider}>
       <Slider
-        value={value}
-        onValueChange={value => setValue(value)}
+        value={props.slideValue ? props.slideValue : value}
+        onValueChange={value => slideValueHandler(value)}
         thumbTintColor='white'
         maximumTrackTintColor='#222823'
         minimumTrackTintColor='white'

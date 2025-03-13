@@ -1,10 +1,101 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
+import { Audio } from 'expo-av';
 
 
-let BottomBar = () => {
+let BottomBar = (props) => {
+  const [sound, setSound] = useState();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [position, setPosition] = useState(0); // Track current position (0 to 1)
+  const [duration, setDuration] = useState(0);
+
+  const playSoundButton = async () => {
+    if(!sound) {
+      if(isPlaying) {
+        stopSound();
+        setIsPlaying(false);
+        return;
+      } else {
+        playSound();
+        setIsPlaying(true);
+      }
+      setDuration(await sound.getDurationAsync());
+      console.log(duration);
+    } else {
+      if(isPlaying) {
+        pauseSound();
+        setIsPlaying(false);
+        return;
+      } else {
+        resumeSound();
+        setIsPlaying(true);
+      }
+    }
+  }
+
+  const pauseSoundButton = async () => {
+    if(isPlaying) {
+      pauseSound();
+      setIsPlaying(false);
+      return;
+    } else {
+      pauseSound();
+      setIsPlaying(true);
+    }
+  }
+
+  const playSound = async () => {
+    if (!props.currSong) return;
+
+    const {sound} = await Audio.Sound.createAsync(
+      { uri: props.currSong.mp3Path }
+    );
+    
+    setSound(sound);
+    
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.isLoaded && status.isPlaying) {
+        setPosition(status.positionMillis / status.durationMillis); // Normalize to 0-1
+      }
+    });
+
+    await sound.playAsync();
+  };
+
+  const stopSound = async () => {
+    if(sound) {
+      await sound.stopAsync();
+      setSound(null);
+    }
+    setIsPlaying(false);
+    setPosition(0);
+    setDuration(0);
+  }
+
+  const pauseSound = async () => {
+    if(sound) {
+      await sound.pauseAsync();
+    }
+  }
+
+  const resumeSound = async () => {
+    if(sound) {
+      await sound.playAsync();
+    }
+  }
+
+  const seekSong = async (value) => {
+    if(sound) {
+
+      const status = await sound.getStatusAsync();
+      const duration = status.durationMillis;
+      const position = value * duration;
+      await sound.setPositionAsync(position);
+    }
+  }
+
   return(
     <View style={styles.bottomBar}>
       
@@ -12,11 +103,11 @@ let BottomBar = () => {
         <View>
           <Image 
               style={styles.barImage}
-              source={require("../images/png/test_album.png")}/>
+              source={{ uri: props.currSong.imagePath }}/>
         </View>
         <View style={styles.songInfo_container}>
-          <Text style={styles.songInfo_name}>SONG NAME</Text>
-          <Text style={styles.songInfo_artist}>ARTIST NAME</Text>
+          <Text style={styles.songInfo_name}>{props.currSong.title}</Text>
+          <Text style={styles.songInfo_artist}>{props.currSong.artist}</Text>
         </View>
       </View>
 
@@ -25,12 +116,18 @@ let BottomBar = () => {
 
         <View style={styles.bottomBarGroupCenter_Top}>
           <WindowBarButton2UI imageSource={require('../images/png/skip_previous.png')} activation={button_test2}></WindowBarButton2UI>
-          <WindowBarButton2UI imageSource={require('../images/png/play_arrow.png')} activation={button_test}></WindowBarButton2UI>
+          
+          { !isPlaying ? (
+                      <WindowBarButton2UI imageSource={require('../images/png/play_arrow.png')} activation={playSoundButton}></WindowBarButton2UI>
+                    ) : (
+                      <WindowBarButton2UI imageSource={require('../images/png/pause_arrow.png')} activation={pauseSoundButton}></WindowBarButton2UI>
+                    )
+          }
           <WindowBarButton2UI imageSource={require('../images/png/skip_forward.png')} activation={button_test}></WindowBarButton2UI>
         </View>
 
         <View style={styles.bottomBarGroupCenter_Bottom}>
-          <SlideBar></SlideBar>
+          <SlideBar onSlide={seekSong} slideValue={position}></SlideBar>
         </View>
       </View>
 

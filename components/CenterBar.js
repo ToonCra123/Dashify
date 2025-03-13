@@ -11,7 +11,9 @@ import { FlatList, ImageBackground, ScrollView } from 'react-native-web';
 import { LinearGradient } from 'expo-linear-gradient';
 import {MAIN_COLOR_GRADIENT, MAIN_COLOR_BASE, CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT} from './UI/Colors.js'
 
-//let selectedContent = JSON.parse(sessionStorage.getItem("selected_content"));
+let selectedContent = false;
+
+//JSON.parse(sessionStorage.getItem("selected_content"));
 
 function Centerbar(props)
 {

@@ -1,40 +1,24 @@
 import React, { useEffect } from "react";
-import { Platform, StyleSheet, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { Platform, StyleSheet, View, Modal } from 'react-native';
 import { TopBar } from './components/TopBar.js';
 import { BottomBar } from './components/BottomBar.js';
 import { Centerbar } from './components/CenterBar.js';
 import AlbumView from './AlbumView.js';
 import 'react-native-gesture-handler';
 import MainMobile from "./components/mobile/MainMobile.js";
-
-const Stack = createStackNavigator();
+import PlaylistPopup from "./components/UI/CreatePlaylist.js";
 
 export default function App() {
   if(Platform.OS === 'web') {
   return (
-    <NavigationContainer>
-      <View style={styles.container}>
-        <TopBar />
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false, 
-            cardStyle: { backgroundColor: '#08090A' }
-          }}
-        >
-          <Stack.Screen name="Home">
-            {() => (
-              <>
-                <Centerbar />
-                <BottomBar />
-              </>
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="AlbumView" component={AlbumView} />
-        </Stack.Navigator>
-      </View>
-    </NavigationContainer>
+    <View style={styles.container}>
+      <TopBar/>
+      <Centerbar/>
+      <BottomBar />
+      
+      
+
+    </View>
   );
   } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
     return (
@@ -44,6 +28,8 @@ export default function App() {
     );
   }
 }
+
+let popups = () => {}
 
 const styles = StyleSheet.create({
   container: {

@@ -7,22 +7,36 @@ import { WindowInput } from './UI/WindowInputField'
 import WebScrollView from './UI/WebScrollView';
 import Popup from './UI/UploadSong.js';
 import PlaylistPopup from './UI/CreatePlaylist.js';
-import ParentComponent from './UI/ParentComponents.js';
-import { ScrollView } from 'react-native-web';
+import { FlatList, ImageBackground, ScrollView } from 'react-native-web';
+import { LinearGradient } from 'expo-linear-gradient';
+import {MAIN_COLOR_GRADIENT, MAIN_COLOR_BASE, CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT} from './UI/Colors.js'
+
+let selectedContent = JSON.parse(sessionStorage.getItem("selected_content"));
 
 function Centerbar(props)
 {
   return(
     <View style={styles.centerbar}>
       <CenterbarWindow></CenterbarWindow>
-      <CenterbarWindowFeed></CenterbarWindowFeed>
+
+      {
+        selectedContent ? 
+          (<CenterbarWindowContentDetails></CenterbarWindowContentDetails>)
+        : 
+          (<CenterbarWindowFeed></CenterbarWindowFeed>)
+      }
+
     </View>
   );
 }
 
 function CenterbarWindowFeed(props){
   return(
-    <View style={styles.centerbarWindowFeed}>
+    <LinearGradient 
+    style={styles.centerbarWindowFeed}
+    colors={[CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT]}
+    start={{x: 0, y:0}}
+    end={{x: 0, y:0}}>
 
       <View style={{paddingLeft: 10, flexDirection: "row", columnGap: 7}}>
         <Window_Button content="All"></Window_Button>
@@ -41,7 +55,176 @@ function CenterbarWindowFeed(props){
         
       </ScrollView>
 
-    </View>
+    </LinearGradient>
+  );
+}
+
+
+function CenterbarWindowContentDetails(props){
+
+  let contentTitle = JSON.parse(sessionStorage.getItem("content_title"));
+  let contentArtist = JSON.parse(sessionStorage.getItem("content_artist"));
+  let contentCover = JSON.parse(sessionStorage.getItem("content_cover"));
+
+  let contentType = JSON.parse(sessionStorage.getItem("content_type"));
+
+  let default_webImage = "https://imgs3.goodsmileus.com/image/cache/data/productimages/HELLO/SnowMiku/01_240828124748305-1200x1200.jpg";
+
+
+  let title = !contentTitle ? "Stone Pebble Pirates" : contentTitle;
+  let artist = !contentArtist ? "ALABAMA ROCK" : contentArtist;
+  let albumCover = !contentCover ? default_webImage : contentCover; //URL OR FILEPATH TO COVER IMAGE (MUST BE 1:1 ACPECT RATIO)
+
+  let type = !contentType ? "{content_type}" : contentType;
+
+
+  let tempgetsong = [
+    { id: '1234'}
+    // Add more items as needed
+  ];
+
+  let tempsongdata = [
+      {
+        "_id": "67d20f2e545d22af7e35a887",
+        "title": "A Thousand Miles",
+        "artist": "Vanessa Carlton",
+        "year": 2001,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741819692536-654986767.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741819694111-923389136.jpg",
+        "listens": 6
+      },
+      {
+        "_id": "67d21388545d22af7e35a896",
+        "title": "APT.",
+        "artist": "ROSE",
+        "year": 2024,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741820807774-455334097.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741820808070-503879797.jpg",
+        "listens": 0
+      },
+      {
+        "_id": "67d228af545d22af7e35a89a",
+        "title": "Pumped Up Kicks",
+        "artist": "Foster The People",
+        "year": 2011,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741826222895-278351858.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741826222894-344020685.jpg",
+        "listens": 0
+      },
+      {
+        "_id": "67d22ad3545d22af7e35a8a3",
+        "title": "My Way",
+        "artist": "Frank Sinatra",
+        "year": 1969,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741826770483-285817292.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741826770477-918580266.jpg",
+        "listens": 0
+      },
+      {
+        "_id": "67d22d2c31ba33534c6a6e03",
+        "title": "Liar",
+        "artist": "Shin Sonic",
+        "year": 2024,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741827371811-806417960.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741827371749-509866792.jpg",
+        "listens": 0
+      },
+      {
+        "_id": "67d22ef331ba33534c6a6e07",
+        "title": "Monitoring feat. Hatsune Miku",
+        "artist": "DECO*27",
+        "year": 2025,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741827826809-294866815.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741827826704-603152733.png",
+        "listens": 0
+      },
+      {
+        "_id": "67d25a3b31ba33534c6a6e22",
+        "title": "Buddy Holly",
+        "artist": "Weezer",
+        "year": 1994,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741838906673-577707902.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741838906627-972858209.jpg",
+        "listens": 0
+      },
+      {
+        "_id": "67d25add31ba33534c6a6e25",
+        "title": "...Baby One More Time (Black Edition)",
+        "artist": "Tenacious D",
+        "year": 2024,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839068098-800570897.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741839068021-193165464.jpg",
+        "listens": 0
+      },
+      {
+        "_id": "67d25b5f31ba33534c6a6e28",
+        "title": "115",
+        "artist": "Elena Siegman",
+        "year": 2011,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839199000-384980585.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741839198955-600178527.jpg",
+        "listens": 0
+      },
+      {
+        "_id": "67d25c5031ba33534c6a6e2b",
+        "title": "Rape Me",
+        "artist": "Nirvana",
+        "year": 1993,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839439795-132461340.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741839439744-9901521.jpg",
+        "listens": 0
+      }
+  
+  ];
+
+  return(
+    <LinearGradient style={styles.centerbarWindowContent}
+    colors={[CONTENTWINDOW_COLOR_GRADIENT, CONTENTWINDOW_COLOR_BASE]}
+    start={{x: 1, y:1}}
+    end={{x: 1, y:0}}>
+      
+      <View style={{flexDirection: "row"}}>
+        <ImageBackground
+          source={{ uri: albumCover}} // Replace with your image URL
+          imageStyle={{ borderRadius: 15 }} // Optional: Style the background image
+          style={{width: 400, height: 400}}
+        >
+        </ImageBackground>
+        
+        <View style={{paddingHorizontal: 40, justifyContent: "flex-end", height: 400}}>
+          <View>
+            <Text style={{color: "white", fontSize: "3rem"}}>{type}</Text>
+          </View>
+
+          <View>
+            <Text style={{color: "white", fontSize: "6rem", fontWeight: "750"}}>{title}</Text>
+          </View>
+
+          <View>
+            <Text style={{color: "white", fontSize: "3rem"}}>{artist}</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
+      
+      <ScrollView style={{width: "100%"}} showsHorizontalScrollIndicator={false}>
+        <FlatList
+            data={tempsongdata}
+            renderItem={({ item }) => (
+              
+              <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>
+              
+
+            )}
+            keyExtractor={item => item._id} // Unique key for each item
+          >
+
+        </FlatList>
+
+      </ScrollView>
+      
+    </LinearGradient>
   );
 }
 
@@ -62,7 +245,11 @@ function CenterbarWindow(props){
   }
   
     return(
-      <View style={styles.centerbarWindow}>
+      <LinearGradient 
+      style={styles.centerbarWindow}
+      colors={[MAIN_COLOR_BASE, MAIN_COLOR_GRADIENT]}
+      start={{x: 0, y:0}}
+      end={{x: 0, y:0}}>
 
         <View style={styles.PlaylistBar}>
 
@@ -99,16 +286,16 @@ function CenterbarWindow(props){
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
-            <ParentComponent playlists={playlists} setPlaylists={setPlaylists}></ParentComponent>
-            <LibraryRow rowName="Skibity" rowDesc="very cool playlist"></LibraryRow>
+            <LibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={()=> {}}></LibraryRow>
           </View>
         </ScrollView>
 
 
 
-      </View>
+      </LinearGradient>
     );
 }
+
 
 const LibraryRow = (props) => {
 
@@ -133,7 +320,7 @@ const LibraryRow = (props) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         <Image
-          source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
+          source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/test_album.png")}
           style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
         />
         
@@ -141,12 +328,27 @@ const LibraryRow = (props) => {
           <View>
             <Text style={styles.libraryPlaylistTextHeader}>
               {props.rowName ? props.rowName : "Playlist Name"}
+              {props.year ? (" (" + props.year + ")") : null}
+
             </Text>
           </View>
-          <View>
+          <View style={{flexDirection: "row"}}>
             <Text style={styles.libraryPlaylistTextDescription}>
               {props.rowDesc ? props.rowDesc : "Description"}
             </Text>
+
+            <View style={{flexDirection: "row", height: 20, alignItems: "center", columnGap: 4, paddingHorizontal: 4}}>
+              
+              
+              <ImageBackground 
+                source={(props.listens || (props.listens === 0)) ? require("./../images/png/listens.png") : null}
+                style={{height: 15, width: 15, alignItems: "center"}}
+              >
+
+              </ImageBackground>
+              <Text style={{color: "white"}}>{(props.listens || (props.listens === 0)) ? props.listens : null}</Text>
+
+            </View>
           </View>
         </View>
       </View>
@@ -173,11 +375,11 @@ let FeedBox = (props) => {
           style={props.isArtst ? styles.feedArtistImage : styles.feedPlaylistImage}
           />
         
-        <view>
+        <View>
           <View style={{paddingTop: 10}}>
             <Text style={{color:"white"}}>{props.rowName ? props.rowName: "Playlist Name"}</Text>
           </View>
-        </view>
+        </View>
       </View>
 
     </TouchableOpacity>
@@ -281,6 +483,19 @@ const styles = StyleSheet.create({
         rowGap: 10,
       },
 
+      centerbarWindowContent:{
+        flex:3,
+        flexDirection:"column",
+        alignItems: "flex-start",
+        backgroundColor: "#222823",
+        height: "100%",
+        borderRadius: 10,
+        paddingTop: 30,
+        paddingHorizontal: 10,
+        rowGap: 10,
+        gap: 5,
+      },
+
       PlaylistBar:{
         width: "100%",
         height: "10%",
@@ -359,14 +574,14 @@ const styles = StyleSheet.create({
       },
 
       libraryPlaylistImage:{
-        height: "2.7rem",
-        width: "2.7rem",
+        height: 75,
+        width: 75,
         resizeMode: "contain",
         borderRadius: 6,
       },
       libraryArtistImage:{
-        height: "2.7rem",
-        width: "2.7rem",
+        height: 75,
+        width: 75,
         resizeMode: "contain",
         borderRadius: 40,
       },
@@ -398,7 +613,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         columnGap: 10,
         width: "100%",
-        height: "4rem",
+        height: 100,
         paddingLeft: 10,
         paddingRight: 10,
       },
@@ -408,7 +623,7 @@ const styles = StyleSheet.create({
         columnGap: 10,
         backgroundColor: "rgba(255, 255, 255, 0.1)",
         width: "100%",
-        height: "4rem",
+        height: 100,
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 6,
@@ -453,6 +668,23 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 6,
+      },
+
+
+
+
+      background: {
+        flex: 1, // Make sure the ImageBackground takes up the entire space
+        justifyContent: 'center', // Center your content
+        alignItems: 'center', // Center your content
+      },
+      container: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background for text
+        padding: 20,
+      },
+      text: {
+        color: 'white',
+        fontSize: 20,
       },
 });
 

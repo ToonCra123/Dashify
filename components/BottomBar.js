@@ -12,6 +12,8 @@ let BottomBar = (props) => {
   const [duration, setDuration] = useState(0);
 
   const playSoundButton = async () => {
+    if (!props.currSong) return;
+
     if(!sound) {
       if(isPlaying) {
         stopSound();
@@ -36,6 +38,8 @@ let BottomBar = (props) => {
   }
 
   const pauseSoundButton = async () => {
+    if (!props.currSong) return;
+
     if(isPlaying) {
       pauseSound();
       setIsPlaying(false);
@@ -65,6 +69,8 @@ let BottomBar = (props) => {
   };
 
   const stopSound = async () => {
+    if (!props.currSong) return;
+
     if(sound) {
       await sound.stopAsync();
       setSound(null);
@@ -75,18 +81,23 @@ let BottomBar = (props) => {
   }
 
   const pauseSound = async () => {
+    if (!props.currSong) return;
+
     if(sound) {
       await sound.pauseAsync();
     }
   }
 
   const resumeSound = async () => {
+    if (!props.currSong) return;
     if(sound) {
       await sound.playAsync();
     }
   }
 
   const seekSong = async (value) => {
+    if (!props.currSong) return;
+    if(value === undefined) return;
     if(sound) {
 
       const status = await sound.getStatusAsync();

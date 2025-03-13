@@ -10,12 +10,12 @@ import PlaylistPopup from "./components/UI/CreatePlaylist.js";
 
 // This is example for song 
 let currSong = {
-  "_id": "67d2732e7de6a9174989d3e7",
-  "title": "if there was a zombie apocalypse i'd let my dog eat me",
-  "artist": "comfi beats",
-  "year": 2023,
-  "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741845294096-192938891.mp3",
-  "imagePath": "http://api.toonhosting.net/img/image-1741845294096-716534737.jpg",
+  "_id": "67d25c5031ba33534c6a6e2b",
+  "title": "Rape Me",
+  "artist": "Nirvana",
+  "year": 1993,
+  "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839439795-132461340.mp3",
+  "imagePath": "http://api.toonhosting.net/img/image-1741839439744-9901521.jpg",
   "listens": 0,
   "__v": 0
 }

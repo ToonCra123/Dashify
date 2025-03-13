@@ -27,6 +27,8 @@ let getSong = async (id) => {
     }
 };
 
+// SEARCH QUEIRIES
+
 let searchSongByTitle = async (query, limit = 10) => {
     query = query.replace(' ', '%20');
     try {
@@ -60,6 +62,8 @@ let searchPlaylist = async (query, limit = 10) => {
     }
 };
 
+// PLAYLIST FUNCTIONS
+
 let getPlaylist = async (id) => {
     try {
         let response = await fetch(`https://api.toonhosting.net/playlist/${id}`);
@@ -70,8 +74,93 @@ let getPlaylist = async (id) => {
     }
 };
 
+let addSongToPlaylist = async (playlistId, songId) => {
+    try {
+        let response = await fetch(`https://api.toonhosting.net/playlist/${playlistId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ song: songId })
+        });
+        let data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+// USER FUNCTIONS
+
+let registerUser = async (username, password) => {
+    try {
+        let response = await fetch('https://api.toonhosting.net/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        let data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+let loginUser = async (username, password) => {
+    try {
+        let response = await fetch('https://api.toonhosting.net/user/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        let data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+let deleteUser = async (username, password) => {
+    try {
+        let response = await fetch('https://api.toonhosting.net/user/', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        let data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+let changePass = async (username, password, newpass) => {
+    try {
+        let response = await fetch('https://api.toonhosting.net/user/', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password, newpass })
+        });
+        let data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 
 
-
-export { getTrending, getSong, searchSongByTitle, searchSongByArtist, searchPlaylist, getPlaylist };
+export { 
+    getTrending, getSong, searchSongByTitle, searchSongByArtist, 
+    searchPlaylist, getPlaylist, registerUser, loginUser, deleteUser, 
+    changePass 
+};

@@ -19,13 +19,7 @@ function SlideBar(props) {
 
 
   let handleHoveredEvent = (v) => {
-
-    console.log(hovered);
-
     (v === null) ? setHovered(!hovered) : setHovered(v);
-
-    console.log(hovered);
-
   }
 
   return(

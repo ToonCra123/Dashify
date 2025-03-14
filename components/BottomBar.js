@@ -7,52 +7,40 @@ import { Audio } from 'expo-av';
 let lastplayedsound;
 
 let BottomBar = (props) => {
+  useEffect(() => {
+    if (sound) {
+      stopSound();
+    }
+  }, [props.currSong]);
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0); // Track current position (0 to 1)
   const [duration, setDuration] = useState(0);
   const [timeMilisecond, setTimeMilisecond] = useState(0);
-  const [volume, setVolume] = useState(1);
-
-  lastplayedsound = props.currSong.mp3Path;
-
-
+  const [volume, setVolume] = useState(0.5);
 
   const playSoundButton = async () => {
     if (!props.currSong) return;
-
-
-
 
     if(!sound) {
       if(isPlaying) {
         stopSound(); 
         setIsPlaying(false);
-
         return;
       } else {
         playSound();
         setIsPlaying(true);
-
-
       }
     } else {
       if(isPlaying) {
         pauseSound();
         setIsPlaying(false);
-        
-
-
         return;
       } else {
         resumeSound();
         setIsPlaying(true);
-
       }
     }
-
-
-    
   }
 
   const pauseSoundButton = async () => {
@@ -61,64 +49,46 @@ let BottomBar = (props) => {
     if(isPlaying) {
       pauseSound();
       setIsPlaying(false);
-
-
       return;
     } else {
       pauseSound();
       setIsPlaying(true);
-
     }
   }
 
 
   const playSound = async () => {
-    
     if (!props.currSong) return;
-
 
     const {sound} = await Audio.Sound.createAsync(
       { uri: props.currSong.mp3Path }
     );
-
-    console.log(props.currSong.title)
-
     setSound(sound);
-    
+  
     sound.setOnPlaybackStatusUpdate(async (status) => {
-
-
       if (status.isLoaded && status.isPlaying) {
         setPosition(status.positionMillis / status.durationMillis); // Normalize to 0-1
         
         setTimeMilisecond(status.positionMillis);
         setDuration(status.durationMillis);
-        
       }
-
       if (status.didJustFinish || status.positionMillis >= status.durationMillis - 500) {
         await stopSound();
       }
     });
-
+    lastplayedsound = props.currSong.mp3Path;
     await sound.playAsync();
   };
 
-  let setStatus = () => 
-    {
-      console.log("pos",position);
-      setPosition(0);
-      console.log("pos2", position)
-    }
-
   const stopSound = async () => {
+    console.log("stopSound")
     if (!props.currSong) return;
-
+    lastplayedsound = props.currSong.mp3Path;
     if(sound) {
+      console.log("stopSound")
       await sound.stopAsync();  // Stop the sound.
       await sound.unloadAsync();  // Unload the sound to release resources.
       setSound(null);  // Clear the sound reference.
-      
     }
     setIsPlaying(false);
     setPosition(0.001); //DO NOT PUT ZERO IT BREAKS #COCONUTJPEG
@@ -136,8 +106,6 @@ let BottomBar = (props) => {
 
   const resumeSound = async () => {
     if (!props.currSong) return;
-
-    
     if(sound) {
       await sound.playAsync();
     }
@@ -154,6 +122,15 @@ let BottomBar = (props) => {
       await sound.setPositionAsync(position);
     }
     
+  }
+
+  const changeVolume = async (value) => {
+    if (!props.currSong) return;
+    if(value === undefined) return;
+    if(sound) {
+      await sound.setVolumeAsync(value);
+      setVolume(value);
+    }
   }
 
   function formatTime(ms) {
@@ -180,6 +157,7 @@ let BottomBar = (props) => {
         <View style={styles.songInfo_container}>
           <Text style={styles.songInfo_name}>{props.currSong.title}</Text>
           <Text style={styles.songInfo_artist}>{props.currSong.artist}</Text>
+          <Text style={styles.songInfo_artist}>{props.currSong.mp3Path}</Text>
         </View>
       </View>
 
@@ -217,7 +195,7 @@ let BottomBar = (props) => {
 
       <View style={styles.bottomBarGroupRight}>
         <WindowBarButton2UI imageSource={require('../images/png/volume_high.png')} activation={button_test}></WindowBarButton2UI>
-        <SlideBar onSlide={setVolume} slideValue={volume}></SlideBar>
+        <SlideBar onSlide={changeVolume} slideValue={volume}></SlideBar>
       </View>
 
     </View>

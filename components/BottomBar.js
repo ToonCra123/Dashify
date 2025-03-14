@@ -95,7 +95,7 @@ let BottomBar = (props) => {
       setSound(null);
     }
     setIsPlaying(false);
-    setPosition(0.001);
+    setPosition(0.001); //DO NOT PUT ZERO IT BREAKS #COCONUTJPEG
     setDuration(0);
     setTimeMilisecond(0);
   }

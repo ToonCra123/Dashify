@@ -26,7 +26,7 @@ let currSongEx = {
 export default function App() {
 
 const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]); //To update trending songs call 'requestTrendingSongs' DO NOT set 'fetchedTrendingSongs' manually
-
+const [shouldStopSong, setShouldStopSong] = useState(false);
 
 let requestTrendingSongs = async () => {}; //empty var for all we care
 
@@ -64,11 +64,9 @@ if(fetchedTrendingSongs.length === 0)
 
     if(!(currSong._id === s._id))
       {
-        console.log("original", currSong.title, currSong);
         setCurrSong(s);
-        console.log("was set to", currSong.title, currSong);
+        setShouldStopSong(true);
         onSongChange();
-
         //make this crap work omg
       }
   }
@@ -86,7 +84,9 @@ if(fetchedTrendingSongs.length === 0)
           <Centerbar selected_content={selected_content} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
           : null
         }
-        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
+        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} 
+                  setCurrentSong={set_song} shouldStopSong={shouldStopSong} setShouldStopSong={setShouldStopSong}
+        />
       </View>
     );
   } else if (Platform.OS === 'ios' || Platform.OS === 'android') {

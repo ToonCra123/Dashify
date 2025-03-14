@@ -16,43 +16,28 @@ let BottomBar = (props) => {
 
   lastplayedsound = props.currSong.mp3Path;
 
-
-
   const playSoundButton = async () => {
     if (!props.currSong) return;
-
-
-
 
     if(!sound) {
       if(isPlaying) {
         stopSound(); 
         setIsPlaying(false);
-
         return;
       } else {
         playSound();
         setIsPlaying(true);
-
-
       }
     } else {
       if(isPlaying) {
         pauseSound();
         setIsPlaying(false);
-        
-
-
         return;
       } else {
         resumeSound();
         setIsPlaying(true);
-
       }
     }
-
-
-    
   }
 
   const pauseSoundButton = async () => {
@@ -61,13 +46,10 @@ let BottomBar = (props) => {
     if(isPlaying) {
       pauseSound();
       setIsPlaying(false);
-
-
       return;
     } else {
       pauseSound();
       setIsPlaying(true);
-
     }
   }
 
@@ -80,9 +62,6 @@ let BottomBar = (props) => {
     const {sound} = await Audio.Sound.createAsync(
       { uri: props.currSong.mp3Path }
     );
-
-    console.log(props.currSong.title)
-
     setSound(sound);
     
     sound.setOnPlaybackStatusUpdate(async (status) => {
@@ -93,7 +72,11 @@ let BottomBar = (props) => {
         
         setTimeMilisecond(status.positionMillis);
         setDuration(status.durationMillis);
-        
+        if (props.currSong.mp3Path !== lastplayedsound) {
+          await stopSound();
+          lastplayedsound = props.currSong.mp3Path;
+          return;
+        }
       }
 
       if (status.didJustFinish || status.positionMillis >= status.durationMillis - 500) {
@@ -115,10 +98,10 @@ let BottomBar = (props) => {
     if (!props.currSong) return;
 
     if(sound) {
+      console.log("stopSound")
       await sound.stopAsync();  // Stop the sound.
       await sound.unloadAsync();  // Unload the sound to release resources.
       setSound(null);  // Clear the sound reference.
-      
     }
     setIsPlaying(false);
     setPosition(0.001); //DO NOT PUT ZERO IT BREAKS #COCONUTJPEG
@@ -154,6 +137,14 @@ let BottomBar = (props) => {
       await sound.setPositionAsync(position);
     }
     
+  }
+
+  const changeVolume = async (value) => {
+    if (!props.currSong) return;
+    if(value === undefined) return;
+    if(sound) {
+      await sound.setVolumeAsync(value);
+    }
   }
 
   function formatTime(ms) {
@@ -217,7 +208,7 @@ let BottomBar = (props) => {
 
       <View style={styles.bottomBarGroupRight}>
         <WindowBarButton2UI imageSource={require('../images/png/volume_high.png')} activation={button_test}></WindowBarButton2UI>
-        <SlideBar onSlide={setVolume} slideValue={volume}></SlideBar>
+        <SlideBar onSlide={changeVolume} slideValue={volume}></SlideBar>
       </View>
 
     </View>

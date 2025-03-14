@@ -77,8 +77,8 @@ let BottomBar = (props) => {
       }
     });
     lastplayedsound = props.currSong.mp3Path;
-    await sound.playAsync();
     await sound.setVolumeAsync(volume);
+    await sound.playAsync();
   };
 
   const stopSound = async () => {

@@ -10,7 +10,7 @@ import PlaylistPopup from './UI/CreatePlaylist.js';
 import { FlatList, ImageBackground, ScrollView } from 'react-native-web';
 import { LinearGradient } from 'expo-linear-gradient';
 import {MAIN_COLOR_GRADIENT, MAIN_COLOR_BASE, CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT} from './UI/Colors.js'
-import { getPlaylist, getSong } from './UI/WebRequests.js';
+import { getPlaylist, getSong, getTrending } from './UI/WebRequests.js';
 
 //JSON.parse(sessionStorage.getItem("selected_content"));
 
@@ -19,13 +19,13 @@ function Centerbar(props)
 
   return(
     <View style={styles.centerbar}>
-      <CenterbarWindow selected_content={props.selected_content} setSelectedContent={props.setSelectedContent}></CenterbarWindow>
+      <CenterbarWindow selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindow>
 
       {
         props.selected_content ? 
-          (<CenterbarWindowContentDetails selected_content={props.selected_content} setSelectedContent={props.setSelectedContent}></CenterbarWindowContentDetails>)
+          (<CenterbarWindowContentDetails selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindowContentDetails>)
         : 
-          (<CenterbarWindowFeed selected_content={props.selected_content} setSelectedContent={props.setSelectedContent}></CenterbarWindowFeed>)
+          (<CenterbarWindowFeed selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} trendingContent={props.trendingContent} setCurrentSong={props.setCurrentSong}></CenterbarWindowFeed>)
       }
 
     </View>
@@ -33,6 +33,16 @@ function Centerbar(props)
 }
 
 function CenterbarWindowFeed(props){
+  
+  //fetch the trending data from back end
+  const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]) //To update trending songs call 'requestTrendingSongs' DO NOT set 'fetchedTrendingSongs' manually
+
+  let example = { _id: "67d25d6d31ba33534c6a6e31", title: "Flamingo", artist: "Kero Kero Bonito"}
+
+  let na = false;
+
+  //props.setCurrentSong(example);
+
   return(
     <LinearGradient 
     style={styles.centerbarWindowFeed}
@@ -50,8 +60,8 @@ function CenterbarWindowFeed(props){
       </View>
 
       <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
-
-        <Catagory name="Trending Songs"></Catagory>
+        {console.log(props.trendingContent, "CenterBar.js")}
+        <Catagory name="Trending Songs" sectionContent={props.trendingContent} setCurrentSong={props.setCurrentSong}></Catagory>
         <Catagory name="Recently Played"></Catagory>
         <Catagory name="Dashify's Picks"></Catagory>
         
@@ -325,7 +335,7 @@ let FeedBox = (props) => {
   const [isSelected, setIsSelected] = useState(false);
 
   return(
-    <TouchableOpacity onPress={() => props.activation}>
+    <TouchableOpacity onPress={() => props.setCurrentSong(props.songdata)}>
 
       <View 
         style={isHovered ? styles.feedBoxHovered : styles.feedBox} 
@@ -384,14 +394,23 @@ let Catagory = (props) => {
 
       <WebScrollView disableShiftScrolling scrollSpeed={1} contentContainerStyle={{paddingBottom: 20,}}>
         <View style={styles.feedContents}>
-          <FeedBox rowName="Skibity" rowDesc="very cool playlist"></FeedBox>
-          <FeedBox rowName="Sigma" rowDesc="skibity cool playlist"></FeedBox>
-          <FeedBox rowName="Dogma" rowDesc="this a artist" isArtst={true}></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
-          <FeedBox rowName="John Pork" rowDesc="ye playlist"></FeedBox>
+
+          {console.log(props.sectionContent, "CATAGORY SECTION", props.name)}
+
+          { !(props.sectionContent === undefined) ? 
+          <FlatList
+              data={props.sectionContent}
+              horizontal
+              renderItem={({ item }) => (
+                      
+                <FeedBox rowName={item.title}rowDesc={item.artist} imageSource={item.imagePath} setCurrentSong={props.setCurrentSong} songdata={item}></FeedBox>
+                      
+              )}
+              keyExtractor={item => item._id} // Unique key for each item
+            >
+        
+          </FlatList>
+          : <FeedBox rowName={"EMPTY CATAGROY DATA"}rowDesc={"MAKE SURE YOU ARE REQUESTING DATA"} imageSource={{uri: "https://media.tenor.com/UnFx-k_lSckAAAAM/amalie-steiness.gif"}}></FeedBox>}
         </View>
       </WebScrollView>
     </View>

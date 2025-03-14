@@ -4,7 +4,7 @@ import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from '.
 import { SlideBar } from './SlideBar';
 import { Audio } from 'expo-av';
 
-
+let lastplayedsound;
 
 let BottomBar = (props) => {
   const [sound, setSound] = useState();
@@ -14,28 +14,45 @@ let BottomBar = (props) => {
   const [timeMilisecond, setTimeMilisecond] = useState(0);
   const [volume, setVolume] = useState(1);
 
+  lastplayedsound = props.currSong.mp3Path;
+
+
+
   const playSoundButton = async () => {
     if (!props.currSong) return;
+
+
+
 
     if(!sound) {
       if(isPlaying) {
         stopSound(); 
         setIsPlaying(false);
+
         return;
       } else {
         playSound();
         setIsPlaying(true);
+
+
       }
     } else {
       if(isPlaying) {
         pauseSound();
         setIsPlaying(false);
+        
+
+
         return;
       } else {
         resumeSound();
         setIsPlaying(true);
+
       }
     }
+
+
+    
   }
 
   const pauseSoundButton = async () => {
@@ -45,31 +62,38 @@ let BottomBar = (props) => {
       pauseSound();
       setIsPlaying(false);
 
+
       return;
     } else {
       pauseSound();
       setIsPlaying(true);
+
     }
   }
 
 
   const playSound = async () => {
+    
     if (!props.currSong) return;
+
 
     const {sound} = await Audio.Sound.createAsync(
       { uri: props.currSong.mp3Path }
     );
-    
+
+    console.log(props.currSong.title)
+
     setSound(sound);
     
     sound.setOnPlaybackStatusUpdate(async (status) => {
+
+
       if (status.isLoaded && status.isPlaying) {
         setPosition(status.positionMillis / status.durationMillis); // Normalize to 0-1
         
         setTimeMilisecond(status.positionMillis);
         setDuration(status.durationMillis);
-
-        //console.log(status.durationMillis, status.positionMillis);
+        
       }
 
       if (status.didJustFinish || status.positionMillis >= status.durationMillis - 500) {
@@ -91,8 +115,10 @@ let BottomBar = (props) => {
     if (!props.currSong) return;
 
     if(sound) {
-      await sound.stopAsync();
-      setSound(null);
+      await sound.stopAsync();  // Stop the sound.
+      await sound.unloadAsync();  // Unload the sound to release resources.
+      setSound(null);  // Clear the sound reference.
+      
     }
     setIsPlaying(false);
     setPosition(0.001); //DO NOT PUT ZERO IT BREAKS #COCONUTJPEG
@@ -110,6 +136,8 @@ let BottomBar = (props) => {
 
   const resumeSound = async () => {
     if (!props.currSong) return;
+
+    
     if(sound) {
       await sound.playAsync();
     }
@@ -125,6 +153,7 @@ let BottomBar = (props) => {
       const position = value * duration;
       await sound.setPositionAsync(position);
     }
+    
   }
 
   function formatTime(ms) {
@@ -138,19 +167,6 @@ let BottomBar = (props) => {
   }
 
   const [isHolding, setIsHolding] = useState(false);
-
-  useEffect(() => {
-    const handleMouseDown = () => setIsHolding(true);
-    const handleMouseUp = () => setIsHolding(false);
-
-    document.addEventListener("mousedown", handleMouseDown);
-    document.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      document.removeEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, []);
 
   return(
     <View style={styles.bottomBar}>

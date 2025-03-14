@@ -8,6 +8,8 @@ import 'react-native-gesture-handler';
 import MainMobile from "./components/mobile/MainMobile.js";
 import PlaylistPopup from "./components/UI/CreatePlaylist.js";
 
+import { getPlaylist, getSong, getTrending } from './components/UI/WebRequests.js';
+
 // This is example for song 
 let currSongEx = {
   "_id": "67d25c5031ba33534c6a6e2b",
@@ -20,7 +22,36 @@ let currSongEx = {
   "__v": 0
 }
 
+
 export default function App() {
+
+const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]); //To update trending songs call 'requestTrendingSongs' DO NOT set 'fetchedTrendingSongs' manually
+
+
+let requestTrendingSongs = async () => {}; //empty var for all we care
+
+if(fetchedTrendingSongs.length === 0)
+  {
+    requestTrendingSongs = async (a) => {
+
+      let tSongs = await getTrending(a);
+
+      setFetchedTrendingSongs(tSongs);
+      
+      console.log(fetchedTrendingSongs);
+      
+      return fetchedTrendingSongs;
+    }
+  }
+  else
+  {
+    console.log(fetchedTrendingSongs.length, fetchedTrendingSongs); //to not spam the back end with request for trending info
+  }
+
+
+  requestTrendingSongs(20);
+  console.log(fetchedTrendingSongs, "App.js")
+
   const [currSong, setCurrSong] = useState(currSongEx);
   const [selected_content, setSelectedContent] = useState(false);
 
@@ -29,13 +60,33 @@ export default function App() {
     console.log(v === null, v)
   }
 
+  let set_song = (s) =>{
+
+    if(!(currSong._id === s._id))
+      {
+        console.log("original", currSong.title, currSong);
+        setCurrSong(s);
+        console.log("was set to", currSong.title, currSong);
+        onSongChange();
+
+        //make this crap work omg
+      }
+  }
+
+  let onSongChange = () => {}
+  
+
+
 
   if(Platform.OS === 'web') {
     return (
       <View style={styles.container}>
-        <TopBar selected_content={selected_content} setSelectedContent={content_selected}/>
-        <Centerbar selected_content={selected_content} setSelectedContent={content_selected}/>
-        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected}/>
+        <TopBar selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
+        { (fetchedTrendingSongs.length > 0) ?
+          <Centerbar selected_content={selected_content} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
+          : null
+        }
+        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
       </View>
     );
   } else if (Platform.OS === 'ios' || Platform.OS === 'android') {

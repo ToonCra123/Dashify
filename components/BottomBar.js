@@ -9,9 +9,14 @@ let lastplayedsound;
 let BottomBar = (props) => {
   useEffect(() => {
     if (sound) {
-      stopSound();
+      stopSound().then(() => {
+        playSound().then(()=> {
+          setIsPlaying(true);
+        });
+      });
     }
   }, [props.currSong]);
+
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0); // Track current position (0 to 1)
@@ -61,7 +66,9 @@ let BottomBar = (props) => {
     if (!props.currSong) return;
 
     const {sound} = await Audio.Sound.createAsync(
-      { uri: props.currSong.mp3Path }
+      { uri: props.currSong.mp3Path,
+        
+      }
     );
 
 
@@ -85,6 +92,8 @@ let BottomBar = (props) => {
     lastplayedsound = props.currSong.mp3Path;
     await sound.setVolumeAsync(volume);
     await sound.playAsync();
+
+
   };
 
   const stopSound = async () => {

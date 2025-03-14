@@ -65,21 +65,22 @@ function CenterbarWindowFeed(props){
 function CenterbarWindowContentDetails(props){
 
   const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
-
   const [songlist, setSonglist] = useState([]);
-  const [playlistName, setPlaylistname] = useState("");
 
   let asyncGetSongs = async (songs)=>{
     for(let i = 0; i < songs.length; i++)
       {
-        let song = await getSong(songs[i], true);
+        let song = await getSong(songs[i], false);
 
         let templist = songlist;
         templist.push(song);
 
+        (i === 0) ? setFetchedPlaylistImage(song.imagePath) : null;
+        
         setSonglist(templist);
       }
   }
+
 
   useEffect(() => {
 
@@ -89,8 +90,10 @@ function CenterbarWindowContentDetails(props){
         console.log(songlist);
       })
 
-      setPlaylistname(obj);
-      console.log(playlistName);
+      setFetchedPlaylistName(obj.title);
+      setFetchedPlaylistDesc(obj.description);
+      console.log(fetchedPlaylistName);
+
     })
     
   }, []);
@@ -125,118 +128,40 @@ function CenterbarWindowContentDetails(props){
         "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741819692536-654986767.mp3",
         "imagePath": "http://api.toonhosting.net/img/image-1741819694111-923389136.jpg",
         "listens": 6
-      },
-      {
-        "_id": "67d21388545d22af7e35a896",
-        "title": "APT.",
-        "artist": "ROSE",
-        "year": 2024,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741820807774-455334097.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741820808070-503879797.jpg",
-        "listens": 0
-      },
-      {
-        "_id": "67d228af545d22af7e35a89a",
-        "title": "Pumped Up Kicks",
-        "artist": "Foster The People",
-        "year": 2011,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741826222895-278351858.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741826222894-344020685.jpg",
-        "listens": 0
-      },
-      {
-        "_id": "67d22ad3545d22af7e35a8a3",
-        "title": "My Way",
-        "artist": "Frank Sinatra",
-        "year": 1969,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741826770483-285817292.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741826770477-918580266.jpg",
-        "listens": 0
-      },
-      {
-        "_id": "67d22d2c31ba33534c6a6e03",
-        "title": "Liar",
-        "artist": "Shin Sonic",
-        "year": 2024,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741827371811-806417960.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741827371749-509866792.jpg",
-        "listens": 0
-      },
-      {
-        "_id": "67d22ef331ba33534c6a6e07",
-        "title": "Monitoring feat. Hatsune Miku",
-        "artist": "DECO*27",
-        "year": 2025,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741827826809-294866815.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741827826704-603152733.png",
-        "listens": 0
-      },
-      {
-        "_id": "67d25a3b31ba33534c6a6e22",
-        "title": "Buddy Holly",
-        "artist": "Weezer",
-        "year": 1994,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741838906673-577707902.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741838906627-972858209.jpg",
-        "listens": 0
-      },
-      {
-        "_id": "67d25add31ba33534c6a6e25",
-        "title": "...Baby One More Time (Black Edition)",
-        "artist": "Tenacious D",
-        "year": 2024,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839068098-800570897.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741839068021-193165464.jpg",
-        "listens": 0
-      },
-      {
-        "_id": "67d25b5f31ba33534c6a6e28",
-        "title": "115",
-        "artist": "Elena Siegman",
-        "year": 2011,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839199000-384980585.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741839198955-600178527.jpg",
-        "listens": 0
-      },
-      {
-        "_id": "67d25c5031ba33534c6a6e2b",
-        "title": "Rape Me",
-        "artist": "Nirvana",
-        "year": 1993,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839439795-132461340.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741839439744-9901521.jpg",
-        "listens": 0
       }
-  
+      // Add more items as needed
   ];
 
-
+  const [fetchedPlaylistName, setFetchedPlaylistName] = useState(".......")
+  const [fetchedPlaylistDesc, setFetchedPlaylistDesc] = useState(".......")
+  const [fetchedPlaylistImage, setFetchedPlaylistImage] = useState("https://i.pinimg.com/originals/80/b5/81/80b5813d8ad81a765ca47ebc59a65ac3.jpg");
+  
 
   return(
     <LinearGradient style={styles.centerbarWindowContent}
     colors={[CONTENTWINDOW_COLOR_GRADIENT, CONTENTWINDOW_COLOR_BASE]}
     start={{x: 1, y:1}}
     end={{x: 1, y:0}}>
-      
+
       <View style={{flexDirection: "row"}}>
         <ImageBackground
-          source={{ uri: albumCover}} // Replace with your image URL
+          source={{ uri: fetchedPlaylistImage}} // Replace with your image URL
           imageStyle={{ borderRadius: 15 }} // Optional: Style the background image
           style={{width: 400, height: 400}}
         >
         </ImageBackground>
-        
+          
         <View style={{paddingHorizontal: 40, justifyContent: "flex-end", height: 400}}>
           <View>
-            <Text style={{color: "white", fontSize: "3rem"}}>{type}</Text>
+            <Text style={{color: "white", fontSize: "3rem"}}>Playlist</Text>
           </View>
 
           <View>
-            <Text style={{color: "white", fontSize: "6rem", fontWeight: "750"}}>{title}</Text>
+            <Text style={{color: "white", fontSize: "6rem", fontWeight: "750"}}>{fetchedPlaylistName}</Text>
           </View>
 
           <View>
-            <Text style={{color: "white", fontSize: "3rem"}}>{artist}</Text>
+            <Text style={{color: "white", fontSize: "3rem"}}>{fetchedPlaylistDesc}</Text>
           </View>
         </View>
       </View>
@@ -248,16 +173,16 @@ function CenterbarWindowContentDetails(props){
           <FlatList
               data={songlist}
               renderItem={({ item }) => (
-                    
+                      
                 <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>
-                    
-      
+                      
+        
               )}
               keyExtractor={item => item._id} // Unique key for each item
             >
-      
+        
           </FlatList>
-      
+        
         </ScrollView>) : null
       }
       

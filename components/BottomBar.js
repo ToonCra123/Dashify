@@ -200,7 +200,7 @@ let BottomBar = (props) => {
 
 
       <View style={styles.bottomBarGroupRight}>
-        <WindowBarButton2UI imageSource={require('../images/png/volume_high.png')} activation={() => setPosition(0.00001)}></WindowBarButton2UI>
+        <WindowBarButton2UI imageSource={require('../images/png/volume_high.png')} activation={button_test}></WindowBarButton2UI>
         <SlideBar onSlide={setVolume} slideValue={volume}></SlideBar>
       </View>
 

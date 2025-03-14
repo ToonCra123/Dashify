@@ -19,7 +19,7 @@ let getTrending = async (limit) => {
 
 let getSong = async (id, shouldCountAsListen = false) => {
     try {
-        let response = await fetch(`https://api.toonhosting.net/song/${id}/${shouldCountAsListen}`);
+        let response = await fetch(shouldCountAsListen ? `https://api.toonhosting.net/song/${id}` : `https://api.toonhosting.net/song/${id}/${shouldCountAsListen}`);
         let data = await response.json();
         return data;
     } catch (error) {

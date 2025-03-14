@@ -72,7 +72,7 @@ function CenterbarWindowContentDetails(props){
   let asyncGetSongs = async (songs)=>{
     for(let i = 0; i < songs.length; i++)
       {
-        let song = await getSong(songs[i]);
+        let song = await getSong(songs[i], true);
 
         let templist = songlist;
         templist.push(song);

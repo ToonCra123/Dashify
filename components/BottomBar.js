@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
 import { Audio } from 'expo-av';
+
 
 
 let BottomBar = (props) => {
@@ -10,21 +11,21 @@ let BottomBar = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0); // Track current position (0 to 1)
   const [duration, setDuration] = useState(0);
+  const [timeMilisecond, setTimeMilisecond] = useState(0);
+  const [volume, setVolume] = useState(1);
 
   const playSoundButton = async () => {
     if (!props.currSong) return;
 
     if(!sound) {
       if(isPlaying) {
-        stopSound();
+        stopSound(); 
         setIsPlaying(false);
         return;
       } else {
         playSound();
         setIsPlaying(true);
       }
-      setDuration(await sound.getDurationAsync());
-      console.log(duration);
     } else {
       if(isPlaying) {
         pauseSound();
@@ -43,12 +44,14 @@ let BottomBar = (props) => {
     if(isPlaying) {
       pauseSound();
       setIsPlaying(false);
+
       return;
     } else {
       pauseSound();
       setIsPlaying(true);
     }
   }
+
 
   const playSound = async () => {
     if (!props.currSong) return;
@@ -59,14 +62,30 @@ let BottomBar = (props) => {
     
     setSound(sound);
     
-    sound.setOnPlaybackStatusUpdate((status) => {
+    sound.setOnPlaybackStatusUpdate(async (status) => {
       if (status.isLoaded && status.isPlaying) {
         setPosition(status.positionMillis / status.durationMillis); // Normalize to 0-1
+        
+        setTimeMilisecond(status.positionMillis);
+        setDuration(status.durationMillis);
+
+        //console.log(status.durationMillis, status.positionMillis);
+      }
+
+      if (status.didJustFinish || status.positionMillis >= status.durationMillis - 500) {
+        await stopSound();
       }
     });
 
     await sound.playAsync();
   };
+
+  let setStatus = () => 
+    {
+      console.log("pos",position);
+      setPosition(0);
+      console.log("pos2", position)
+    }
 
   const stopSound = async () => {
     if (!props.currSong) return;
@@ -76,8 +95,9 @@ let BottomBar = (props) => {
       setSound(null);
     }
     setIsPlaying(false);
-    setPosition(0);
+    setPosition(0.001);
     setDuration(0);
+    setTimeMilisecond(0);
   }
 
   const pauseSound = async () => {
@@ -107,6 +127,31 @@ let BottomBar = (props) => {
     }
   }
 
+  function formatTime(ms) {
+    const minutes = Math.floor((ms / (1000 * 60)));
+    const seconds = Math.floor((ms / 1000) % 60);
+  
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+  
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+
+  const [isHolding, setIsHolding] = useState(false);
+
+  useEffect(() => {
+    const handleMouseDown = () => setIsHolding(true);
+    const handleMouseUp = () => setIsHolding(false);
+
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
   return(
     <View style={styles.bottomBar}>
       
@@ -122,6 +167,7 @@ let BottomBar = (props) => {
         </View>
       </View>
 
+
       
       <View style={styles.bottomBarGroupCenter}>
 
@@ -134,18 +180,28 @@ let BottomBar = (props) => {
                       <WindowBarButton2UI imageSource={require('../images/png/pause_arrow.png')} activation={pauseSoundButton}></WindowBarButton2UI>
                     )
           }
+
           <WindowBarButton2UI imageSource={require('../images/png/skip_forward.png')} activation={button_test}></WindowBarButton2UI>
         </View>
 
         <View style={styles.bottomBarGroupCenter_Bottom}>
+
+          <Text style={{color: "white", opacity: 0.9}}>
+            {formatTime(timeMilisecond)}
+          </Text>
+
           <SlideBar onSlide={seekSong} slideValue={position}></SlideBar>
+
+          <Text style={{color: "white", opacity: 0.9}}>
+            {formatTime(duration)}
+          </Text>
         </View>
       </View>
 
 
       <View style={styles.bottomBarGroupRight}>
-        <WindowBarButton2UI imageSource={require('../images/png/volume_high.png')} activation={button_test}></WindowBarButton2UI>
-        <SlideBar></SlideBar>
+        <WindowBarButton2UI imageSource={require('../images/png/volume_high.png')} activation={() => setPosition(0.00001)}></WindowBarButton2UI>
+        <SlideBar onSlide={setVolume} slideValue={volume}></SlideBar>
       </View>
 
     </View>
@@ -206,11 +262,14 @@ const styles = StyleSheet.create({
       bottomBarGroupCenter_Bottom:{
         flexDirection:"row",
         justifyContent:"center",
+        alignItems: "center",
+        columnGap: 10,
       },
     
       bottomBarGroupCenter_Top:{
         flexDirection:"row",
         justifyContent:"center",
+        columnGap: 10,
       },
     
       bottomBarGroupRight:{

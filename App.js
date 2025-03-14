@@ -22,12 +22,20 @@ let currSongEx = {
 
 export default function App() {
   const [currSong, setCurrSong] = useState(currSongEx);
+  const [selected_content, setSelectedContent] = useState(false);
+
+  let content_selected = (v) =>{
+    (v === undefined) ? setSelectedContent(!selected_content) : setSelectedContent(v);
+    console.log(v === null, v)
+  }
+
+
   if(Platform.OS === 'web') {
     return (
       <View style={styles.container}>
-        <TopBar/>
-        <Centerbar/>
-        <BottomBar currSong={currSong} />
+        <TopBar selected_content={selected_content} setSelectedContent={content_selected}/>
+        <Centerbar selected_content={selected_content} setSelectedContent={content_selected}/>
+        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected}/>
       </View>
     );
   } else if (Platform.OS === 'ios' || Platform.OS === 'android') {

@@ -10,22 +10,22 @@ import PlaylistPopup from './UI/CreatePlaylist.js';
 import { FlatList, ImageBackground, ScrollView } from 'react-native-web';
 import { LinearGradient } from 'expo-linear-gradient';
 import {MAIN_COLOR_GRADIENT, MAIN_COLOR_BASE, CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT} from './UI/Colors.js'
-
-let selectedContent = false;
+import { getPlaylist, getSong } from './UI/WebRequests.js';
 
 //JSON.parse(sessionStorage.getItem("selected_content"));
 
 function Centerbar(props)
 {
+
   return(
     <View style={styles.centerbar}>
-      <CenterbarWindow></CenterbarWindow>
+      <CenterbarWindow selected_content={props.selected_content} setSelectedContent={props.setSelectedContent}></CenterbarWindow>
 
       {
-        selectedContent ? 
-          (<CenterbarWindowContentDetails></CenterbarWindowContentDetails>)
+        props.selected_content ? 
+          (<CenterbarWindowContentDetails selected_content={props.selected_content} setSelectedContent={props.setSelectedContent}></CenterbarWindowContentDetails>)
         : 
-          (<CenterbarWindowFeed></CenterbarWindowFeed>)
+          (<CenterbarWindowFeed selected_content={props.selected_content} setSelectedContent={props.setSelectedContent}></CenterbarWindowFeed>)
       }
 
     </View>
@@ -63,6 +63,37 @@ function CenterbarWindowFeed(props){
 
 
 function CenterbarWindowContentDetails(props){
+
+  const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
+
+  const [songlist, setSonglist] = useState([]);
+  const [playlistName, setPlaylistname] = useState("");
+
+  let asyncGetSongs = async (songs)=>{
+    for(let i = 0; i < songs.length; i++)
+      {
+        let song = await getSong(songs[i]);
+
+        let templist = songlist;
+        templist.push(song);
+
+        setSonglist(templist);
+      }
+  }
+
+  useEffect(() => {
+
+    getPlaylist("67d38e527de6a9174989d40e").then((obj) =>{
+      asyncGetSongs(obj.songs).then(()=>{
+        setIsPlaylistLoading(false);
+        console.log(songlist);
+      })
+
+      setPlaylistname(obj);
+      console.log(playlistName);
+    })
+    
+  }, []);
 
   let contentTitle = JSON.parse(sessionStorage.getItem("content_title"));
   let contentArtist = JSON.parse(sessionStorage.getItem("content_artist"));
@@ -179,6 +210,8 @@ function CenterbarWindowContentDetails(props){
   
   ];
 
+
+
   return(
     <LinearGradient style={styles.centerbarWindowContent}
     colors={[CONTENTWINDOW_COLOR_GRADIENT, CONTENTWINDOW_COLOR_BASE]}
@@ -209,22 +242,24 @@ function CenterbarWindowContentDetails(props){
       </View>
 
       <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
+
+      { !isPlaylistLoading ? (
+        <ScrollView style={{width: "100%"}} showsHorizontalScrollIndicator={false}>
+          <FlatList
+              data={songlist}
+              renderItem={({ item }) => (
+                    
+                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>
+                    
       
-      <ScrollView style={{width: "100%"}} showsHorizontalScrollIndicator={false}>
-        <FlatList
-            data={tempsongdata}
-            renderItem={({ item }) => (
-              
-              <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>
-              
-
-            )}
-            keyExtractor={item => item._id} // Unique key for each item
-          >
-
-        </FlatList>
-
-      </ScrollView>
+              )}
+              keyExtractor={item => item._id} // Unique key for each item
+            >
+      
+          </FlatList>
+      
+        </ScrollView>) : null
+      }
       
     </LinearGradient>
   );
@@ -288,7 +323,7 @@ function CenterbarWindow(props){
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
-            <LibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={()=> {}}></LibraryRow>
+            <LibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={props.setSelectedContent}></LibraryRow>
           </View>
         </ScrollView>
 

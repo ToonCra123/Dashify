@@ -12,9 +12,7 @@ let BottomBar = (props) => {
   const [position, setPosition] = useState(0); // Track current position (0 to 1)
   const [duration, setDuration] = useState(0);
   const [timeMilisecond, setTimeMilisecond] = useState(0);
-  const [volume, setVolume] = useState(1);
-
-  lastplayedsound = props.currSong.mp3Path;
+  const [volume, setVolume] = useState(0.5);
 
   const playSoundButton = async () => {
     if (!props.currSong) return;
@@ -58,24 +56,28 @@ let BottomBar = (props) => {
     
     if (!props.currSong) return;
 
-
+    /*
+    if (props.currSong.mp3Path !== lastplayedsound) {
+      await stopSound();
+      lastplayedsound = props.currSong.mp3Path;
+    }
+    */
     const {sound} = await Audio.Sound.createAsync(
       { uri: props.currSong.mp3Path }
     );
     setSound(sound);
     
     sound.setOnPlaybackStatusUpdate(async (status) => {
-
-
       if (status.isLoaded && status.isPlaying) {
         setPosition(status.positionMillis / status.durationMillis); // Normalize to 0-1
         
         setTimeMilisecond(status.positionMillis);
         setDuration(status.durationMillis);
-        if (props.currSong.mp3Path !== lastplayedsound) {
-          await stopSound();
-          lastplayedsound = props.currSong.mp3Path;
-          return;
+
+
+        console.log(props.currSong.mp3Path, lastplayedsound)
+        if(props.currSong.mp3Path !== lastplayedsound) {
+          kms();
         }
       }
 
@@ -84,19 +86,18 @@ let BottomBar = (props) => {
       }
     });
 
+    lastplayedsound = props.currSong.mp3Path;
     await sound.playAsync();
   };
 
-  let setStatus = () => 
-    {
-      console.log("pos",position);
-      setPosition(0);
-      console.log("pos2", position)
-    }
+  const kms = () => {
+    console.log("kms")
+  }
 
   const stopSound = async () => {
+    console.log("stopSound")
     if (!props.currSong) return;
-
+    lastplayedsound = props.currSong.mp3Path;
     if(sound) {
       console.log("stopSound")
       await sound.stopAsync();  // Stop the sound.
@@ -119,8 +120,6 @@ let BottomBar = (props) => {
 
   const resumeSound = async () => {
     if (!props.currSong) return;
-
-    
     if(sound) {
       await sound.playAsync();
     }
@@ -144,6 +143,7 @@ let BottomBar = (props) => {
     if(value === undefined) return;
     if(sound) {
       await sound.setVolumeAsync(value);
+      setVolume(value);
     }
   }
 

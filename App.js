@@ -30,22 +30,12 @@ const [shouldStopSong, setShouldStopSong] = useState(false);
 
 let requestTrendingSongs = async () => {}; //empty var for all we care
 
-if(fetchedTrendingSongs.length === 0)
-  {
+  if(fetchedTrendingSongs.length === 0) {
     requestTrendingSongs = async (a) => {
-
       let tSongs = await getTrending(a);
-
-      setFetchedTrendingSongs(tSongs);
-      
-      console.log(fetchedTrendingSongs);
-      
+      setFetchedTrendingSongs(tSongs);      
       return fetchedTrendingSongs;
     }
-  }
-  else
-  {
-    console.log(fetchedTrendingSongs.length, fetchedTrendingSongs); //to not spam the back end with request for trending info
   }
 
 
@@ -57,18 +47,15 @@ if(fetchedTrendingSongs.length === 0)
 
   let content_selected = (v) =>{
     (v === undefined) ? setSelectedContent(!selected_content) : setSelectedContent(v);
-    console.log(v === null, v)
   }
 
   let set_song = (s) =>{
-
-    if(!(currSong._id === s._id))
-      {
+    if(!(currSong._id === s._id)){
         setCurrSong(s);
         setShouldStopSong(true);
         onSongChange();
         //make this crap work omg
-      }
+    }
   }
 
   let onSongChange = () => {}

@@ -81,6 +81,9 @@ let BottomBar = (props) => {
       { uri: props.currSong.mp3Path }
     );
 
+
+
+
     console.log(props.currSong.title)
 
     setSound(sound);
@@ -134,7 +137,10 @@ let BottomBar = (props) => {
     }
   }
 
+  let updatesss = props.currSong.title;
   const resumeSound = async () => {
+
+    console.log(props.currSong.title, updatesss)
     if (!props.currSong) return;
 
     
@@ -166,7 +172,9 @@ let BottomBar = (props) => {
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
-  const [isHolding, setIsHolding] = useState(false);
+
+  
+
 
   return(
     <View style={styles.bottomBar}>

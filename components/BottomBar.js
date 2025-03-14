@@ -83,6 +83,7 @@ let BottomBar = (props) => {
       }
     });
     lastplayedsound = props.currSong.mp3Path;
+    await sound.setVolumeAsync(volume);
     await sound.playAsync();
   };
 
@@ -168,7 +169,6 @@ let BottomBar = (props) => {
         <View style={styles.songInfo_container}>
           <Text style={styles.songInfo_name}>{props.currSong.title}</Text>
           <Text style={styles.songInfo_artist}>{props.currSong.artist}</Text>
-          <Text style={styles.songInfo_artist}>{props.currSong.mp3Path}</Text>
         </View>
       </View>
 

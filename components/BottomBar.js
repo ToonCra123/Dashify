@@ -7,6 +7,11 @@ import { Audio } from 'expo-av';
 let lastplayedsound;
 
 let BottomBar = (props) => {
+  useEffect(() => {
+    if (sound) {
+      stopSound();
+    }
+  }, [props.currSong]);
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0); // Track current position (0 to 1)
@@ -53,46 +58,27 @@ let BottomBar = (props) => {
 
 
   const playSound = async () => {
-    
     if (!props.currSong) return;
 
-    /*
-    if (props.currSong.mp3Path !== lastplayedsound) {
-      await stopSound();
-      lastplayedsound = props.currSong.mp3Path;
-    }
-    */
     const {sound} = await Audio.Sound.createAsync(
       { uri: props.currSong.mp3Path }
     );
     setSound(sound);
-    
+  
     sound.setOnPlaybackStatusUpdate(async (status) => {
       if (status.isLoaded && status.isPlaying) {
         setPosition(status.positionMillis / status.durationMillis); // Normalize to 0-1
         
         setTimeMilisecond(status.positionMillis);
         setDuration(status.durationMillis);
-
-
-        console.log(props.currSong.mp3Path, lastplayedsound)
-        if(props.currSong.mp3Path !== lastplayedsound) {
-          kms();
-        }
       }
-
       if (status.didJustFinish || status.positionMillis >= status.durationMillis - 500) {
         await stopSound();
       }
     });
-
     lastplayedsound = props.currSong.mp3Path;
     await sound.playAsync();
   };
-
-  const kms = () => {
-    console.log("kms")
-  }
 
   const stopSound = async () => {
     console.log("stopSound")
@@ -171,6 +157,7 @@ let BottomBar = (props) => {
         <View style={styles.songInfo_container}>
           <Text style={styles.songInfo_name}>{props.currSong.title}</Text>
           <Text style={styles.songInfo_artist}>{props.currSong.artist}</Text>
+          <Text style={styles.songInfo_artist}>{props.currSong.mp3Path}</Text>
         </View>
       </View>
 

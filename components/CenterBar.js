@@ -60,7 +60,6 @@ function CenterbarWindowFeed(props){
       </View>
 
       <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
-        {console.log(props.trendingContent, "CenterBar.js")}
         <Catagory name="Trending Songs" sectionContent={props.trendingContent} setCurrentSong={props.setCurrentSong}></Catagory>
         <Catagory name="Recently Played"></Catagory>
         <Catagory name="Dashify's Picks"></Catagory>
@@ -97,13 +96,10 @@ function CenterbarWindowContentDetails(props){
     getPlaylist("67d38e527de6a9174989d40e").then((obj) =>{
       asyncGetSongs(obj.songs).then(()=>{
         setIsPlaylistLoading(false);
-        console.log(songlist);
       })
 
       setFetchedPlaylistName(obj.title);
       setFetchedPlaylistDesc(obj.description);
-      console.log(fetchedPlaylistName);
-
     })
     
   }, []);
@@ -394,9 +390,6 @@ let Catagory = (props) => {
 
       <WebScrollView disableShiftScrolling scrollSpeed={1} contentContainerStyle={{paddingBottom: 20,}}>
         <View style={styles.feedContents}>
-
-          {console.log(props.sectionContent, "CATAGORY SECTION", props.name)}
-
           { !(props.sectionContent === undefined) ? 
           <FlatList
               data={props.sectionContent}

@@ -26,51 +26,33 @@ let currSongEx = {
 export default function App() {
 
 const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]); //To update trending songs call 'requestTrendingSongs' DO NOT set 'fetchedTrendingSongs' manually
-
+const [shouldStopSong, setShouldStopSong] = useState(false);
 
 let requestTrendingSongs = async () => {}; //empty var for all we care
 
-if(fetchedTrendingSongs.length === 0)
-  {
+  if(fetchedTrendingSongs.length === 0) {
     requestTrendingSongs = async (a) => {
-
       let tSongs = await getTrending(a);
-
-      setFetchedTrendingSongs(tSongs);
-      
-      console.log(fetchedTrendingSongs);
-      
+      setFetchedTrendingSongs(tSongs);      
       return fetchedTrendingSongs;
     }
   }
-  else
-  {
-    console.log(fetchedTrendingSongs.length, fetchedTrendingSongs); //to not spam the back end with request for trending info
-  }
-
-
   requestTrendingSongs(20);
-  console.log(fetchedTrendingSongs, "App.js")
 
   const [currSong, setCurrSong] = useState(currSongEx);
   const [selected_content, setSelectedContent] = useState(false);
 
   let content_selected = (v) =>{
     (v === undefined) ? setSelectedContent(!selected_content) : setSelectedContent(v);
-    console.log(v === null, v)
   }
 
   let set_song = (s) =>{
-
-    if(!(currSong._id === s._id))
-      {
-        console.log("original", currSong.title, currSong);
+    if(!(currSong._id === s._id)){
         setCurrSong(s);
-        console.log("was set to", currSong.title, currSong);
+        setShouldStopSong(true);
         onSongChange();
-
         //make this crap work omg
-      }
+    }
   }
 
   let onSongChange = () => {}
@@ -86,7 +68,9 @@ if(fetchedTrendingSongs.length === 0)
           <Centerbar selected_content={selected_content} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
           : null
         }
-        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
+        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} 
+                  setCurrentSong={set_song} shouldStopSong={shouldStopSong} setShouldStopSong={setShouldStopSong}
+        />
       </View>
     );
   } else if (Platform.OS === 'ios' || Platform.OS === 'android') {

@@ -38,6 +38,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
     }
   }
   requestTrendingSongs(20);
+  
 
   const [currSong, setCurrSong] = useState(currSongEx);
   const [selected_content, setSelectedContent] = useState(false);

@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image } from 'react-native';
 import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
 import { Audio } from 'expo-av';
+import { getSong } from './UI/WebRequests';
 
 let lastplayedsound;
 
@@ -70,12 +71,8 @@ let BottomBar = (props) => {
         
       }
     );
-
-
-
-
-    console.log(props.currSong.title)
-
+    
+    getSong(props.currSong._id);
     setSound(sound);
   
     sound.setOnPlaybackStatusUpdate(async (status) => {

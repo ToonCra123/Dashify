@@ -25,7 +25,7 @@ function Centerbar(props)
         props.selected_content ? 
           (<CenterbarWindowContentDetails selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindowContentDetails>)
         : 
-          (<CenterbarWindowFeed selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} trendingContent={props.trendingContent} setCurrentSong={props.setCurrentSong}></CenterbarWindowFeed>)
+          (<CenterbarWindowFeed selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} trendingContent={props.trendingContent} setCurrentSong={props.setCurrentSong} currSong={props.currSong}></CenterbarWindowFeed>)
       }
 
     </View>
@@ -60,7 +60,7 @@ function CenterbarWindowFeed(props){
       </View>
 
       <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
-        <Catagory name="Trending Songs" sectionContent={props.trendingContent} setCurrentSong={props.setCurrentSong}></Catagory>
+        <Catagory name="Trending Songs" sectionContent={props.trendingContent} setCurrentSong={props.setCurrentSong} currSong={props.currSong}></Catagory>
         <Catagory name="Recently Played"></Catagory>
         <Catagory name="Dashify's Picks"></Catagory>
         
@@ -186,6 +186,7 @@ function CenterbarWindowContentDetails(props){
               )}
               keyExtractor={item => item._id} // Unique key for each item
             >
+          
         
           </FlatList>
         
@@ -330,11 +331,29 @@ let FeedBox = (props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
 
+  useEffect(() => {
+    if(props.currSong)
+      {
+        if(props.currSong._id === props.songdata._id)
+        {
+          setIsSelected(true);
+        }
+        else
+        {
+          setIsSelected(false);
+        }
+      }
+  }, [props.currSong]);
+
+  let triggerFeedBox = () => {
+    props.setCurrentSong(props.songdata)
+  }
+
   return(
-    <TouchableOpacity onPress={() => props.setCurrentSong(props.songdata)}>
+    <TouchableOpacity onPress={triggerFeedBox}>
 
       <View 
-        style={isHovered ? styles.feedBoxHovered : styles.feedBox} 
+        style={isHovered || isSelected ? styles.feedBoxHovered : styles.feedBox} 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         >
@@ -382,6 +401,7 @@ let RecentsButton = () => {
 
 let Catagory = (props) => {
 
+
   return(
     <View>
       <View style={{paddingLeft: 10, paddingBottom: 10, paddingTop: 20}}>
@@ -396,7 +416,7 @@ let Catagory = (props) => {
               horizontal
               renderItem={({ item }) => (
                       
-                <FeedBox rowName={item.title}rowDesc={item.artist} imageSource={item.imagePath} setCurrentSong={props.setCurrentSong} songdata={item}></FeedBox>
+                <FeedBox rowName={item.title}rowDesc={item.artist} imageSource={item.imagePath} setCurrentSong={props.setCurrentSong} songdata={item} currSong={props.currSong}></FeedBox>
                       
               )}
               keyExtractor={item => item._id} // Unique key for each item

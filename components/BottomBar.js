@@ -87,6 +87,7 @@ let BottomBar = (props) => {
       }
       if (status.didJustFinish || status.positionMillis >= status.durationMillis - 500) {
         await stopSound();
+        skip_next_button();
       }
     });
     lastplayedsound = props.currSong.mp3Path;
@@ -162,6 +163,54 @@ let BottomBar = (props) => {
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
+  let skip_previous_button = () =>{
+  
+    if((props.trendingContent.length > 0))
+      {
+        //console.log(props.trendingContent, props.currSong);
+        //console.log(props.trendingContent.length)
+        
+        for (let i = 0; i < props.trendingContent.length; i++)
+          {
+            //console.log(props.trendingContent[i].title);
+
+            if((props.trendingContent[i]._id === props.currSong._id))
+              {
+                let check_i = i + 1;
+                check_i = (i - 1 + props.trendingContent.length) % props.trendingContent.length;
+
+                console.log(props.trendingContent[check_i].title, "poop");
+
+                props.setCurrentSong(props.trendingContent[check_i]);
+              }
+          }
+      }
+  }
+
+  let skip_next_button = () =>{
+  
+    if((props.trendingContent.length > 0))
+      {
+        //console.log(props.trendingContent, props.currSong);
+        //console.log(props.trendingContent.length)
+        
+        for (let i = 0; i < props.trendingContent.length; i++)
+          {
+            //console.log(props.trendingContent[i].title);
+
+            if((props.trendingContent[i]._id === props.currSong._id))
+              {
+                let check_i = i + 1;
+                check_i = (i + 1) % props.trendingContent.length;
+
+                console.log(props.trendingContent[check_i].title, "poop");
+
+                props.setCurrentSong(props.trendingContent[check_i]);
+              }
+          }
+      }
+  }
+
 
   
 
@@ -186,7 +235,7 @@ let BottomBar = (props) => {
       <View style={styles.bottomBarGroupCenter}>
 
         <View style={styles.bottomBarGroupCenter_Top}>
-          <WindowBarButton2UI imageSource={require('../images/png/skip_previous.png')} activation={button_test2}></WindowBarButton2UI>
+          <WindowBarButton2UI imageSource={require('../images/png/skip_previous.png')} activation={skip_previous_button}></WindowBarButton2UI>
           
           { !isPlaying ? (
                       <WindowBarButton2UI imageSource={require('../images/png/play_arrow.png')} activation={playSoundButton}></WindowBarButton2UI>
@@ -195,7 +244,7 @@ let BottomBar = (props) => {
                     )
           }
 
-          <WindowBarButton2UI imageSource={require('../images/png/skip_forward.png')} activation={button_test}></WindowBarButton2UI>
+          <WindowBarButton2UI imageSource={require('../images/png/skip_forward.png')} activation={skip_next_button}></WindowBarButton2UI>
         </View>
 
         <View style={styles.bottomBarGroupCenter_Bottom}>

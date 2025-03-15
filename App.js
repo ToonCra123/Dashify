@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Platform, StyleSheet, View, Modal } from 'react-native';
 import { TopBar } from './components/TopBar.js';
 import { BottomBar } from './components/BottomBar.js';
@@ -26,6 +26,8 @@ let currSongEx = {
 export default function App() {
 
 const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]); //To update trending songs call 'requestTrendingSongs' DO NOT set 'fetchedTrendingSongs' manually
+
+
 const [shouldStopSong, setShouldStopSong] = useState(false);
 
 let requestTrendingSongs = async () => {}; //empty var for all we care
@@ -33,14 +35,23 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
   if(fetchedTrendingSongs.length === 0) {
     requestTrendingSongs = async (a) => {
       let tSongs = await getTrending(a);
-      setFetchedTrendingSongs(tSongs);      
+      setFetchedTrendingSongs(tSongs);
+      
+      //setCurrSong(fetchedTrendingSongs[0]);
       return fetchedTrendingSongs;
     }
   }
   requestTrendingSongs(20);
+
+  useEffect(() => {
+    if(fetchedTrendingSongs.length > 0)
+      {
+        setCurrSong(fetchedTrendingSongs[0]);
+      }
+  }, [fetchedTrendingSongs]);
   
 
-  const [currSong, setCurrSong] = useState(currSongEx);
+  const [currSong, setCurrSong] = useState({});
   const [selected_content, setSelectedContent] = useState(false);
 
   let content_selected = (v) =>{
@@ -66,11 +77,12 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
       <View style={styles.container}>
         <TopBar selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
         { (fetchedTrendingSongs.length > 0) ?
-          <Centerbar selected_content={selected_content} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
+          <Centerbar selected_content={selected_content} currSong={currSong} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
           : null
         }
         <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} 
                   setCurrentSong={set_song} shouldStopSong={shouldStopSong} setShouldStopSong={setShouldStopSong}
+                  trendingContent={fetchedTrendingSongs}
         />
       </View>
     );

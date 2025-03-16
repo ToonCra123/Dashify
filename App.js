@@ -10,6 +10,20 @@ import PlaylistPopup from "./components/UI/CreatePlaylist.js";
 
 import { getPlaylist, getSong, getTrending } from './components/UI/WebRequests.js';
 
+
+
+//import { LoginWindow } from './components/UI/Login.js';         to import login func from 'Login.js', if your func a different name, change 'LoginWindow' to your function name
+
+// remember to export login function in Login.js like this 
+// export function your_func_name(){}
+// or:
+// export let your_func_name = () => {}
+// both mean same thing
+
+
+
+
+
 // This is example for song 
 let currSongEx = {
   "_id": "67d25c5031ba33534c6a6e2b",
@@ -72,26 +86,38 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
 
 
-  if(Platform.OS === 'web') {
-    return (
-      <View style={styles.container}>
-        <TopBar selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
-        { (fetchedTrendingSongs.length > 0) ?
-          <Centerbar selected_content={selected_content} currSong={currSong} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
-          : null
-        }
-        <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} 
-                  setCurrentSong={set_song} shouldStopSong={shouldStopSong} setShouldStopSong={setShouldStopSong}
-                  trendingContent={fetchedTrendingSongs}
-        />
-      </View>
-    );
-  } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
-    return (
-      <View style={styles.container}>
-        <MainMobile />
-      </View>
-    );
+if(true) //for log in page testing <<<<<
+  {
+    //return(<LoginWindow></LoginWindow>);              uncomment and put login function here when ready, make sure to import it ^^^^
+  }
+
+
+
+
+  else
+  {
+
+    if(Platform.OS === 'web') {
+      return (
+        <View style={styles.container}>
+          <TopBar selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
+          { (fetchedTrendingSongs.length > 0) ?
+            <Centerbar selected_content={selected_content} currSong={currSong} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
+            : null
+          }
+          <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} 
+                    setCurrentSong={set_song} shouldStopSong={shouldStopSong} setShouldStopSong={setShouldStopSong}
+                    trendingContent={fetchedTrendingSongs}
+          />
+        </View>
+      );
+    } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
+      return (
+        <View style={styles.container}>
+          <MainMobile />
+        </View>
+      );
+    }
   }
 }
 

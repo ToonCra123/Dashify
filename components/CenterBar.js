@@ -179,10 +179,7 @@ function CenterbarWindowContentDetails(props){
           <FlatList
               data={songlist}
               renderItem={({ item }) => (
-                      
-                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>
-                      
-        
+                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>   
               )}
               keyExtractor={item => item._id} // Unique key for each item
             >
@@ -230,7 +227,7 @@ function CenterbarWindow(props){
           </View>
           
           <View style={styles.PlaylistBarGroupRight}>
-            <PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>
+            {/*<PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>*/}
           </View>
         
         </View>
@@ -246,7 +243,8 @@ function CenterbarWindow(props){
           </View>
 
           <View style={styles.PlaylistSearchbarGroupRight}>
-            <RecentsButton></RecentsButton>
+            <PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>
+            {/*<RecentsButton></RecentsButton>*/}
           </View>
         </View>
 
@@ -349,24 +347,55 @@ let FeedBox = (props) => {
     props.setCurrentSong(props.songdata)
   }
 
+  function truncateString(str, amount = 30) {
+    if (str.length > amount) {
+      return str.slice(0, amount) + '...';
+    }
+    return str;
+  }
+
   return(
     <TouchableOpacity onPress={triggerFeedBox}>
 
       <View 
-        style={isHovered || isSelected ? styles.feedBoxHovered : styles.feedBox} 
+        style={isHovered ? styles.feedBoxHovered : styles.feedBox} 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         >
-        <Image
-          source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
-          style={props.isArtst ? styles.feedArtistImage : styles.feedPlaylistImage}
-          />
         
-        <View>
-          <View style={{paddingTop: 10}}>
-            <Text style={{color:"white"}}>{props.rowName ? props.rowName: "Playlist Name"}</Text>
+        <View style={{flex: 1}}>
+          <View style={{}}>
+            <View 
+              style={{
+                
+                height: "100%",
+                width: 170,
+                aspectRatio: 1,
+                borderRadius: 10,
+                overflow: "hidden",
+              }}
+            >
+            
+              <ImageBackground
+                source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
+                style={{flex:1,}}
+                />
+              
+            </View>
+          </View>
+          
+          <View style={{flex: 1}}>
+            
+            <View style={{paddingTop: 5}}>
+              <Text style={{color:"white", fontWeight: "bold", fontSize: "1.25rem"}}>{props.rowName ? truncateString(props.rowName) : "Playlist Name"}</Text>
+            </View>
+            <View style={{}}>
+              <Text style={{color:"white"}}>{props.rowDesc ? truncateString(props.rowDesc) : "Artist Name"}</Text>
+            </View>
+
           </View>
         </View>
+        
       </View>
 
     </TouchableOpacity>
@@ -397,6 +426,7 @@ let RecentsButton = () => {
   </TouchableOpacity>
   );
 }
+
 
 
 let Catagory = (props) => {
@@ -450,6 +480,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 10,
         gap: 10,
+        overflow: "hidden",
       },
     
       centerbarWindow:{
@@ -625,29 +656,28 @@ const styles = StyleSheet.create({
 
       feedBox:{
         flexDirection: "column",
+        paddingTop: 10,
         alignItems: "center",
-        justifyContent: "center",
 
-        columnGap: 10,
-
-        width: "10rem",
-        height: "10rem",
+        aspectRatio: 1,
+        width: 200,
+        height: 275,
+        overflow: "hidden",
       },
+
       feedBoxHovered:{
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        columnGap: 10,
 
+        paddingTop: 10,
         backgroundColor: "rgba(255, 255, 255, 0.1)",
+        aspectRatio: 1,
+        width: 200,
+        height: 275,
+        overflow: "hidden",
 
-        width: "10rem",
-        height: "10rem",
 
-        rowGap:0,
-
-
-        borderRadius: 6,
+        borderRadius: 5,
       },
 
       libraryRowSelected:{

@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     },
 
     window_icon2:{
-        height: "2.5rem",
-        width: "2.5rem",
+        height: 35,
+        width: 35,
         resizeMode: "contain",
     },
     

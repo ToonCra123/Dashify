@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         backgroundColor: "#08090A",
         alignItems: "center",
+        overflow: "hidden",
       },
 
       topBarGroupLeft:{

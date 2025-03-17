@@ -2,17 +2,25 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 
-let MobileNavBar = () => {
+let MobileNavBar = (props) => {
+    let pageHandler = (page) => {
+        if (!props.pageHandler) return;
+        props.pageHandler(page);
+    }
+
     return (
         <View style={styles.mainContent}>
             <View style={styles.container}>
                 <MobileNavBarButton 
+                    pageHandler={() => pageHandler(0)}
                     imageSource={require("../../../images/png/home.png")}
                     text={"Home"}
                 />
                 <MobileNavBarButton 
+                    pageHandler={() => pageHandler(1)}
                     imageSource={require("../../../images/png/search.png")}
                     text={"Search"}
+
                 />
                 <MobileNavBarButton 
                     imageSource={require("../../../images/png/library.png")}
@@ -26,7 +34,7 @@ let MobileNavBar = () => {
 
 let MobileNavBarButton = (props) => {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.pageHandler}>
             <View style={styles.buttonContainer}>
                 {props.imageSource ? (                
                     <Image 

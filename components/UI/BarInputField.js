@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, Pressable } from 'react-native';
 
 let BarInput = (props) => {
@@ -15,6 +15,14 @@ let BarInput = (props) => {
     const handleHover = (v) => {
         setIsHovered(v);
     }
+
+    useEffect(() => {
+
+        props.setQuery(text);
+
+    }, [text]);
+
+
 
 
 

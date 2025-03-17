@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 
 let BarButtonUI = (props) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    let toggle_hover = (v) => {
+
+        setIsHovered(v);
+
+    }
+
     return (
         <TouchableOpacity onPress={props.activation}>
             <View>
@@ -15,12 +23,34 @@ let BarButtonUI = (props) => {
 }
 
 let BarButton = (props) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    let toggle_hover = (v) => {
+
+        setIsHovered(v);
+
+    }
+
+    let button_icon = (data) => {
+
+        if(data){
+            return isHovered ? data.homeHovered : data.home;
+        }
+        else
+        {
+            return props.imageSource;
+        }
+    }
+    
+
+    
+
     return (
-        <TouchableOpacity onPress={props.activation}>
-            <View style={styles.icon_container}>
+        <TouchableOpacity onPress={props.activation} onMouseEnter={() => toggle_hover(true)} onMouseLeave={() => toggle_hover(false)}>
+            <View style={isHovered ? styles.icon_containerHovered : styles.icon_container}>
                 <Image 
                     style={styles.icon}
-                    source={props.imageSource}
+                    source={isHovered ? props.imageSourceHovered : props.imageSource}
                 />
             </View>
         </TouchableOpacity>
@@ -28,6 +58,14 @@ let BarButton = (props) => {
 }
 
 let WindowBarButtonUI = (props) =>{
+    const [isHovered, setIsHovered] = useState(false);
+
+    let toggle_hover = (v) => {
+
+        setIsHovered(v);
+        console.log(isHovered, "after hovered state");
+    }
+
     return(
         <TouchableOpacity onPress={props.activation}>
             <View>
@@ -41,9 +79,18 @@ let WindowBarButtonUI = (props) =>{
 }
 
 let WindowBarButton2UI = (props) =>{
+
+    const [isHovered, setIsHovered] = useState(false);
+
+    let toggle_hover = (v) => {
+
+        setIsHovered(v);
+        console.log(isHovered, "after hovered state");
+    }
+
     return(
-        <TouchableOpacity onPress={props.activation}>
-            <View>
+        <TouchableOpacity onPress={props.activation} onMouseEnter={() => toggle_hover(true)} onMouseLeave={() => toggle_hover(false)}>
+            <View style={isHovered ? styles.button_hovered : styles.button_idle}>
                 <Image 
                     style={styles.window_icon2}
                     source={props.imageSource}
@@ -54,6 +101,13 @@ let WindowBarButton2UI = (props) =>{
 }
 
 const styles = StyleSheet.create({
+    button_hovered: {
+        opacity: 1,
+        transform: [{scale: 1.1}]
+    },
+    button_idle: {
+        opacity: 0.7,
+    },
     icon: {
         height: "1.5rem",
         width: "1.5rem",
@@ -79,6 +133,13 @@ const styles = StyleSheet.create({
     
     icon_container:{
         padding: 10,
+        opacity: 0.6,
+    },
+
+    icon_containerHovered:{
+        padding: 10,
+        opacity: 1,
+        transform: [{scale: 1.2}]
     },
 });
 

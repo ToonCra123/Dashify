@@ -314,7 +314,10 @@ let BottomBar = (props) => {
                     )
           }
 
-          <WindowBarButton2UI imageSource={require('../images/png/skip_forward.png')} activation={skip_next_button}></WindowBarButton2UI>
+          <WindowBarButton2UI 
+            imageSource={require('../images/png/skip_forward.png')} 
+            activation={skip_next_button}>
+          </WindowBarButton2UI>
         </View>
 
         <View style={styles.bottomBarGroupCenter_Bottom}>

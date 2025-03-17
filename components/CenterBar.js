@@ -16,19 +16,126 @@ import { getPlaylist, getSong, getTrending } from './UI/WebRequests.js';
 
 function Centerbar(props)
 {
+  
 
   return(
     <View style={styles.centerbar}>
       <CenterbarWindow selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindow>
 
       {
-        props.selected_content ? 
-          (<CenterbarWindowContentDetails selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindowContentDetails>)
-        : 
-          (<CenterbarWindowFeed selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} trendingContent={props.trendingContent} setCurrentSong={props.setCurrentSong} currSong={props.currSong}></CenterbarWindowFeed>)
-      }
+  props.searchQuery.length > 0 ? (
+    <CenterBarWindowSearchResults 
+      selected_content={props.selected_content} 
+      setSelectedContent={props.setSelectedContent} 
+      setCurrentSong={props.setCurrentSong} 
+      songSearchData={props.songSearchData} 
+      artistSearchData={props.artistSearchData} 
+    />
+  ) : props.selected_content ? (
+    <CenterbarWindowContentDetails 
+      selected_content={props.selected_content} 
+      setSelectedContent={props.setSelectedContent} 
+      setCurrentSong={props.setCurrentSong} 
+      songSearchData={props.songSearchData} 
+      artistSearchData={props.artistSearchData} 
+    />
+  ) : (
+    <CenterbarWindowFeed 
+      selected_content={props.selected_content} 
+      setSelectedContent={props.setSelectedContent} 
+      trendingContent={props.trendingContent} 
+      setCurrentSong={props.setCurrentSong} 
+      currSong={props.currSong} 
+    />
+  )
+}
 
     </View>
+  );
+}
+
+function CenterBarWindowSearchResults(props){
+  return(
+    <LinearGradient style={styles.centerbarWindowContent}
+    colors={[CONTENTWINDOW_COLOR_GRADIENT, CONTENTWINDOW_COLOR_BASE]}
+    start={{x: 1, y:1}}
+    end={{x: 1, y:0}}>
+
+    <ScrollView style={{width: "100%"}} showsHorizontalScrollIndicator={false}>
+
+        {props.songSearchData.length > 0 ? (
+          <View>
+
+            <View style={{flexDirection: "row", paddingLeft: 10}}>
+              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>Top Result</Text>
+            </View>
+
+            <LibraryRow rowName={props.songSearchData[0].title} rowDesc={props.songSearchData[0].artist} imageSource={props.songSearchData[0].imagePath} year={props.songSearchData[0].year} listens={props.songSearchData[0].listens} setCurrentSong={props.setCurrentSong} songdata={props.songSearchData[0]} currSong={props.currSong}></LibraryRow>   
+
+          </View>
+        ) : null}
+
+        {props.songSearchData.length > 0 ? (
+          <View>
+            <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
+
+            <View style={{flexDirection: "row", paddingLeft: 10}}>
+              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>Songs</Text>
+            </View>
+          </View>
+        ) : null }
+      
+
+        { props.songSearchData.length > 0 ? (
+          <FlatList
+              data={props.songSearchData.slice(1)} //.slice(1) cuts first index since we are already showing that seperately
+              renderItem={({ item, index }) => (
+                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}  setCurrentSong={props.setCurrentSong} songdata={item} currSong={props.currSong}></LibraryRow>   
+              )}
+              keyExtractor={item => item._id}
+            >
+            
+          </FlatList>
+          
+          ) : null
+        }
+
+
+
+
+        { props.artistSearchData.length > 1 ? (
+
+          <View>
+          <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
+
+          <View style={{flexDirection: "row", paddingLeft: 10}}>
+            <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>By Artists</Text>
+          </View>
+
+          <FlatList
+                data={props.artistSearchData}
+                renderItem={({ item }) => (
+                  <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens} setCurrentSong={props.setCurrentSong} songdata={item} currSong={props.currSong}></LibraryRow>   
+                )}
+                keyExtractor={item => item._id}
+              >
+            
+            </FlatList>
+          </View>
+
+          ) : null
+        }
+
+        { props.songSearchData.length === 0  && props.artistSearchData.length === 1 ? (
+          <View style={{paddingLeft: 10}}>
+            <Text style={{color: "white", fontSize: "3rem", fontWeight: "bold"}}>No Results :(</Text>
+          </View>
+          
+          ) : null
+        }
+      </ScrollView>
+      
+    </LinearGradient>
   );
 }
 
@@ -271,10 +378,12 @@ const LibraryRow = (props) => {
 
   // Add this handler function
   const handlePress = () => {
-    console.log('Row pressed');
     if (props.activation) {
       props.activation();
     }
+
+    props.setCurrentSong(props.songdata);
+    console.log(props.songdata, props.setCurrentSong);
   };
 
   return(

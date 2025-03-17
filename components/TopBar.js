@@ -1,12 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { BarButton } from './UI/BarButton';
 import { BarInput } from './UI/BarInputField';
 import { ImageBackground } from 'react-native-web';
 
-let TopBar = () => {
+import { searchSongByArtist, searchSongByTitle } from './UI/WebRequests';
+
+let TopBar = (props) => {
 
     let haspfp = true;
+    const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            try{
+                if(searchQuery.length > 0){
+                    let songData = await searchSongByTitle(searchQuery, 20);
+                    let artistData; //await searchSongByArtist(searchQuery, 20);
+
+                    artistData = [{
+                        __v: 0,
+                        _id: "67d266b231ba33534c6a6e5a",
+                        artist: "Metallica",
+                        imagePath: "http://api.toonhosting.net/img/image-1741842097318-265167331.jpg",
+                        listens: 0,
+                        mp3Path: "http://api.toonhosting.net/mp3/mp3-1741842097319-660448700.mp3",
+                        title: "(Anesthesia) Pulling Teeth",
+                        year: 1983,
+                    }] //search by artist api call no work this to test if it did come back with results
+
+                    let data = [songData, artistData]
+
+                    props.setQueryData(data);
+                    props.setQuery(searchQuery);
+
+                    //console.log(searchQuery, searchQuery.length);
+
+                    //console.log(artistData, searchQuery);
+                }
+                else
+                {
+                    props.setQuery(searchQuery);
+                }
+            }
+            catch (error)
+            {
+                console.log("ERROR FETCHING SEARCH DATA: ", error);
+            }
+        }
+
+        fetchData();
+
+    }, [searchQuery]);
+
+
+    const home_icons = {
+        home: require("../images/png/home.png"),
+        homeHovered: require("../images/png/home_solid.png"),
+    }
 
     return (
         <View style={styles.topBar}>
@@ -18,9 +71,10 @@ let TopBar = () => {
 
             <View style={styles.topBarGroupCenter}>
                 <View style={{justifyContent: "center", backgroundColor: "rgba(255, 255, 255, 0.1)", borderRadius: 35}}>
-                    <BarButton imageSource={require('../images/png/home.png')} activation={buttonTest2}></BarButton>
+                    <BarButton imageSource={home_icons.home} imageSourceHovered={home_icons.homeHovered} activation={buttonTest2}></BarButton>
                 </View>
-                <BarInput placeholder="What do you want to play?"></BarInput>
+
+                <BarInput placeholder="What do you want to play?" setQuery={setSearchQuery}></BarInput>
             </View>
             
             { haspfp ? (

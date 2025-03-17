@@ -22,21 +22,6 @@ import { getPlaylist, getSong, getTrending } from './components/UI/WebRequests.j
 
 
 
-
-
-// This is example for song 
-let currSongEx = {
-  "_id": "67d25c5031ba33534c6a6e2b",
-  "title": "Rape Me",
-  "artist": "Nirvana",
-  "year": 1993,
-  "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741839439795-132461340.mp3",
-  "imagePath": "http://api.toonhosting.net/img/image-1741839439744-9901521.jpg",
-  "listens": 0,
-  "__v": 0
-}
-
-
 export default function App() {
 
 const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]); //To update trending songs call 'requestTrendingSongs' DO NOT set 'fetchedTrendingSongs' manually
@@ -86,7 +71,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
 
 
-if(true) //for log in page testing <<<<<
+  if(false) //for log in page testing <<<<<
   {
     //return(<LoginWindow></LoginWindow>);              uncomment and put login function here when ready, make sure to import it ^^^^
   }

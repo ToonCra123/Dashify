@@ -7,6 +7,7 @@ import { WindowInput } from './UI/WindowInputField'
 import WebScrollView from './UI/WebScrollView';
 import Popup from './UI/UploadSong.js';
 import PlaylistPopup from './UI/CreatePlaylist.js';
+import ParentComponent from './UI/ParentComponents.js';
 import { FlatList, ImageBackground, ScrollView } from 'react-native-web';
 import { LinearGradient } from 'expo-linear-gradient';
 import {MAIN_COLOR_GRADIENT, MAIN_COLOR_BASE, CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT} from './UI/Colors.js'
@@ -415,6 +416,7 @@ function CenterbarWindow(props){
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
+            <ParentComponent/>
             <LibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={props.setSelectedContent}></LibraryRow>
           </View>
         </ScrollView>

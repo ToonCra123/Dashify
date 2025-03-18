@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, Image, StyleSheet, Platform } from 'react-native';
 
 const PlaylistPopup = ({ onCreatePlaylist }) => {
+  
   const [isVisible, setIsVisible] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
   const [description, setDescription] = useState('');
-
 
   const handleSubmit = () => {
     if (onCreatePlaylist) {
@@ -73,8 +73,6 @@ const PlaylistPopup = ({ onCreatePlaylist }) => {
 };
 
 
-
-// Keep the same styles as previous version
 const styles = StyleSheet.create({
   button: {
     height: "3vh",

@@ -1,14 +1,14 @@
-import React, { useState , useEffect} from "react";
-import { Platform, StyleSheet, View, Modal } from 'react-native';
-import { TopBar } from './components/TopBar.js';
-import { BottomBar } from './components/BottomBar.js';
-import { Centerbar } from './components/CenterBar.js';
-import AlbumView from './AlbumView.js';
-import 'react-native-gesture-handler';
+import React, { useState, useEffect } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { TopBar } from "./components/TopBar.js";
+import { BottomBar } from "./components/BottomBar.js";
+import { Centerbar } from "./components/CenterBar.js";
+import AlbumView from "./AlbumView.js";
+import "react-native-gesture-handler";
 import MainMobile from "./components/mobile/MainMobile.js";
-import PlaylistPopup from "./components/UI/CreatePlaylist.js";
-
-import { getPlaylist, getSong, getTrending } from './components/UI/WebRequests.js';
+import { getPlaylist, getSong, getTrending } from "./components/UI/WebRequests.js";
 
 
 
@@ -20,6 +20,7 @@ import { getPlaylist, getSong, getTrending } from './components/UI/WebRequests.j
 // export let your_func_name = () => {}
 // both mean same thing
 
+const Stack = createStackNavigator();
 
 
 export default function App() {
@@ -89,20 +90,55 @@ if(false) //for log in page testing <<<<<
 
   else
   {
-
-    if(Platform.OS === 'web') {
+    if (Platform.OS === 'web') {
       return (
-        <View style={styles.container}>
-          <TopBar selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song} setQueryData={song_search_window} setQuery={setSearchQuery}/>
-          { (fetchedTrendingSongs.length > 0) ?
-            <Centerbar selected_content={selected_content} currSong={currSong} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song} songSearchData={songSearchData} artistSearchData={artistSearchData} searchQuery={searchQuery}/>
-            : null
-          }
-          <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} 
-                    setCurrentSong={set_song} shouldStopSong={shouldStopSong} setShouldStopSong={setShouldStopSong}
-                    trendingContent={fetchedTrendingSongs}
-          />
-        </View>
+        <NavigationContainer>
+          <View style={styles.container}>
+            <TopBar
+              selected_content={selected_content}
+              setSelectedContent={content_selected}
+              setCurrentSong={set_song}
+              setQueryData={song_search_window}  // Added missing prop
+              setQuery={setSearchQuery}         
+            />
+            
+            {fetchedTrendingSongs.length > 0 && (
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  cardStyle: { backgroundColor: '#08090A' }
+                }}
+              >
+                <Stack.Screen name="Home">
+                  {(props) => (
+                    <Centerbar
+                      {...props}
+                      selected_content={selected_content}
+                      currSong={currSong}
+                      setSelectedContent={content_selected}
+                      trendingContent={fetchedTrendingSongs}
+                      setCurrentSong={set_song}
+                      songSearchData={songSearchData}      // Added missing prop
+                      artistSearchData={artistSearchData}   // Added missing prop
+                      searchQuery={searchQuery}             // Added missing prop
+                    />
+                  )}
+                </Stack.Screen>
+                <Stack.Screen name="AlbumView" component={AlbumView} />
+              </Stack.Navigator>
+            )}
+    
+            <BottomBar
+              currSong={currSong}
+              selected_content={selected_content}
+              setSelectedContent={content_selected}
+              setCurrentSong={set_song}
+              shouldStopSong={shouldStopSong}
+              setShouldStopSong={setShouldStopSong}
+              trendingContent={fetchedTrendingSongs}
+            />
+          </View>
+        </NavigationContainer>
       );
     } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
       return (

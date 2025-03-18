@@ -16,43 +16,71 @@ import { getPlaylist, getSong, getTrending } from './UI/WebRequests.js';
 
 function Centerbar(props)
 {
-  
+  const collapse_menu_icons = {
+    left_open: require("./../images/png/arrow_menu_open.png"),
+    left_close: require("./../images/png/arrow_menu_close.png"),
+    right_open: require("./../images/png/arrow_menu_close.png"),
+    right_close: require("./../images/png/arrow_menu_open.png"),
+  }
 
-  return(
-    <View style={styles.centerbar}>
-      <CenterbarWindow selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindow>
+  
+  const [collapseMenu, setCollapseMenu] = useState(false);
+  const [collapseMenuIcon, setCollapseMenuIcon] = useState(collapseMenu ? collapse_menu_icons.left_close : collapse_menu_icons.left_open);
+
+
+  return (
+    
+
+   <View style={styles.centerbar}>
+
+      {!collapseMenu ? (
+      <CenterbarWindow 
+        collapseMenu={collapseMenu} 
+        setCollapseMenu={setCollapseMenu}
+        collapseMenuIcon={collapseMenuIcon}
+        setCollapseMenuIcon={setCollapseMenuIcon}
+        collapse_menu_icons={collapse_menu_icons}
+
+        selected_content={props.selected_content} 
+        setSelectedContent={props.setSelectedContent} 
+        setCurrentSong={props.setCurrentSong}
+
+        /> ) : null}
       {
+
+      
         
-  props.searchQuery.length > 0 ? (
-    <CenterBarWindowSearchResults 
-      selected_content={props.selected_content} 
-      setSelectedContent={props.setSelectedContent} 
-      setCurrentSong={props.setCurrentSong} 
-      songSearchData={props.songSearchData} 
-      artistSearchData={props.artistSearchData} 
-    />
-  ) : props.selected_content ? (
-    <CenterbarWindowContentDetails 
-      selected_content={props.selected_content} 
-      setSelectedContent={props.setSelectedContent} 
-      setCurrentSong={props.setCurrentSong} 
-      songSearchData={props.songSearchData} 
-      artistSearchData={props.artistSearchData} 
-    />
-  ) : (
-    <CenterbarWindowFeed 
-      selected_content={props.selected_content} 
-      setSelectedContent={props.setSelectedContent} 
-      trendingContent={props.trendingContent} 
-      setCurrentSong={props.setCurrentSong} 
-      currSong={props.currSong} 
-    />
-  )
-}
+      props.searchQuery.length > 0 ? (
+        <CenterBarWindowSearchResults 
+          selected_content={props.selected_content} 
+          setSelectedContent={props.setSelectedContent} 
+          setCurrentSong={props.setCurrentSong} 
+          songSearchData={props.songSearchData} 
+          artistSearchData={props.artistSearchData} 
+        />
+      ) : props.selected_content ? (
+        <CenterbarWindowContentDetails 
+          selected_content={props.selected_content} 
+          setSelectedContent={props.setSelectedContent} 
+          setCurrentSong={props.setCurrentSong} 
+          songSearchData={props.songSearchData} 
+          artistSearchData={props.artistSearchData} 
+        />
+      ) : (
+        <CenterbarWindowFeed 
+          selected_content={props.selected_content} 
+          setSelectedContent={props.setSelectedContent} 
+          trendingContent={props.trendingContent} 
+          setCurrentSong={props.setCurrentSong} 
+          currSong={props.currSong} 
+        />
+      )
+    }
 
     </View>
   );
 }
+
 
 function CenterBarWindowSearchResults(props){
 
@@ -324,6 +352,18 @@ function CenterbarWindow(props){
       description: newPlaylist.description
     }]);
   }
+
+
+  let toggle_menu_state = (v) => {
+    props.setCollapseMenu(!props.collapseMenu);
+
+  }
+
+  useEffect(() => {
+    props.collapseMenu ? props.setCollapseMenuIcon(props.collapse_menu_icons.left_close) : props.setCollapseMenuIcon(props.collapse_menu_icons.left_open);
+  }, [props.collapseMenu]);
+
+
   
     return(
       <LinearGradient 
@@ -335,14 +375,21 @@ function CenterbarWindow(props){
         <View style={styles.PlaylistBar}>
 
           <View style={styles.PlaylistBarGroupLeft}>
+
           <WindowBarButtonUI
                 imageSource={require('../images/png/library.png')}>
                 </WindowBarButtonUI>
             <Text style={styles.libraryHeader}>Your Library</Text>
           </View>
+
+
           
           <View style={styles.PlaylistBarGroupRight}>
-            {/*<PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>*/}
+            <WindowBarButtonUI
+              imageSource={props.collapseMenuIcon}
+              activation={toggle_menu_state}
+              >
+            </WindowBarButtonUI>
           </View>
         
         </View>
@@ -592,6 +639,15 @@ const styles = StyleSheet.create({
       },
     
       centerbar:{
+        flex:1,
+        flexDirection:"row",
+        alignItems: "center",
+        paddingHorizontal: 10,
+        gap: 10,
+        overflow: "hidden",
+      },
+
+      CenterBarWindowColapsed:{
         flex:1,
         flexDirection:"row",
         alignItems: "center",

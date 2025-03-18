@@ -52,7 +52,7 @@ let MobileNavBarButton = (props) => {
 const styles = StyleSheet.create({
     mainContent: {
         flex: 1,
-        backgroundColor: '#08090A',
+        backgroundColor: '#181522',
         alignItems: 'center',
         justifyContent: 'center',
         height: "100%",
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'space-around',
-        backgroundColor: "black",
+        backgroundColor: "#181522",
         width: "100%",
     },
     buttonContainer: {

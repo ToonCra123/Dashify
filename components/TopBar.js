@@ -3,11 +3,15 @@ import { StyleSheet, View, Text } from 'react-native';
 import { BarButton } from './UI/BarButton';
 import { BarInput } from './UI/BarInputField';
 import { ImageBackground } from 'react-native-web';
-
+import { useNavigation } from '@react-navigation/native';
 import { searchSongByArtist, searchSongByTitle } from './UI/WebRequests';
+
+
 
 let TopBar = (props) => {
 
+    const navigation = useNavigation();
+    
     let haspfp = true;
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -52,8 +56,12 @@ let TopBar = (props) => {
     return (
         <View style={styles.topBar}>
             <View style={styles.topBarGroupLeft}>
-                <BarButton imageSource={require('../images/png/more.png')} activation={buttonTest2} />
-                <BarButton imageSource={require('../images/png/arrow_back.png')} activation={buttonTest} />
+                <BarButton imageSource={require('../images/png/more.png')} activation={buttonTest} />
+                <BarButton imageSource={require('../images/png/arrow_back.png')} activation={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        }}/>
                 <BarButton imageSource={require('../images/png/arrow_forward.png')} activation={buttonTest} />
             </View>
 

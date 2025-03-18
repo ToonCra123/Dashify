@@ -77,7 +77,7 @@ let BottomBar = (props) => {
       }
     );
     
-    getSong(props.currSong._id);
+    getSong(props.currSong._id, true);
     setSound(sound);
   
     sound.setOnPlaybackStatusUpdate(async (status) => {

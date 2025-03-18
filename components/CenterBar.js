@@ -21,8 +21,8 @@ function Centerbar(props)
   return(
     <View style={styles.centerbar}>
       <CenterbarWindow selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindow>
-
       {
+        
   props.searchQuery.length > 0 ? (
     <CenterBarWindowSearchResults 
       selected_content={props.selected_content} 
@@ -55,6 +55,14 @@ function Centerbar(props)
 }
 
 function CenterBarWindowSearchResults(props){
+
+  const search_result_catagories = {
+    songResultsTitle: "Songs",
+    artistResultsTitle: "By Artists",
+    topResultTitle: "Top Result",
+    noResultTitle: "No Results :(",
+  }
+
   return(
     <LinearGradient style={styles.centerbarWindowContent}
     colors={[CONTENTWINDOW_COLOR_GRADIENT, CONTENTWINDOW_COLOR_BASE]}
@@ -67,7 +75,7 @@ function CenterBarWindowSearchResults(props){
           <View>
 
             <View style={{flexDirection: "row", paddingLeft: 10}}>
-              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>Top Result</Text>
+              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>{search_result_catagories.topResultTitle}</Text>
             </View>
 
             <LibraryRow rowName={props.songSearchData[0].title} rowDesc={props.songSearchData[0].artist} imageSource={props.songSearchData[0].imagePath} year={props.songSearchData[0].year} listens={props.songSearchData[0].listens} setCurrentSong={props.setCurrentSong} songdata={props.songSearchData[0]} currSong={props.currSong}></LibraryRow>   
@@ -80,7 +88,7 @@ function CenterBarWindowSearchResults(props){
             <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
 
             <View style={{flexDirection: "row", paddingLeft: 10}}>
-              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>Songs</Text>
+              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>{search_result_catagories.songResultsTitle}</Text>
             </View>
           </View>
         ) : null }
@@ -103,13 +111,13 @@ function CenterBarWindowSearchResults(props){
 
 
 
-        { props.artistSearchData.length > 1 ? (
+        { props.artistSearchData.length > 0 ? (
 
           <View>
           <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
 
           <View style={{flexDirection: "row", paddingLeft: 10}}>
-            <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>By Artists</Text>
+            <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>{search_result_catagories.artistResultsTitle}</Text>
           </View>
 
           <FlatList
@@ -126,9 +134,9 @@ function CenterBarWindowSearchResults(props){
           ) : null
         }
 
-        { props.songSearchData.length === 0  && props.artistSearchData.length === 1 ? (
+        { props.songSearchData.length === 0  && props.artistSearchData.length === 0 ? (
           <View style={{paddingLeft: 10}}>
-            <Text style={{color: "white", fontSize: "3rem", fontWeight: "bold"}}>No Results :(</Text>
+            <Text style={{color: "white", fontSize: "3rem", fontWeight: "bold"}}>{search_result_catagories.noResultTitle}</Text>
           </View>
           
           ) : null

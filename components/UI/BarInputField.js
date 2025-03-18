@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, Pressable }
 
 let BarInput = (props) => {
 
-    const [text, setText] = useState(props.initalValue);
+    const [text, setText] = useState(props.initalValue ? props.initalValue: "");
     const [isToggled, setIsToggled] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 

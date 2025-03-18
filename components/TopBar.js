@@ -17,28 +17,15 @@ let TopBar = (props) => {
 
             try{
                 if(searchQuery.length > 0){
-                    let songData = await searchSongByTitle(searchQuery, 20);
-                    let artistData; //await searchSongByArtist(searchQuery, 20);
+                    props.setQuery(searchQuery);
 
-                    artistData = [{
-                        __v: 0,
-                        _id: "67d266b231ba33534c6a6e5a",
-                        artist: "Metallica",
-                        imagePath: "http://api.toonhosting.net/img/image-1741842097318-265167331.jpg",
-                        listens: 0,
-                        mp3Path: "http://api.toonhosting.net/mp3/mp3-1741842097319-660448700.mp3",
-                        title: "(Anesthesia) Pulling Teeth",
-                        year: 1983,
-                    }] //search by artist api call no work this to test if it did come back with results
+                    let songData = await searchSongByTitle(searchQuery, 20);
+                    let artistData = await searchSongByArtist(searchQuery, 20);
 
                     let data = [songData, artistData]
 
                     props.setQueryData(data);
-                    props.setQuery(searchQuery);
 
-                    //console.log(searchQuery, searchQuery.length);
-
-                    //console.log(artistData, searchQuery);
                 }
                 else
                 {
@@ -48,6 +35,7 @@ let TopBar = (props) => {
             catch (error)
             {
                 console.log("ERROR FETCHING SEARCH DATA: ", error);
+                searchQuery ? props.setQuery(searchQuery) : props.setQuery("");
             }
         }
 

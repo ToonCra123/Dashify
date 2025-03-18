@@ -27,7 +27,7 @@ let MobileNavBar = (props) => {
                     text={"Library"}
                 />
             </View>
-            <View style={{height: 30}}></View>
+            <View style={{height: 30, backgroundColor: '#0E0F10'}}></View>
         </View>
     );
 };
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'space-around',
-        backgroundColor: "#0E0F10",
+        backgroundColor: "black",
         width: "100%",
     },
     buttonContainer: {

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     mainContent: {
         width: "100%",
         flex: 1,
-        backgroundColor: 'blue',
+        backgroundColor: '#0E0F10',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     bottomNavigation: {
         width: "100%",
         height: 100,
-        backgroundColor: 'red',
+        backgroundColor: '#0E0F10',
         alignItems: 'center',
         justifyContent: 'flex-start',
     },

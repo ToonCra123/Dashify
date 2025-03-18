@@ -11,7 +11,6 @@ import MainMobile from "./components/mobile/MainMobile.js";
 import { getPlaylist, getSong, getTrending } from "./components/UI/WebRequests.js";
 
 
-
 //import { LoginWindow } from './components/UI/Login.js';         to import login func from 'Login.js', if your func a different name, change 'LoginWindow' to your function name
 
 // remember to export login function in Login.js like this 
@@ -80,8 +79,6 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
   }
 
   
-
-
 
 if(false) //for log in page testing <<<<<
   {

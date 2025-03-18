@@ -68,7 +68,7 @@ let Trending = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#08090A',
+        backgroundColor: '#181522',
         paddingTop: 80,
         height: "100%",
         width: "100%",
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     songCardText: {
-        color: 'grey',
+        color: '#8b8b8b',
         fontSize: 14,
     },
     songCardImage: {

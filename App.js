@@ -76,6 +76,10 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
     setSongSearchData(data[0]);
     setArtistSearchData(data[1]);
 
+
+  if(false) //for log in page testing <<<<<
+  {
+    //return(<LoginWindow></LoginWindow>);              uncomment and put login function here when ready, make sure to import it ^^^^
   }
 
   

@@ -1,12 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { BarButton } from './UI/BarButton';
 import { BarInput } from './UI/BarInputField';
 import { ImageBackground } from 'react-native-web';
 
-let TopBar = () => {
+import { searchSongByArtist, searchSongByTitle } from './UI/WebRequests';
+
+let TopBar = (props) => {
 
     let haspfp = true;
+    const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            try{
+                if(searchQuery.length > 0){
+                    props.setQuery(searchQuery);
+
+                    let songData = await searchSongByTitle(searchQuery, 20);
+                    let artistData = await searchSongByArtist(searchQuery, 20);
+
+                    let data = [songData, artistData]
+
+                    props.setQueryData(data);
+
+                }
+                else
+                {
+                    props.setQuery(searchQuery);
+                }
+            }
+            catch (error)
+            {
+                console.log("ERROR FETCHING SEARCH DATA: ", error);
+                searchQuery ? props.setQuery(searchQuery) : props.setQuery("");
+            }
+        }
+
+        fetchData();
+
+    }, [searchQuery]);
+
+
+    const home_icons = {
+        home: require("../images/png/home.png"),
+        homeHovered: require("../images/png/home_solid.png"),
+    }
 
     return (
         <View style={styles.topBar}>
@@ -18,9 +59,10 @@ let TopBar = () => {
 
             <View style={styles.topBarGroupCenter}>
                 <View style={{justifyContent: "center", backgroundColor: "rgba(255, 255, 255, 0.1)", borderRadius: 35}}>
-                    <BarButton imageSource={require('../images/png/home.png')} activation={buttonTest2}></BarButton>
+                    <BarButton imageSource={home_icons.home} imageSourceHovered={home_icons.homeHovered} activation={buttonTest2}></BarButton>
                 </View>
-                <BarInput placeholder="What do you want to play?"></BarInput>
+
+                <BarInput placeholder="What do you want to play?" setQuery={setSearchQuery}></BarInput>
             </View>
             
             { haspfp ? (
@@ -57,6 +99,7 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         backgroundColor: "#08090A",
         alignItems: "center",
+        overflow: "hidden",
       },
 
       topBarGroupLeft:{

@@ -67,8 +67,14 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
   }
 
   let onSongChange = () => {}
-  
 
+  const [songSearchData, setSongSearchData] = useState([]);
+  const [artistSearchData, setArtistSearchData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  let song_search_window = (data) => {
+    setSongSearchData(data[0]);
+    setArtistSearchData(data[1]);
 
 
   if(false) //for log in page testing <<<<<
@@ -76,8 +82,14 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
     //return(<LoginWindow></LoginWindow>);              uncomment and put login function here when ready, make sure to import it ^^^^
   }
 
+  
 
 
+
+if(false) //for log in page testing <<<<<
+  {
+    //return(<LoginWindow></LoginWindow>);              uncomment and put login function here when ready, make sure to import it ^^^^
+  }
 
   else
   {
@@ -85,9 +97,9 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
     if(Platform.OS === 'web') {
       return (
         <View style={styles.container}>
-          <TopBar selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song}/>
+          <TopBar selected_content={selected_content} setSelectedContent={content_selected} setCurrentSong={set_song} setQueryData={song_search_window} setQuery={setSearchQuery}/>
           { (fetchedTrendingSongs.length > 0) ?
-            <Centerbar selected_content={selected_content} currSong={currSong} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song}/>
+            <Centerbar selected_content={selected_content} currSong={currSong} setSelectedContent={content_selected} trendingContent={fetchedTrendingSongs} setCurrentSong={set_song} songSearchData={songSearchData} artistSearchData={artistSearchData} searchQuery={searchQuery}/>
             : null
           }
           <BottomBar currSong={currSong} selected_content={selected_content} setSelectedContent={content_selected} 

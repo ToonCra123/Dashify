@@ -16,19 +16,134 @@ import { getPlaylist, getSong, getTrending } from './UI/WebRequests.js';
 
 function Centerbar(props)
 {
+  
 
   return(
     <View style={styles.centerbar}>
       <CenterbarWindow selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindow>
-
       {
-        props.selected_content ? 
-          (<CenterbarWindowContentDetails selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} setCurrentSong={props.setCurrentSong}></CenterbarWindowContentDetails>)
-        : 
-          (<CenterbarWindowFeed selected_content={props.selected_content} setSelectedContent={props.setSelectedContent} trendingContent={props.trendingContent} setCurrentSong={props.setCurrentSong} currSong={props.currSong}></CenterbarWindowFeed>)
-      }
+        
+  props.searchQuery.length > 0 ? (
+    <CenterBarWindowSearchResults 
+      selected_content={props.selected_content} 
+      setSelectedContent={props.setSelectedContent} 
+      setCurrentSong={props.setCurrentSong} 
+      songSearchData={props.songSearchData} 
+      artistSearchData={props.artistSearchData} 
+    />
+  ) : props.selected_content ? (
+    <CenterbarWindowContentDetails 
+      selected_content={props.selected_content} 
+      setSelectedContent={props.setSelectedContent} 
+      setCurrentSong={props.setCurrentSong} 
+      songSearchData={props.songSearchData} 
+      artistSearchData={props.artistSearchData} 
+    />
+  ) : (
+    <CenterbarWindowFeed 
+      selected_content={props.selected_content} 
+      setSelectedContent={props.setSelectedContent} 
+      trendingContent={props.trendingContent} 
+      setCurrentSong={props.setCurrentSong} 
+      currSong={props.currSong} 
+    />
+  )
+}
 
     </View>
+  );
+}
+
+function CenterBarWindowSearchResults(props){
+
+  const search_result_catagories = {
+    songResultsTitle: "Songs",
+    artistResultsTitle: "By Artists",
+    topResultTitle: "Top Result",
+    noResultTitle: "No Results :(",
+  }
+
+  return(
+    <LinearGradient style={styles.centerbarWindowContent}
+    colors={[CONTENTWINDOW_COLOR_GRADIENT, CONTENTWINDOW_COLOR_BASE]}
+    start={{x: 1, y:1}}
+    end={{x: 1, y:0}}>
+
+    <ScrollView style={{width: "100%"}} showsHorizontalScrollIndicator={false}>
+
+        {props.songSearchData.length > 0 ? (
+          <View>
+
+            <View style={{flexDirection: "row", paddingLeft: 10}}>
+              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>{search_result_catagories.topResultTitle}</Text>
+            </View>
+
+            <LibraryRow rowName={props.songSearchData[0].title} rowDesc={props.songSearchData[0].artist} imageSource={props.songSearchData[0].imagePath} year={props.songSearchData[0].year} listens={props.songSearchData[0].listens} setCurrentSong={props.setCurrentSong} songdata={props.songSearchData[0]} currSong={props.currSong}></LibraryRow>   
+
+          </View>
+        ) : null}
+
+        {props.songSearchData.length > 0 ? (
+          <View>
+            <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
+
+            <View style={{flexDirection: "row", paddingLeft: 10}}>
+              <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>{search_result_catagories.songResultsTitle}</Text>
+            </View>
+          </View>
+        ) : null }
+      
+
+        { props.songSearchData.length > 0 ? (
+          <FlatList
+              data={props.songSearchData.slice(1)} //.slice(1) cuts first index since we are already showing that seperately
+              renderItem={({ item, index }) => (
+                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}  setCurrentSong={props.setCurrentSong} songdata={item} currSong={props.currSong}></LibraryRow>   
+              )}
+              keyExtractor={item => item._id}
+            >
+            
+          </FlatList>
+          
+          ) : null
+        }
+
+
+
+
+        { props.artistSearchData.length > 0 ? (
+
+          <View>
+          <View style={{backgroundColor:"white", height: 2, width: "100%", opacity: 0.1, borderRadius: 10}}></View>
+
+          <View style={{flexDirection: "row", paddingLeft: 10}}>
+            <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>{search_result_catagories.artistResultsTitle}</Text>
+          </View>
+
+          <FlatList
+                data={props.artistSearchData}
+                renderItem={({ item }) => (
+                  <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens} setCurrentSong={props.setCurrentSong} songdata={item} currSong={props.currSong}></LibraryRow>   
+                )}
+                keyExtractor={item => item._id}
+              >
+            
+            </FlatList>
+          </View>
+
+          ) : null
+        }
+
+        { props.songSearchData.length === 0  && props.artistSearchData.length === 0 ? (
+          <View style={{paddingLeft: 10}}>
+            <Text style={{color: "white", fontSize: "3rem", fontWeight: "bold"}}>{search_result_catagories.noResultTitle}</Text>
+          </View>
+          
+          ) : null
+        }
+      </ScrollView>
+      
+    </LinearGradient>
   );
 }
 
@@ -179,10 +294,7 @@ function CenterbarWindowContentDetails(props){
           <FlatList
               data={songlist}
               renderItem={({ item }) => (
-                      
-                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>
-                      
-        
+                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>   
               )}
               keyExtractor={item => item._id} // Unique key for each item
             >
@@ -230,7 +342,7 @@ function CenterbarWindow(props){
           </View>
           
           <View style={styles.PlaylistBarGroupRight}>
-            <PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>
+            {/*<PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>*/}
           </View>
         
         </View>
@@ -246,7 +358,8 @@ function CenterbarWindow(props){
           </View>
 
           <View style={styles.PlaylistSearchbarGroupRight}>
-            <RecentsButton></RecentsButton>
+            <PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>
+            {/*<RecentsButton></RecentsButton>*/}
           </View>
         </View>
 
@@ -273,10 +386,12 @@ const LibraryRow = (props) => {
 
   // Add this handler function
   const handlePress = () => {
-    console.log('Row pressed');
     if (props.activation) {
       props.activation();
     }
+
+    props.setCurrentSong(props.songdata);
+    console.log(props.songdata, props.setCurrentSong);
   };
 
   return(
@@ -349,24 +464,55 @@ let FeedBox = (props) => {
     props.setCurrentSong(props.songdata)
   }
 
+  function truncateString(str, amount = 30) {
+    if (str.length > amount) {
+      return str.slice(0, amount) + '...';
+    }
+    return str;
+  }
+
   return(
     <TouchableOpacity onPress={triggerFeedBox}>
 
       <View 
-        style={isHovered || isSelected ? styles.feedBoxHovered : styles.feedBox} 
+        style={isHovered ? styles.feedBoxHovered : styles.feedBox} 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         >
-        <Image
-          source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
-          style={props.isArtst ? styles.feedArtistImage : styles.feedPlaylistImage}
-          />
         
-        <View>
-          <View style={{paddingTop: 10}}>
-            <Text style={{color:"white"}}>{props.rowName ? props.rowName: "Playlist Name"}</Text>
+        <View style={{flex: 1}}>
+          <View style={{}}>
+            <View 
+              style={{
+                
+                height: "100%",
+                width: 170,
+                aspectRatio: 1,
+                borderRadius: 10,
+                overflow: "hidden",
+              }}
+            >
+            
+              <ImageBackground
+                source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
+                style={{flex:1,}}
+                />
+              
+            </View>
+          </View>
+          
+          <View style={{flex: 1}}>
+            
+            <View style={{paddingTop: 5}}>
+              <Text style={{color:"white", fontWeight: "bold", fontSize: "1.25rem"}}>{props.rowName ? truncateString(props.rowName) : "Playlist Name"}</Text>
+            </View>
+            <View style={{}}>
+              <Text style={{color:"white"}}>{props.rowDesc ? truncateString(props.rowDesc) : "Artist Name"}</Text>
+            </View>
+
           </View>
         </View>
+        
       </View>
 
     </TouchableOpacity>
@@ -397,6 +543,7 @@ let RecentsButton = () => {
   </TouchableOpacity>
   );
 }
+
 
 
 let Catagory = (props) => {
@@ -450,6 +597,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 10,
         gap: 10,
+        overflow: "hidden",
       },
     
       centerbarWindow:{
@@ -625,29 +773,28 @@ const styles = StyleSheet.create({
 
       feedBox:{
         flexDirection: "column",
+        paddingTop: 10,
         alignItems: "center",
-        justifyContent: "center",
 
-        columnGap: 10,
-
-        width: "10rem",
-        height: "10rem",
+        aspectRatio: 1,
+        width: 200,
+        height: 275,
+        overflow: "hidden",
       },
+
       feedBoxHovered:{
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        columnGap: 10,
 
+        paddingTop: 10,
         backgroundColor: "rgba(255, 255, 255, 0.1)",
+        aspectRatio: 1,
+        width: 200,
+        height: 275,
+        overflow: "hidden",
 
-        width: "10rem",
-        height: "10rem",
 
-        rowGap:0,
-
-
-        borderRadius: 6,
+        borderRadius: 5,
       },
 
       libraryRowSelected:{

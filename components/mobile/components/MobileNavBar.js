@@ -23,6 +23,7 @@ let MobileNavBar = (props) => {
 
                 />
                 <MobileNavBarButton 
+                    pageHandler={() => pageHandler(2)}
                     imageSource={require("../../../images/png/library.png")}
                     text={"Library"}
                 />

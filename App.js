@@ -71,7 +71,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
 
 
-  if(true) //for log in page testing <<<<<
+  if(false) //for log in page testing <<<<<
   {
     //return(<LoginWindow></LoginWindow>);              uncomment and put login function here when ready, make sure to import it ^^^^
   }

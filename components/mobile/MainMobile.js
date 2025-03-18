@@ -3,21 +3,31 @@ import { View, Text, StyleSheet } from "react-native";
 import { MobileNavBar } from "./components/MobileNavBar.js";
 import HomeContent from "./components/HomeContent.js";
 import SearchContent from "./components/SearchContent.js";
+import LoginPage from "./components/LoginPage.js";
+import LibraryContent from "./components/LibraryContent.js";
 
 let MainMobile = () => {
     // Will implement later the queue functionality
     let [mainQueue, setMainQueue] = useState([]);
     let [pageSelection, setPageSelection] = useState(0);
+    let [user, setUser] = useState({});
+    let [loggedIn, setLoggedIn] = useState(false);
 
-    return (
+
+    return (  
+        <View style={styles.container}>
+        { loggedIn ?
         <View style={styles.container}>
             <View style={styles.mainContent}>
                 {pageSelection === 0 ? (<HomeContent />) : null}
                 {pageSelection === 1 ? (<SearchContent />) : null}
+                {pageSelection === 2 ? (<LibraryContent libraryContent={user.playlists}/>) : null}
             </View>
             <View style={styles.bottomNavigation}>
                 <MobileNavBar pageHandler={setPageSelection} />
             </View>
+        </View> : <LoginPage setUser={setUser} setLoggedIn={setLoggedIn} />
+        }
         </View>
     );
 };
@@ -25,7 +35,7 @@ let MainMobile = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#08090A',
+        backgroundColor: 'black',
         alignItems: 'center',
         justifyContent: 'center',
         height: "100%",

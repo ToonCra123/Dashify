@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     },
     songCardText: {
         paddingLeft: 10,
-        color: 'grey',
+        color: 'white',
         fontSize: 14,
         flexShrink: 1,
         width: 250,

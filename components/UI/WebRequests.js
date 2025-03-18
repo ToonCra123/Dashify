@@ -103,6 +103,7 @@ let registerUser = async (username, password) => {
             body: JSON.stringify({ username, password })
         });
         let data = await response.json();
+        data.status = response.status;
         return data;
     } catch (error) {
         console.error(error);
@@ -119,9 +120,10 @@ let loginUser = async (username, password) => {
             body: JSON.stringify({ username, password })
         });
         let data = await response.json();
+        data.status = response.status;
         return data;
     } catch (error) {
-        console.error(error);
+        
     }
 };
 

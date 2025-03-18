@@ -9,7 +9,7 @@ import AlbumView from "./AlbumView.js";
 import "react-native-gesture-handler";
 import MainMobile from "./components/mobile/MainMobile.js";
 import { getPlaylist, getSong, getTrending } from "./components/UI/WebRequests.js";
-
+import { createNavigationContainerRef } from '@react-navigation/native';
 
 //import { LoginWindow } from './components/UI/Login.js';         to import login func from 'Login.js', if your func a different name, change 'LoginWindow' to your function name
 
@@ -20,6 +20,8 @@ import { getPlaylist, getSong, getTrending } from "./components/UI/WebRequests.j
 // both mean same thing
 
 const Stack = createStackNavigator();
+export const navigationRef = createNavigationContainerRef();
+
 
 
 export default function App() {
@@ -89,14 +91,14 @@ if(false) //for log in page testing <<<<<
   {
     if (Platform.OS === 'web') {
       return (
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <View style={styles.container}>
             <TopBar
               selected_content={selected_content}
               setSelectedContent={content_selected}
               setCurrentSong={set_song}
               setQueryData={song_search_window}  // Added missing prop
-              setQuery={setSearchQuery}         
+              setQuery={setSearchQuery}   
             />
             
             {fetchedTrendingSongs.length > 0 && (
@@ -110,6 +112,7 @@ if(false) //for log in page testing <<<<<
                   {(props) => (
                     <Centerbar
                       {...props}
+                      navigation={props.navigation}
                       selected_content={selected_content}
                       currSong={currSong}
                       setSelectedContent={content_selected}

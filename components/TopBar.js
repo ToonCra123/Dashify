@@ -5,10 +5,15 @@ import { BarInput } from './UI/BarInputField';
 import { ImageBackground } from 'react-native-web';
 import { useNavigation } from '@react-navigation/native';
 import { searchSongByArtist, searchSongByTitle } from './UI/WebRequests';
-
+import { navigationRef } from '../App.js'; 
 
 
 let TopBar = (props) => {
+    const handleHomePress = () => {
+        if (navigationRef.current) {
+            navigationRef.current.navigate('Home');
+        }
+    }
 
     const navigation = useNavigation();
     
@@ -67,7 +72,7 @@ let TopBar = (props) => {
 
             <View style={styles.topBarGroupCenter}>
                 <View style={{justifyContent: "center", backgroundColor: "rgba(255, 255, 255, 0.1)", borderRadius: 35}}>
-                    <BarButton imageSource={home_icons.home} imageSourceHovered={home_icons.homeHovered} activation={buttonTest2}></BarButton>
+                    <BarButton imageSource={home_icons.home} imageSourceHovered={home_icons.homeHovered} activation={handleHomePress}/>
                 </View>
 
                 <BarInput placeholder="What do you want to play?" setQuery={setSearchQuery}></BarInput>

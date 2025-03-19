@@ -65,19 +65,6 @@ let SearchSongResult = (props) => {
     }
 
     return (
-        <ContextMenuView style={styles.songCardContainer}
-            actions={[
-                { title: 'Add to Queue', systemIcon: 'arrow.right.circle' },
-                { title: 'Add to Playlist', systemIcon: 'square.and.arrow.up'},
-            ]}
-            onPress={(event) => {
-                console.log('Event: ', event.nativeEvent.name);
-                if(event.nativeEvent.name === 'Add to Queue') {
-                    console.log('Hi')
-                    props.setMainQueue(props.mainQueue.concat(props.song));
-                }
-            }}
-        >
             <TouchableOpacity style={styles.songCardContainer} onPress={onPress}>
                 <Image source={{ uri: makeHttps(props.song.imagePath) }}
                     style={{ width: 50, height: 50, paddingLeft: 10 }}
@@ -85,7 +72,6 @@ let SearchSongResult = (props) => {
                 />
                 <Text style={styles.songCardText}>{props.song.title}</Text>
             </TouchableOpacity>
-        </ContextMenuView>
     );
 }
 

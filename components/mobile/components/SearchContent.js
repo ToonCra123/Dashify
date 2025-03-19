@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, FlatList, Keyboard } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, FlatList, Keyboard, Platform } from "react-native";
 import { searchSongByTitle } from "../../UI/WebRequests";
-import ContextMenuView from "react-native-context-menu-view";
+
 
 let makeHttps = (url) => {
     if (url.startsWith("http://")) {

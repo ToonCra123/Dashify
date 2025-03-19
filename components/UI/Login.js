@@ -148,7 +148,7 @@ export default function LoginWindow(props) {
             {successMessage ? (
                 <Text style={styles.successText}>{successMessage}</Text>
             ) : null}
-            
+            <View style={styles.container2}>
             <View style={styles.formGroup}>
                 <Text style={styles.label}>Username</Text>
                 <TextInput
@@ -200,6 +200,7 @@ export default function LoginWindow(props) {
                     <Text style={styles.buttonText}>{isSignup ? "Sign Up" : "Login"}</Text>
                 )}
             </TouchableOpacity>
+            </View>
             
             
             <TouchableOpacity 
@@ -253,11 +254,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         fontSize: 15,
-        backgroundColor: "transparent",
+        outlineColor: "transparent",
         color: "white",
         placeholderTextColor: "white",
         boxShadow: "1px 1px 1px 1px black",
         backgroundColor: "#5E5E5E"
+        
     },
     
     button: {
@@ -313,4 +315,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
     },
+    container2: {
+        width: "50%",
+        alignSelf: "center",
+    }
 });

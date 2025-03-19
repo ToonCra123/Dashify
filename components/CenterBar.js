@@ -20,15 +20,15 @@ import { useNavigation } from '@react-navigation/native';
 function Centerbar(props)
 {
   const collapse_menu_icons = {
-    left_open: require("./../images/png/arrow_menu_open.png"),
-    left_close: require("./../images/png/arrow_menu_close.png"),
+    left_open: require("./../images/png/library.png"),
+    left_close: require("./../images/png/arrow_back_alt.png"),
     right_open: require("./../images/png/arrow_menu_close.png"),
     right_close: require("./../images/png/arrow_menu_open.png"),
   }
 
   
   const [collapseMenu, setCollapseMenu] = useState(false);
-  const [collapseMenuIcon, setCollapseMenuIcon] = useState(collapseMenu ? collapse_menu_icons.left_close : collapse_menu_icons.left_open);
+  const [collapseMenuIcon, setCollapseMenuIcon] = useState(collapseMenu ? collapse_menu_icons.left_open : collapse_menu_icons.left_close);
 
 
   return (
@@ -375,6 +375,13 @@ function CenterbarWindow(props){
 
   }
 
+  const [addPlaylistHovered, setAddPlaylistHovered] = useState(false);
+
+  let hover_add_playlist = (v) => {
+    v === undefined ? setAddPlaylistHovered(!addPlaylistHovered) : setAddPlaylistHovered(v);
+
+  }
+
   useEffect(() => {
     if (props.collapse_menu_icons) {
       props.collapseMenu 
@@ -384,6 +391,7 @@ function CenterbarWindow(props){
   }, [props.collapseMenu, props.collapse_menu_icons]);
 
 
+    const [isAddPlaylistVisible, setIsAddPlaylistVisible] = useState(false);
   
     return(
       <LinearGradient 
@@ -397,14 +405,36 @@ function CenterbarWindow(props){
           <View style={styles.PlaylistBarGroupLeft}>
 
           <WindowBarButtonUI
-                imageSource={require('../images/png/library.png')}>
-                </WindowBarButtonUI>
-            <Text style={styles.libraryHeader}>Your Library</Text>
+          imageSource={require('../images/png/library_selected.png')}>
+
+          </WindowBarButtonUI>
+
+            <View>
+              <Text style={styles.libraryHeader}>Your Library</Text>
+            </View>
+
           </View>
 
 
           
           <View style={styles.PlaylistBarGroupRight}>
+            <TouchableOpacity style={{flexDirection:"row", justifyContent: "center", alignItems: "center", gap: 5}}
+              onPress={{}}>
+
+              <View style={addPlaylistHovered ? styles.addPlaylistHovered : styles.addPlaylist}
+                onMouseEnter={() => hover_add_playlist(true)}
+                onMouseLeave={() => hover_add_playlist(false)}
+                >
+                
+                  <PlaylistPopup onCreatePlaylist={playlistHandler} setIsVisible={setIsAddPlaylistVisible} isVisible={isAddPlaylistVisible}/>
+                  
+                  <View>
+                    <Text style={{color: "white", fontWeight: "bold"}}>Create</Text>
+                  </View>
+
+              </View>
+            </TouchableOpacity>
+
             <WindowBarButtonUI
               imageSource={props.collapseMenuIcon}
               activation={toggle_menu_state}
@@ -425,7 +455,7 @@ function CenterbarWindow(props){
           </View>
 
           <View style={styles.PlaylistSearchbarGroupRight}>
-            <PlaylistPopup onCreatePlaylist={playlistHandler}/>
+
             {/*<RecentsButton></RecentsButton>*/}
           </View>
         </View>
@@ -480,13 +510,22 @@ function CenterbarWindowCollapsed(props){
 
   let toggle_menu_state = (v) => {
     props.setCollapseMenu(!props.collapseMenu);
-
   }
+  
 
   useEffect(() => {
     props.collapseMenu ? props.setCollapseMenuIcon(props.collapse_menu_icons.left_close) : props.setCollapseMenuIcon(props.collapse_menu_icons.left_open);
   }, [props.collapseMenu]);
 
+    const [addPlaylistHovered, setAddPlaylistHovered] = useState(false);
+    const [isAddPlaylistVisible, setIsAddPlaylistVisible] = useState(false);
+    
+
+    let hover_add_playlist = (v) => {
+      v === undefined ? setAddPlaylistHovered(!addPlaylistHovered) : setAddPlaylistHovered(v);
+  
+    }
+    
 
   
     return(
@@ -496,24 +535,37 @@ function CenterbarWindowCollapsed(props){
       start={{x: 0, y:0}}
       end={{x: 0, y:0}}>
 
-      <View style={styles.PlaylistBarCollapsed}>
+      <View style={{gap: 30, alignItems: "center", width: "100%", height: "100%"}}>
+        <View style={styles.PlaylistBarCollapsed}>
 
-        <View style={styles.PlaylistBarGroupCenter}>
-          <WindowBarButtonUI
-            imageSource={props.collapseMenuIcon}
-            activation={toggle_menu_state}
-            >
-          </WindowBarButtonUI>
+          <View style={styles.PlaylistBarGroupCenter}>
+
+            <WindowBarButtonUI
+              imageSource={props.collapseMenuIcon}
+              activation={toggle_menu_state}
+              >
+            </WindowBarButtonUI>
+
+            <View style={addPlaylistHovered ? styles.addPlaylistHovered : styles.addPlaylist}
+                      onMouseEnter={() => hover_add_playlist(true)}
+                      onMouseLeave={() => hover_add_playlist(false)}
+                      >
+                      <PlaylistPopup onCreatePlaylist={playlistHandler} setIsVisible={setIsAddPlaylistVisible} isVisible={isAddPlaylistVisible}/>
+            </View>
+            
+            <View>
+              <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
+                <View style={styles.libraryContents}>
+                  <CollapseLibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={props.setSelectedContent}></CollapseLibraryRow>
+                </View>
+              </ScrollView>
+            </View>
+
+          </View>
+
         </View>
 
       </View>
-
-
-        <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
-          <View style={styles.libraryContents}>
-            <CollapseLibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={props.setSelectedContent}></CollapseLibraryRow>
-          </View>
-        </ScrollView>
 
       </LinearGradient>
     );
@@ -777,6 +829,31 @@ const styles = StyleSheet.create({
         overflow: "hidden",
       },
 
+      addPlaylistHovered:{
+        width: 120, 
+        height: 55, 
+        backgroundColor: "rgba(255, 255, 255, 0.1)", 
+        borderRadius: 35, 
+        alignItems: "center", 
+        justifyContent: "center",
+        flexDirection: "row",
+
+        gap: 5,
+
+      },
+
+      addPlaylist:{
+        width: 120, 
+        height: 55, 
+        backgroundColor: "rgba(255, 255, 255, 0.05)", 
+        borderRadius: 35, 
+        alignItems: "center", 
+        justifyContent: "center",
+        flexDirection: "row",
+
+        gap: 5,
+      },
+
     
       centerbarWindow:{
         flex:0.75,
@@ -866,13 +943,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-end",
         alignItems: "center",
+        gap: 20,
 
       },
 
       PlaylistBarGroupCenter:{
-        flexDirection: "row",
-        justifyContent: "center",
+        flexDirection: "column",
+        justifyContent: "flex-start",
         alignItems: "center",
+        height: "100%",
+        width: "100%",
+        gap: 35,
       },
 
       WindowButtonsGroup:{

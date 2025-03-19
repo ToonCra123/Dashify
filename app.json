@@ -2,6 +2,13 @@
   "expo": {
     "name": "Dashify",
     "slug": "Dashify",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "ios": {
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"],
+        "NSMicrophoneUsageDescription": "This app requires microphone access",
+        "NSCameraUsageDescription": "This app requires camera access"
+      }
+    }
   }
 }

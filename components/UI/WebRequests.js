@@ -123,7 +123,7 @@ let loginUser = async (username, password) => {
         data.status = response.status;
         return data;
     } catch (error) {
-        
+        console.log('bitch', error)
     }
 };
 

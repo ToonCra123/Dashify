@@ -36,7 +36,7 @@ function Centerbar(props)
 
    <View style={styles.centerbar}>
 
-      {!collapseMenu ? (
+      {collapseMenu ? (
       <CenterbarWindow 
         collapseMenu={collapseMenu} 
         setCollapseMenu={setCollapseMenu}
@@ -48,7 +48,19 @@ function Centerbar(props)
         setSelectedContent={props.setSelectedContent} 
         setCurrentSong={props.setCurrentSong}
 
-        /> ) : null}
+        /> ) : 
+        
+        <CenterbarWindowCollapsed
+          collapseMenu={collapseMenu} 
+          setCollapseMenu={setCollapseMenu}
+          collapseMenuIcon={collapseMenuIcon}
+          setCollapseMenuIcon={setCollapseMenuIcon}
+          collapse_menu_icons={collapse_menu_icons}
+
+          selected_content={props.selected_content} 
+          setSelectedContent={props.setSelectedContent} 
+          setCurrentSong={props.setCurrentSong}
+        />}
       {
 
       
@@ -449,6 +461,65 @@ function CenterbarWindow(props){
 }
 
 
+function CenterbarWindowCollapsed(props){
+
+  // TODO: Add a call to get playlists from backend
+  const [playlists, setPlaylists] = useState([]);
+
+
+  // TODO: Add API call to add playlist to backend 
+  // and update the state with the new playlist
+  let playlistHandler = (newPlaylist) => {
+    setPlaylists(prev => [...prev, {
+      id: Date.now().toString(),
+      name: newPlaylist.playlistName,
+      description: newPlaylist.description
+    }]);
+  }
+
+
+  let toggle_menu_state = (v) => {
+    props.setCollapseMenu(!props.collapseMenu);
+
+  }
+
+  useEffect(() => {
+    props.collapseMenu ? props.setCollapseMenuIcon(props.collapse_menu_icons.left_close) : props.setCollapseMenuIcon(props.collapse_menu_icons.left_open);
+  }, [props.collapseMenu]);
+
+
+  
+    return(
+      <LinearGradient 
+      style={styles.centerbarWindowCollapsed}
+      colors={[MAIN_COLOR_BASE, MAIN_COLOR_GRADIENT]}
+      start={{x: 0, y:0}}
+      end={{x: 0, y:0}}>
+
+      <View style={styles.PlaylistBarCollapsed}>
+
+        <View style={styles.PlaylistBarGroupCenter}>
+          <WindowBarButtonUI
+            imageSource={props.collapseMenuIcon}
+            activation={toggle_menu_state}
+            >
+          </WindowBarButtonUI>
+        </View>
+
+      </View>
+
+
+        <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
+          <View style={styles.libraryContents}>
+            <CollapseLibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={props.setSelectedContent}></CollapseLibraryRow>
+          </View>
+        </ScrollView>
+
+      </LinearGradient>
+    );
+}
+
+
 const LibraryRow = (props) => {
 
   const [isHovered, setIsHovered] = useState(false);
@@ -508,6 +579,39 @@ const LibraryRow = (props) => {
             </View>
           </View>
         </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const CollapseLibraryRow = (props) => {
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+
+  // Add this handler function
+  const handlePress = () => {
+    if (props.activation) {
+      props.activation();
+    }
+
+    props.setCurrentSong(props.songdata);
+    console.log(props.songdata, props.setCurrentSong);
+  };
+
+  return(
+    <TouchableOpacity 
+      onPress={handlePress} // Fixed: Directly use handler function
+    >
+      <View 
+        style={isHovered ? styles.CollapseLibraryRowHovered : styles.CollapseLibraryRow}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <Image
+          source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/test_album.png")}
+          style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
+        />
       </View>
     </TouchableOpacity>
   );
@@ -673,17 +777,22 @@ const styles = StyleSheet.create({
         overflow: "hidden",
       },
 
-      CenterBarWindowColapsed:{
-        flex:1,
-        flexDirection:"row",
-        alignItems: "center",
-        paddingHorizontal: 10,
-        gap: 10,
-        overflow: "hidden",
-      },
     
       centerbarWindow:{
         flex:0.75,
+        flexDirection:"column",
+        alignItems: "flex-start",
+        backgroundColor: "#222823",
+        height: "100%",
+        borderRadius: 10,
+        
+        paddingTop: 30,
+        paddingHorizontal: 10,
+        rowGap: 10,
+      },
+
+      centerbarWindowCollapsed:{
+        flex:0.2,
         flexDirection:"column",
         alignItems: "flex-start",
         backgroundColor: "#222823",
@@ -731,6 +840,18 @@ const styles = StyleSheet.create({
 
       },
 
+      PlaylistBarCollapsed:{
+        width: "100%",
+        height: "10%",
+
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+
+
+
+      },
+
       PlaylistBarGroupLeft:{
         flexDirection: "row",
         justifyContent: "flex-start",
@@ -746,6 +867,12 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
         alignItems: "center",
 
+      },
+
+      PlaylistBarGroupCenter:{
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
       },
 
       WindowButtonsGroup:{
@@ -853,6 +980,28 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 6,
+      },
+
+      CollapseLibraryRow:{
+        flexDirection: "row",
+        justifyContent: "center",
+        columnGap: 10,
+        width: "100%",
+        height: 100,
+        paddingLeft: 10,
+        paddingRight: 10,
+        opacity: 0.95,
+      },
+
+      CollapseLibraryRowHovered:{
+        flexDirection: "row",
+        justifyContent: "center",
+        columnGap: 10,
+        width: "100%",
+        height: 100,
+        paddingLeft: 10,
+        paddingRight: 10,
+        opacity: 1,
       },
 
       feedBox:{

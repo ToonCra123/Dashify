@@ -1,6 +1,7 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, FlatList, Keyboard } from "react-native";
 import { searchSongByTitle } from "../../UI/WebRequests";
+import ContextMenuView from "react-native-context-menu-view";
 
 let makeHttps = (url) => {
     if (url.startsWith("http://")) {
@@ -48,7 +49,7 @@ let SearchContent = (props) => {
                     <FlatList
                         data={searchResults}
                         renderItem={({item}) => (
-                            <SearchSongResult song={item} />
+                            <SearchSongResult song={item} mainQueue={props.mainQueue} setMainQueue={props.setMainQueue} />
                         )}
                         keyExtractor={(item) => item._id}
                     /> : null
@@ -59,14 +60,32 @@ let SearchContent = (props) => {
 }
 
 let SearchSongResult = (props) => {
+    let onPress = () => {
+        props.setMainQueue([props.song]);
+    }
+
     return (
-        <View style={styles.songCardContainer}>
-            <Image source={{ uri: makeHttps(props.song.imagePath) }}
-                style={{ width: 50, height: 50, paddingLeft: 10 }}
-                resizeMode="stretch"
-            />
-            <Text style={styles.songCardText}>{props.song.title}</Text>
-        </View>
+        <ContextMenuView style={styles.songCardContainer}
+            actions={[
+                { title: 'Add to Queue', systemIcon: 'arrow.right.circle' },
+                { title: 'Add to Playlist', systemIcon: 'square.and.arrow.up'},
+            ]}
+            onPress={(event) => {
+                console.log('Event: ', event.nativeEvent.name);
+                if(event.nativeEvent.name === 'Add to Queue') {
+                    console.log('Hi')
+                    props.setMainQueue(props.mainQueue.concat(props.song));
+                }
+            }}
+        >
+            <TouchableOpacity style={styles.songCardContainer} onPress={onPress}>
+                <Image source={{ uri: makeHttps(props.song.imagePath) }}
+                    style={{ width: 50, height: 50, paddingLeft: 10 }}
+                    resizeMode="stretch"
+                />
+                <Text style={styles.songCardText}>{props.song.title}</Text>
+            </TouchableOpacity>
+        </ContextMenuView>
     );
 }
 
@@ -137,6 +156,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     songCardContainer: {
+        backgroundColor: "black",
         width: "100%",
         flexDirection: "row",
         padding: 10,

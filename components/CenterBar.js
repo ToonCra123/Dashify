@@ -12,6 +12,8 @@ import { FlatList, ImageBackground, ScrollView } from 'react-native-web';
 import { LinearGradient } from 'expo-linear-gradient';
 import {MAIN_COLOR_GRADIENT, MAIN_COLOR_BASE, CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT} from './UI/Colors.js'
 import { getPlaylist, getSong, getTrending } from './UI/WebRequests.js';
+import AlbumView from '../AlbumView.js';
+import { useNavigation } from '@react-navigation/native';
 
 //JSON.parse(sessionStorage.getItem("selected_content"));
 
@@ -335,7 +337,7 @@ function CenterbarWindowContentDetails(props){
           <FlatList
               data={songlist}
               renderItem={({ item }) => (
-                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens}></LibraryRow>   
+                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens} setCurrentSong={props.setCurrentSong} songdata={item}></LibraryRow>   
               )}
               keyExtractor={item => item._id} // Unique key for each item
             >
@@ -354,6 +356,7 @@ function CenterbarWindow(props){
 
   // TODO: Add a call to get playlists from backend
   const [playlists, setPlaylists] = useState([]);
+  const navigation = useNavigation();
 
 
   // TODO: Add API call to add playlist to backend 
@@ -373,8 +376,12 @@ function CenterbarWindow(props){
   }
 
   useEffect(() => {
-    props.collapseMenu ? props.setCollapseMenuIcon(props.collapse_menu_icons.left_close) : props.setCollapseMenuIcon(props.collapse_menu_icons.left_open);
-  }, [props.collapseMenu]);
+    if (props.collapse_menu_icons) {
+      props.collapseMenu 
+        ? props.setCollapseMenuIcon(props.collapse_menu_icons.left_close) 
+        : props.setCollapseMenuIcon(props.collapse_menu_icons.left_open);
+    }
+  }, [props.collapseMenu, props.collapse_menu_icons]);
 
 
   
@@ -418,7 +425,7 @@ function CenterbarWindow(props){
           </View>
 
           <View style={styles.PlaylistSearchbarGroupRight}>
-            <PlaylistPopup onCreatePlaylist={playlistHandler}></PlaylistPopup>
+            <PlaylistPopup onCreatePlaylist={playlistHandler}/>
             {/*<RecentsButton></RecentsButton>*/}
           </View>
         </View>
@@ -428,8 +435,22 @@ function CenterbarWindow(props){
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
           <View style={styles.libraryContents}>
-            <ParentComponent/>
-            <LibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={props.setSelectedContent}></LibraryRow>
+            {playlists.map(playlist => (
+                    <LibraryRow
+                      key={playlist.id}
+                      rowName={playlist.name}
+                      rowDesc={playlist.description}
+                      activation={() =>  navigation.navigate('AlbumView', { 
+                        playlist: playlist
+                      })}
+                    />
+                  ))}
+            <LibraryRow 
+              rowName="Skibity" 
+              rowDesc="very cool playlist" 
+              activation={props.setSelectedContent}
+              setCurrentSong={props.setCurrentSong}
+            ></LibraryRow>
           </View>
         </ScrollView>
 
@@ -510,8 +531,11 @@ const LibraryRow = (props) => {
       props.activation();
     }
 
-    props.setCurrentSong(props.songdata);
-    console.log(props.songdata, props.setCurrentSong);
+    // Add check to ensure setCurrentSong exists before calling it
+    if (props.setCurrentSong && typeof props.setCurrentSong === 'function' && props.songdata) {
+      props.setCurrentSong(props.songdata);
+      console.log(props.songdata, props.setCurrentSong);
+    }
   };
 
   return(
@@ -893,6 +917,7 @@ const styles = StyleSheet.create({
 
       libraryContents:{
         width: "100%",
+        flexDirection: 'column-reverse'
       },
 
       feedContents:{
@@ -944,6 +969,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
       },
+
       libraryRowHovered:{
         flexDirection: "row",
         alignItems: "center",
@@ -982,7 +1008,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         paddingTop: 10,
         alignItems: "center",
-
         aspectRatio: 1,
         width: 200,
         height: 275,
@@ -992,15 +1017,12 @@ const styles = StyleSheet.create({
       feedBoxHovered:{
         flexDirection: "column",
         alignItems: "center",
-
         paddingTop: 10,
         backgroundColor: "rgba(255, 255, 255, 0.1)",
         aspectRatio: 1,
         width: 200,
         height: 275,
         overflow: "hidden",
-
-
         borderRadius: 5,
       },
 
@@ -1008,18 +1030,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         columnGap: 10,
-
         backgroundColor: "rgba(255, 255, 255, 0.2)",
-
         width: "100%",
         height: "4rem",
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 6,
       },
-
-
-
 
       background: {
         flex: 1, // Make sure the ImageBackground takes up the entire space

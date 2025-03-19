@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native"; 
+import { View, Text, Image, TouchableOpacity, Touchable, StyleSheet } from "react-native"; 
 import { MobileNavBar } from "./components/MobileNavBar.js";
 import HomeContent from "./components/HomeContent.js";
 import SearchContent from "./components/SearchContent.js";
@@ -31,6 +31,7 @@ let setAudioSettings = async () => {
 let MainMobile = () => {
     // Audio States
     let [mainQueue, setMainQueue] = useState([]);
+    let [currSong, setCurrSong] = useState({});
     let [sound, setSound] = useState(null);
     let [isPlaying, setIsPlaying] = useState(false);
     let [position, setPosition] = useState(0); // Track current position (0 to 1)
@@ -38,18 +39,22 @@ let MainMobile = () => {
 
     // Called when the mainQueue changes
     useEffect(() => {
-        if (mainQueue.length > 0 && !isPlaying) {
-            playSound();
-        } else if (mainQueue.length > 0 && isPlaying) {
-            stopSound().then(() => playSound());
+        console.log(mainQueue)
+        if (mainQueue.length === 0) {
+            stopSound();
+        } else if (mainQueue[0] !== currSong) {
+            stopSound().then(() => {
+                playSound();
+            });
         }
     }, [mainQueue]);
-
 
     // Audio Functions
     let playSound = async () => {
         await setAudioSettings();
         console.log("Playing sound");
+
+        setCurrSong(mainQueue[0]);
         const { sound } = await Audio.Sound.createAsync(
             { uri: makeHttps(mainQueue[0].mp3Path) },
             { shouldPlay: true }
@@ -57,7 +62,8 @@ let MainMobile = () => {
 
         sound.setOnPlaybackStatusUpdate((status) => {
             if (status.didJustFinish) {
-                setMainQueue(mainQueue.slice(1));
+                handlePlayNextSong();
+                return;
             }
             setPosition(status.positionMillis / status.durationMillis);
             setDuration(status.durationMillis);
@@ -79,10 +85,22 @@ let MainMobile = () => {
         setIsPlaying(true);
     }
 
+    let handlePlayNextSong = async () => {
+        if (mainQueue.length <= 1) {
+            stopSound();
+            return;
+        }
+        setMainQueue(mainQueue.slice(1));
+    }
+
     let stopSound = async () => {
         if (!sound) return;
         await sound.stopAsync();
         setIsPlaying(false);
+        setSound(null);
+        setCurrSong({});
+        setPosition(0);
+        setDuration(0);
     }
 
     // position is a float from 0 to 1
@@ -102,9 +120,8 @@ let MainMobile = () => {
         <View style={styles.container}>
             <View style={styles.mainContent}>
                 {pageSelection === 0 ? (<HomeContent mainQueue={mainQueue} setMainQueue={setMainQueue} />) : null}
-                {pageSelection === 1 ? (<SearchContent />) : null}
+                {pageSelection === 1 ? (<SearchContent mainQueue={mainQueue} setMainQueue={setMainQueue} />) : null}
                 {pageSelection === 2 ? (<LibraryContent libraryContent={user.playlists}/>) : null}
-                <Text style={styles.textStyle}>{mainQueue.length > 0 ? mainQueue[0].title : null}</Text>
             </View>
             <View style={styles.bottomNavigation}>
                 <MobileNavBar pageHandler={setPageSelection} />
@@ -119,7 +136,7 @@ let MainMobile = () => {
 let SongDetails = (props) => {
 
     return (
-        <View style={styles.songDetails}>
+        <TouchableOpacity style={styles.songDetails} activeOpacity={1}>
             <View style={styles.songCardContainer}>
                 <Image source={{ uri: makeHttps(props.song.imagePath) }}
                        style={styles.songCardImage} 
@@ -142,7 +159,7 @@ let SongDetails = (props) => {
                 }
 
             </View>
-        </View>
+        </TouchableOpacity>
     )
 };
 
@@ -200,6 +217,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     songCardText: {
+        width: 150,
         paddingLeft: 5,
         color: '#bcb9f9',
         fontWeight: 'bold',

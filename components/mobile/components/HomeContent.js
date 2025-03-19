@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
 import { getTrending } from "../../UI/WebRequests";
 
-let HomeContent = () => {
+let HomeContent = (props) => {
     return (
         <View style={styles.container}>
-            <Trending />
+            <Trending mainQueue={props.mainQueue} setMainQueue={props.setMainQueue} />
         </View>
     );
 }
@@ -21,19 +21,23 @@ let makeHttps = (url) => {
     return url;
 }
 
-let SongCard = ({ song }) => {
+let SongCard = (props) => {
+    let onPress = () => {
+        props.setMainQueue([props.song]);
+    }
+
     return (
-        <View style={styles.songCardContainer}>
-            <Image source={{ uri: makeHttps(song.imagePath) }}
+        <TouchableOpacity style={styles.songCardContainer} onPress={onPress}>
+            <Image source={{ uri: makeHttps(props.song.imagePath) }}
                    style={styles.songCardImage} 
                    resizeMode="stretch" 
             />
-            <Text style={styles.songCardText}>{song.title}</Text>
-        </View>
+            <Text style={styles.songCardText}>{props.song.title}</Text>
+        </TouchableOpacity>
     );
 }
 
-let Trending = () => {
+let Trending = (props) => {
     let [trending, setTrending] = useState([]);
     let [isLoading, setIsLoading] = useState(true);
 
@@ -56,7 +60,7 @@ let Trending = () => {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     data={trending}
-                    renderItem={({ item }) => <SongCard song={item} />}
+                    renderItem={({ item }) => <SongCard song={item} mainQueue={props.mainQueue} setMainQueue={props.setMainQueue} />}
                     keyExtractor={(item) => item._id}
                 />
             )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, use } from "react";
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, FlatList, Keyboard } from "react-native";
 import { searchSongByTitle } from "../../UI/WebRequests";
 
 let makeHttps = (url) => {
@@ -20,6 +20,12 @@ let SearchContent = (props) => {
         setSearchTerm(searchT);
     }
 
+    let cancelButtonHandler = () => {
+        // reset search term and make keyboard go down
+        Keyboard.dismiss();
+        setSearchTerm("");
+    }
+
     useEffect(() => {
         let fetchResults = async () => {
             let results = await searchSongByTitle(searchTerm, 20);
@@ -33,7 +39,7 @@ let SearchContent = (props) => {
         <View style={styles.container}>
             <View style={styles.searchBarContainer}>
                 <SearchBar searchTerm={searchTerm} setSearchTerm={searchHandler} />
-                <TouchableOpacity style={styles.cancelButton}>
+                <TouchableOpacity onPress={cancelButtonHandler} style={styles.cancelButton}>
                     <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
             </View>
@@ -116,8 +122,10 @@ const styles = StyleSheet.create({
     cancelButton: {
         alignContent: "center",
         justifyContent: "center",
-        marginBottom: 15,
-        marginLeft: 20,
+        height: 45,
+        width: 60,
+        marginLeft: 25,
+
     }, 
     cancelButtonText: {
         color: "white",

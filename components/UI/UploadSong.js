@@ -17,6 +17,15 @@ const Popup = () => {
 
   const [errorMsg, setErrorMsg] = useState('');
 
+  const [isUploadBarHovered, setIsUploadBarHovered] = useState(false);
+  const [isUploadBarHovered2, setIsUploadBarHovered2] = useState(false);
+
+  const [isTextInputHovered, setIsTextInputHovered] = useState(false);
+  const [isTextInputHovered2, setIsTextInputHovered2] = useState(false);
+  const [isTextInputHovered3, setIsTextInputHovered3] = useState(false);
+
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
+
   const handleUpload = () => {
     if (!selectedFile) {
       setErrorMsg('Please select an image!');
@@ -124,57 +133,74 @@ const Popup = () => {
               <View>
               <Text style={styles.label}>Song Title</Text>
               <TextInput
-                  style={styles.TextInput}
+                  style={isTextInputHovered ? styles.TextInputHovered : styles.TextInput}
                   onChangeText={text => setTitle(text)}
                   placeholder='Title'
+                  onMouseEnter={() => setIsTextInputHovered(true)}
+                  onMouseLeave={() => setIsTextInputHovered(false)}
                   value={title} />
                   </View>
                 
                   <View>
                   <Text style={styles.label}>Song Artist</Text>
                 <TextInput
-                  style={styles.TextInput}
+                  style={isTextInputHovered2 ? styles.TextInputHovered : styles.TextInput}
                   onChangeText={text => setArtist(text)}
                   placeholder='Artist'
+                  onMouseEnter={() => setIsTextInputHovered2(true)}
+                  onMouseLeave={() => setIsTextInputHovered2(false)}
                   value={artist} />
                   </View>
                 
                   <View>
                   <Text style={styles.label}>Release Year</Text>
                 <TextInput
-                  style={styles.TextInput}
+                  style={isTextInputHovered3 ? styles.TextInputHovered : styles.TextInput}
                   onChangeText={text => setYear(text)}
                   placeholder='Year'
+                  onMouseEnter={() => setIsTextInputHovered3(true)}
+                  onMouseLeave={() => setIsTextInputHovered3(false)}
                   value={year} />
                   </View>
 
-              <View style={styles.uploadBar}>
+              <View style={isUploadBarHovered ? styles.uploadBarHovered : styles.uploadBar}>
                 <Text style={styles.text2}>Upload Image</Text>
                 {selectedFile && (
                   <Text style={styles.text2}>
                     Selected: {selectedFile.name} (Size: {(selectedFile.size / 1024).toFixed(2)} kbs)
                   </Text>
                 )}
-                <TouchableOpacity onPress={handlePress}>
+                <TouchableOpacity onPress={handlePress}
+                onMouseEnter={() => setIsUploadBarHovered(true)}
+                onMouseLeave={() => setIsUploadBarHovered(false)}
+                >
                   <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
                 </TouchableOpacity>
                 </View>
 
-                <View style={styles.uploadBar}>
+                <View style={isUploadBarHovered2 ? styles.uploadBarHovered : styles.uploadBar}>
                 <Text style={styles.text2}>Upload Audio</Text>
                 {selectedSong && (
                   <Text style={styles.text2}>
                     Selected: {selectedSong.name} (Size: {(selectedSong.size / 1024).toFixed(2)} kbs)
                   </Text>
                 )}
-                <TouchableOpacity onPress={handleSongPress}>
+                <TouchableOpacity onPress={handleSongPress}
+                onMouseEnter={() => setIsUploadBarHovered2(true)}
+                onMouseLeave={() => setIsUploadBarHovered2(false)}
+                >
                   <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
                 </TouchableOpacity>
                 </View>
 
               </View>
 
-                <TouchableOpacity style={styles.button} onPress={handleUpload}>
+                <TouchableOpacity 
+                style={isButtonHovered ? styles.buttonHovered : styles.button} 
+                onPress={handleUpload}
+                onMouseEnter={() => setIsButtonHovered(true)}
+                onMouseLeave={() => setIsButtonHovered(false)}
+                >
                   <Text style={styles.text2}>Upload</Text>
                 </TouchableOpacity>
 
@@ -258,18 +284,31 @@ const styles = StyleSheet.create({
   },
   uploadBar: {
     color: "white",
-    backgroundColor: "#323232",
     borderRadius: 10,
     margin: 5,
     padding: 5,
     justifyContent: "center",
     alignItems: "center",
-    borderStyle: "solid",
-    borderWidth: 5,
-    borderColor: "#E50000",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
     width: "35%",
-    paddingBottom: 0
+    boxShadow: "1px 1px 1px 1px black",
   },
+
+  uploadBarHovered: {
+    boxShadow: "0 0 0 1.5px white", /* Acts like a border but doesn’t change size */
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    outlineColor: "transparent",
+    color: "white",
+    placeholderTextColor: "white",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    margin: 5,
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "35%",
+},
+
   uploadContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -281,25 +320,53 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   TextInput: {
+    height: 50,
     color: "white",
     padding: 10,
-    backgroundColor: "#323232",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    boxShadow: "1px 1px 1px 1px black",
     outlineColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: 5,
-    borderColor: "#E50000",
     borderRadius: 5,
+    fontSize: 15,
   },
+
+  TextInputHovered: {
+    height: 50,
+    boxShadow: "0 0 0 1.5px white", /* Acts like a border but doesn’t change size */
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 15,
+    outlineColor: "transparent",
+    color: "white",
+    placeholderTextColor: "white",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    outlineStyle: "none",
+},
+
   button: {
-    backgroundColor: "#E50000",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
     height: 50,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 15,
     width: "50%",
-    marginBottom: 5
+    marginBottom: 5,
+    boxShadow: "1px 1px 1px 1px black",
 },
+
+buttonHovered: {
+  backgroundColor: "rgba(255, 255, 255, 0.1)",
+  height: 50,
+  borderRadius: 100,
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: 15,
+  boxShadow: "1px 1px 1px 1px black",
+  width: "50%",
+  marginBottom: 5,
+},
+
   label: {
     color: "white",
     fontWeight: "bold",

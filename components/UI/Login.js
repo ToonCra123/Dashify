@@ -138,17 +138,15 @@ export default function LoginWindow(props) {
     const [isToggleAccountButton, setIsToggleAccountButton] = useState(false);
 
 
-
-
     return (
         <View style={styles.container}>
             <View style={{alignItems: "center"}}>
                 <Text style={{color: "white", fontWeight: "bold", fontSize: "4rem"}}>Dashify</Text>
             </View>
 
-            <View style={{gap: 20}}>
+            <View>
                 <View>
-                    <Text style={styles.title}>{isSignup ? "Create Account" : "Login"}</Text>
+                    <Text style={styles.title}>{isSignup ? "Create Account" : ""}</Text>
                 </View>
 
                 <View style={styles.subtitle}>
@@ -235,9 +233,7 @@ export default function LoginWindow(props) {
                                 : "Don't have an account? Sign up"}
                         </Text>
                     </TouchableOpacity>
-
                 </View>
-
             </View>
         </View>
     );
@@ -247,8 +243,7 @@ const styles = StyleSheet.create({
     container: {
         width: "100%",
         height: "100%",
-        gap: 200,
-
+        gap: 100,
         justifyContent: "center",
         backgroundColor: "#121212",
     },
@@ -276,7 +271,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 50,
-        borderRadius: 35,
+        borderRadius: 10,
         paddingHorizontal: 10,
         fontSize: 15,
         outlineColor: "transparent",
@@ -284,24 +279,20 @@ const styles = StyleSheet.create({
         placeholderTextColor: "white",
         boxShadow: "1px 1px 1px 1px black",
         backgroundColor: "rgba(255, 255, 255, 0.05)",
-
         outlineStyle: "none",
     },
 
     inputHovered: {
         height: 50,
-
         boxShadow: "0 0 0 1.5px white", /* Acts like a border but doesn’t change size */
-        borderRadius: 35,
+        borderRadius: 10,
         paddingHorizontal: 10,
         fontSize: 15,
         outlineColor: "transparent",
         color: "white",
         placeholderTextColor: "white",
         backgroundColor: "rgba(255, 255, 255, 0.1)",
-        
         outlineStyle: "none",
-        
     },
     
     button: {

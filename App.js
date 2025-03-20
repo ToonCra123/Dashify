@@ -84,7 +84,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
   
 
-if(true) //for log in page testing <<<<<
+if(false) //for log in page testing <<<<<
   {
    return <LoginWindow />; //this is the login page, if you want to test it, set the above 'if' statement to true and comment out the rest of the code
   }

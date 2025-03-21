@@ -8,7 +8,7 @@ import { Centerbar } from "./components/CenterBar.js";
 import AlbumView from "./AlbumView.js";
 import "react-native-gesture-handler";
 import MainMobile from "./components/mobile/MainMobile.js";
-import { getPlaylist, getSong, getTrending } from "./components/UI/WebRequests.js";
+import { getPlaylist, getSong, getTrending, loginUser } from "./components/UI/WebRequests.js";
 import { createNavigationContainerRef } from '@react-navigation/native';
 import LoginWindow from './components/UI/Login.js';         
 
@@ -82,11 +82,59 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
   }
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  let syncUserData = async (name, pass) => {
+    let data = await loginUser(name, pass);
+    
+    if(data.status === 200)
+    {
+      setUsername(name);
+      setPassword(pass);
+
+      //console.log(username, password, data);
+      return (
+        {
+          valid: true,
+          username: username,
+          password: password,
+          _id: data._id,
+        }
+      )
+    }
+    else
+    {
+      //console.error("username: '" + name + "' or password: '" + pass + "' do not exist");
+      return (
+        {
+          valid: false,
+          username: name,
+          password: pass,
+          _id: undefined,
+        }
+      )
+    }
+  }
+
   
 
-if(false) //for log in page testing <<<<<
+if(!isLoggedIn) //for log in page testing <<<<<
   {
-   return <LoginWindow />; //this is the login page, if you want to test it, set the above 'if' statement to true and comment out the rest of the code
+    return (
+    <LoginWindow 
+      username={username}
+      setUsername={setUsername}
+      password={password}
+      setPassword={setPassword}
+      syncUserData={syncUserData}
+      isLoggedIn={isLoggedIn}
+      setIsLoggedIn={setIsLoggedIn}
+
+    />
+    ); //this is the login page, if you want to test it, set the above 'if' statement to true and comment out the rest of the code
   }
 
   else

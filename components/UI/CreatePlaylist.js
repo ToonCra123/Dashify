@@ -184,7 +184,8 @@ const styles = StyleSheet.create({
     marginTop: 50,
     padding: 10,
     width: "50%",
-    color: "white"
+    color: "white",
+    outlineColor: "Transparent",
   },
   input2: {
     borderWidth: 1,
@@ -199,6 +200,7 @@ const styles = StyleSheet.create({
   descriptionInput: {
     height: 150,
     textAlignVertical: 'top',
+    outlineColor: "Transparent",
   },
   imageButton: {
     position: "absolute",

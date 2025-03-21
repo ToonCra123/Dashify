@@ -112,7 +112,7 @@ const Popup = () => {
   return (
     <TouchableOpacity onPress={() => setIsPopupVisible(true)} >
       <View style={styles.container}>
-        <Text style={styles.text2}>Upload Song</Text>
+        <Text style={styles.text3}>Upload Song</Text>
         <Modal
           visible={isPopupVisible}
           transparent={true}
@@ -136,6 +136,7 @@ const Popup = () => {
                   style={isTextInputHovered ? styles.TextInputHovered : styles.TextInput}
                   onChangeText={text => setTitle(text)}
                   placeholder='Title'
+                  placeholderTextColor={"#B0B0B0"}
                   onMouseEnter={() => setIsTextInputHovered(true)}
                   onMouseLeave={() => setIsTextInputHovered(false)}
                   value={title} />
@@ -147,6 +148,7 @@ const Popup = () => {
                   style={isTextInputHovered2 ? styles.TextInputHovered : styles.TextInput}
                   onChangeText={text => setArtist(text)}
                   placeholder='Artist'
+                  placeholderTextColor={"#B0B0B0"}
                   onMouseEnter={() => setIsTextInputHovered2(true)}
                   onMouseLeave={() => setIsTextInputHovered2(false)}
                   value={artist} />
@@ -158,6 +160,7 @@ const Popup = () => {
                   style={isTextInputHovered3 ? styles.TextInputHovered : styles.TextInput}
                   onChangeText={text => setYear(text)}
                   placeholder='Year'
+                  placeholderTextColor={"#B0B0B0"}
                   onMouseEnter={() => setIsTextInputHovered3(true)}
                   onMouseLeave={() => setIsTextInputHovered3(false)}
                   value={year} />
@@ -174,7 +177,7 @@ const Popup = () => {
                 onMouseEnter={() => setIsUploadBarHovered(true)}
                 onMouseLeave={() => setIsUploadBarHovered(false)}
                 >
-                  <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
+                  <Image style={styles.uploadImg} source={require('../../images/png/upload_icon_gray.png')}/>
                 </TouchableOpacity>
                 </View>
 
@@ -189,7 +192,7 @@ const Popup = () => {
                 onMouseEnter={() => setIsUploadBarHovered2(true)}
                 onMouseLeave={() => setIsUploadBarHovered2(false)}
                 >
-                  <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
+                  <Image style={styles.uploadImg} source={require('../../images/png/upload_icon_gray.png')}/>
                 </TouchableOpacity>
                 </View>
 
@@ -201,7 +204,7 @@ const Popup = () => {
                 onMouseEnter={() => setIsButtonHovered(true)}
                 onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <Text style={styles.text2}>Upload</Text>
+                  <Text style={styles.text4}>Upload</Text>
                 </TouchableOpacity>
 
 
@@ -261,8 +264,21 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 25
+    fontSize: 25,
   },
+
+  text3: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15
+  },
+
+  text4: {
+    color: "black",
+    fontWeight: "condensedBold",
+    fontSize: 15
+  },
+
   errorText: {
     marginTop: 10,
     color: "red",
@@ -277,6 +293,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 15,
+    marginTop: 10,
   },
   uploadImg: {
     width: 150,
@@ -285,13 +302,12 @@ const styles = StyleSheet.create({
   uploadBar: {
     color: "white",
     borderRadius: 10,
-    margin: 5,
-    padding: 5,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.05)",
     width: "35%",
     boxShadow: "1px 1px 1px 1px black",
+    paddingHorizontal: 10,
   },
 
   uploadBarHovered: {
@@ -302,8 +318,6 @@ const styles = StyleSheet.create({
     color: "white",
     placeholderTextColor: "white",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    margin: 5,
-    padding: 5,
     justifyContent: "center",
     alignItems: "center",
     width: "35%",
@@ -344,26 +358,28 @@ const styles = StyleSheet.create({
 },
 
   button: {
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    backgroundColor: "white",
     height: 50,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 15,
-    width: "50%",
+    marginTop: 10,
+    width: "25%",
     marginBottom: 5,
+    color: "black",
+    fontWeight: "bold",
     boxShadow: "1px 1px 1px 1px black",
 },
 
 buttonHovered: {
-  backgroundColor: "rgba(255, 255, 255, 0.1)",
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
   height: 50,
   borderRadius: 100,
   justifyContent: "center",
   alignItems: "center",
-  marginTop: 15,
+  marginTop: 10,
   boxShadow: "1px 1px 1px 1px black",
-  width: "50%",
+  width: "25%",
   marginBottom: 5,
 },
 

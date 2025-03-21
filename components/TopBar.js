@@ -71,7 +71,7 @@ let TopBar = (props) => {
             </View>
 
             <View style={styles.topBarGroupCenter}>
-            <Image style={{width: 50, height: 50, marginLeft: 10}} source={require("../images/png/Red-logo.png")}/>
+
                 <View style={{justifyContent: "center", backgroundColor: "rgba(255, 255, 255, 0.1)", borderRadius: 35}}>
                     <BarButton imageSource={home_icons.home} imageSourceHovered={home_icons.homeHovered} activation={handleHomePress}/>
                 </View>

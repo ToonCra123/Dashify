@@ -44,6 +44,7 @@ export default function LoginWindow(props) {
         setSuccessMessage("");
     }, [isSignup]);
 
+
     const handleLogin = async () => {
         setIsLoading(true);
         setError("");
@@ -110,6 +111,7 @@ export default function LoginWindow(props) {
         }
     };
 
+
     if (isLoggedIn) {
         return (
             <View style={styles.container}>
@@ -129,90 +131,109 @@ export default function LoginWindow(props) {
         );
     }
 
+    const [isUserInputHovered, setIsUserInputHovered] = useState(false);
+    const [isPassInputHovered, setIsPassInputHovered] = useState(false);
+    const [isConfirmPassInputHovered, setIsConfirmPassInputHovered] = useState(false);
+    const [isButtonHovered, setIsButtonHovered] = useState(false);
+    const [isToggleAccountButton, setIsToggleAccountButton] = useState(false);
+
+
     return (
         <View style={styles.container}>
-            <Animated.Image 
-                source={require("../../images/png/Red8.png")} 
-                style={{ 
-                    width: 175, 
-                    height: 175, 
-                    alignSelf: 'center', 
-                    position: 'absolute', 
-                    top: 20,
-                    transform: [{ rotate: spin }]
-                }}
-            />
-            <Text style={styles.title}>{isSignup ? "Create Account" : "Dashify Login"}</Text>
-            <View style={styles.subtitle}>
-            
-            {successMessage ? (
-                <Text style={styles.successText}>{successMessage}</Text>
-            ) : null}
-            <View style={styles.container2}>
-            <View style={styles.formGroup}>
-                <Text style={styles.label}>Username</Text>
-                <TextInput
-                    style={styles.input}
-                    value={username}
-                    onChangeText={setUsername}
-                    placeholder="Username"
-                    autoCapitalize="none"
-                    editable={!isLoading}
-                />
+            <View style={{alignItems: "center"}}>
+                <Text style={{color: "white", fontWeight: "bold", fontSize: "4rem"}}>Dashify</Text>
             </View>
-            
-            <View style={styles.formGroup}>
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                    style={styles.input}
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder="Password"
-                    secureTextEntry
-                    editable={!isLoading}
-                />
-            </View>
-            
-            {isSignup && (
-                <View style={styles.formGroup}>
-                    <Text style={styles.label}>Confirm Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={confirmPassword}
-                        onChangeText={setConfirmPassword}
-                        placeholder="Confirm password"
-                        secureTextEntry
-                        editable={!isLoading}
-                    />
-                </View>
-            )}
 
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            
-            <TouchableOpacity 
-                style={[styles.button, isLoading && styles.buttonDisabled]} 
-                onPress={isSignup ? handleSignup : handleLogin}
-                disabled={isLoading || !username || !password || (isSignup && (!confirmPassword))}
-            >
-                {isLoading ? (
-                    <ActivityIndicator color="#ffffff" />
-                ) : (
-                    <Text style={styles.buttonText}>{isSignup ? "Sign Up" : "Login"}</Text>
-                )}
-            </TouchableOpacity>
-            </View>
-            
-            
-            <TouchableOpacity 
-                style={styles.toggleMode} 
-                onPress={() => setIsSignup(!isSignup)}
-            >
-                <Text style={styles.toggleModeText}>
-                    {isSignup 
-                        ? "Already have an account? Login" 
-                        : "Don't have an account? Sign up"}
-                </Text>
-            </TouchableOpacity>
+            <View>
+                <View>
+                    <Text style={styles.title}>{isSignup ? "Create Account" : ""}</Text>
+                </View>
+
+                <View style={styles.subtitle}>
+                
+                    {successMessage ? (
+                        <Text style={styles.successText}>{successMessage}</Text>
+                    ) : null}
+
+                    <View style={styles.container2}>
+
+                        <View style={styles.formGroup}>
+                            <Text style={styles.label}>Username</Text>
+
+                            <TextInput
+                                style={isUserInputHovered ? styles.inputHovered : styles.input}
+                                value={username}
+                                onChangeText={setUsername}
+                                autoCapitalize="none"
+                                editable={!isLoading}
+                                onMouseEnter={() => setIsUserInputHovered(true)}
+                                onMouseLeave={() => setIsUserInputHovered(false)}
+                            />
+                        </View>
+                    
+                        <View style={styles.formGroup}>
+                            <Text style={styles.label}>Password</Text>
+                            <TextInput
+                                style={isPassInputHovered ? styles.inputHovered : styles.input}
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry
+                                editable={!isLoading}
+
+                                onMouseEnter={() => setIsPassInputHovered(true)}
+                                onMouseLeave={() => setIsPassInputHovered(false)}
+                            />
+                        </View>
+                        
+                        {isSignup && (
+                            <View style={styles.formGroup}>
+                                <Text style={styles.label}>Confirm Password</Text>
+                                <TextInput
+                                    style={isConfirmPassInputHovered ? styles.inputHovered : styles.input}
+                                    value={confirmPassword}
+                                    onChangeText={setConfirmPassword}
+                                    secureTextEntry
+                                    editable={!isLoading}
+
+                                    onMouseEnter={() => setIsConfirmPassInputHovered(true)}
+                                    onMouseLeave={() => setIsConfirmPassInputHovered(false)}
+                                />
+                            </View>
+                        )}
+
+                        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+                        
+                        <View                 
+                            onMouseEnter={() => setIsButtonHovered(true)}
+                            onMouseLeave={() => setIsButtonHovered(false)}
+                        >
+                            <TouchableOpacity 
+                                style={isLoading ? styles.buttonDisabled : isButtonHovered ? styles.buttonHovered : styles.button} 
+                                onPress={isSignup ? handleSignup : handleLogin}
+                                disabled={isLoading || !username || !password || (isSignup && (!confirmPassword))}
+                            >
+                                {isLoading ? (
+                                    <ActivityIndicator color="#ffffff" /> //???????
+                                ) : (
+                                    <Text style={styles.buttonText}>{isSignup ? "Sign Up" : "Login"}</Text>
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                
+                    <TouchableOpacity 
+                        style={styles.toggleMode} 
+                        onPress={() => setIsSignup(!isSignup)}
+                        onMouseEnter={() => setIsToggleAccountButton(true)}
+                        onMouseLeave={() => setIsToggleAccountButton(false)}
+                    >
+                        <Text style={isToggleAccountButton ? styles.toggleModeTextHovered : styles.toggleModeText}>
+                            {isSignup 
+                                ? "Already have an account? Login" 
+                                : "Don't have an account? Sign up"}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -220,10 +241,11 @@ export default function LoginWindow(props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 20,
+        width: "100%",
+        height: "100%",
+        gap: 100,
         justifyContent: "center",
-        backgroundColor: "black",
+        backgroundColor: "#121212",
     },
     title: {
         fontSize: 25,
@@ -240,7 +262,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     label: {
-        fontSize: 20,
+        fontSize: "1rem",
         fontWeight: "500",
         color: "white",
         marginBottom: 10,
@@ -249,21 +271,32 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 50,
-        borderWidth: 5,
-        borderColor: "#E50000",
-        borderRadius: 5,
+        borderRadius: 10,
         paddingHorizontal: 10,
         fontSize: 15,
         outlineColor: "transparent",
         color: "white",
         placeholderTextColor: "white",
         boxShadow: "1px 1px 1px 1px black",
-        backgroundColor: "#5E5E5E"
-        
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
+        outlineStyle: "none",
+    },
+
+    inputHovered: {
+        height: 50,
+        boxShadow: "0 0 0 1.5px white", /* Acts like a border but doesn’t change size */
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        fontSize: 15,
+        outlineColor: "transparent",
+        color: "white",
+        placeholderTextColor: "white",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        outlineStyle: "none",
     },
     
     button: {
-        backgroundColor: "#E50000",
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
         height: 50,
         borderRadius: 100,
         justifyContent: "center",
@@ -271,12 +304,28 @@ const styles = StyleSheet.create({
         marginTop: 15,
         boxShadow: "1px 1px 1px 1px black",
     },
+
+    buttonHovered: {
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        height: 50,
+        borderRadius: 100,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 15,
+        boxShadow: "1px 1px 1px 1px black",
+    },
+
     buttonDisabled: {
-        backgroundColor: "#97c3f7",
-        opacity: 0.5,
+        backgroundColor: "rgba(255, 255, 255, 0.025)",
+        height: 50,
+        borderRadius: 100,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 15,
+        boxShadow: "1px 1px 1px 1px black",
     },
     buttonText: {
-        color: "#fff",
+        color: "white",
         fontSize: 16,
         fontWeight: "600",
     },
@@ -300,8 +349,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     toggleModeText: {
-        color: "#E50000",
-        fontSize: 14,
+        color: "white",
+        fontSize: "1rem",
+    },
+    toggleModeTextHovered: {
+        color: "white",
+        fontSize: "1rem",
+        textDecorationLine: "underline",
     },
     successText: {
         color: "green",

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity} from 'react-native';
 import { CenterbarWindow } from './components/CenterBar';
-import { BottomBar } from './components/BottomBar';
 import { WindowInput } from './components/UI/WindowInputField';
 import Popup from './components/UI/UploadSong';
 
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
   },
   list: {
     width: "52%",
-    backgroundColor: "#222823",
+    backgroundColor: "#1F1F1F",
     borderRadius: 5,
     marginHorizontal: 10,
     padding: 30,

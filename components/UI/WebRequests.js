@@ -97,6 +97,40 @@ let createPlaylist = async (title, desc) => {
     }
 }
 
+let addPlaylistToUser = async (user, pass, playlistId) => {
+    try {
+        let response = await fetch(`https://api.toonhosting.net/user/playlist/add-playlist`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: user, password: pass, playlist: playlistId })
+        });
+        let data = await response.json();
+        data.status = response.status;
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+let removePlaylistFromUser = async (user, pass, playlistId) => {
+    try {
+        let response = await fetch(`https://api.toonhosting.net/user/playlist/remove-playlist`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: user, password: pass, playlist: playlistId })
+        });
+        let data = await response.json();
+        data.status = response.status;
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 let addSongToPlaylist = async (playlistId, songId) => {
     try {
         let response = await fetch(`https://api.toonhosting.net/playlist/${playlistId}`, {
@@ -190,5 +224,6 @@ let changePass = async (username, password, newpass) => {
 export { 
     getTrending, getSong, searchSongByTitle, searchSongByArtist, 
     searchPlaylist, getPlaylist, registerUser, loginUser, deleteUser, 
-    changePass, createPlaylist, addSongToPlaylist
+    changePass, createPlaylist, addSongToPlaylist, addPlaylistToUser, 
+    removePlaylistFromUser
 };

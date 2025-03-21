@@ -109,7 +109,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
     if (Platform.OS === 'web') {
 
-      if(!isLoggedIn) //for log in page testing <<<<<
+      if(isLoggedIn) //for log in page testing <<<<<
       {
         return (
         <LoginWindow 

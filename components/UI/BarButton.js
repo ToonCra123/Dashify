@@ -50,7 +50,7 @@ let BarButton = (props) => {
             <View style={isHovered ? styles.icon_containerHovered : styles.icon_container}>
                 <Image 
                     style={styles.icon}
-                    source={isHovered ? props.imageSourceHovered : props.imageSource}
+                    source={props.imageSourceHovered === undefined ? props.imageSource : isHovered ? props.imageSourceHovered : props.imageSource}
                 />
             </View>
         </TouchableOpacity>

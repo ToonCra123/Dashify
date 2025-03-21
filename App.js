@@ -85,6 +85,11 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({});
+
+  useEffect(()=>{
+    console.log(userData)
+  }, [userData]);
 
 
   let syncUserData = async (name, pass) => {
@@ -94,29 +99,10 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
     {
       setUsername(name);
       setPassword(pass);
+      setUserData(data);
+    }
 
-      //console.log(username, password, data);
-      return (
-        {
-          valid: true,
-          username: username,
-          password: password,
-          _id: data._id,
-        }
-      )
-    }
-    else
-    {
-      //console.error("username: '" + name + "' or password: '" + pass + "' do not exist");
-      return (
-        {
-          valid: false,
-          username: name,
-          password: pass,
-          _id: undefined,
-        }
-      )
-    }
+    return data
   }
 
   
@@ -132,6 +118,8 @@ if(!isLoggedIn) //for log in page testing <<<<<
       syncUserData={syncUserData}
       isLoggedIn={isLoggedIn}
       setIsLoggedIn={setIsLoggedIn}
+      setUserData={setUserData}
+      userData={userData}
 
     />
     ); //this is the login page, if you want to test it, set the above 'if' statement to true and comment out the rest of the code
@@ -171,6 +159,8 @@ if(!isLoggedIn) //for log in page testing <<<<<
                       songSearchData={songSearchData}      // Added missing prop
                       artistSearchData={artistSearchData}   // Added missing prop
                       searchQuery={searchQuery}             // Added missing prop
+                      setUserData={setUserData}
+                      userData={userData}
                     />
                   )}
                 </Stack.Screen>

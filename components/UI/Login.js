@@ -46,22 +46,23 @@ export default function LoginWindow(props) {
 
 
     const handleLogin = async () => {
-        setIsLoading(true);
         setError("");
-        try {
-            // Simulate a login request
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            // Check if the username and password are correct (for demo purposes)
-            if (username === "user" && password === "password") {
+        setIsLoading(true);
+        await props.syncUserData(username, password).then((data)=>{
+            //console.log(data);
+
+            if(data.valid)
+            {
                 setIsLoggedIn(true);
-            } else {
-                setError("Invalid username or password");
+                props.setIsLoggedIn(true);
             }
-        } catch (error) {
-            setError("An error occurred. Please try again.");
-        } finally {
+            else
+            {
+                setError("Username or Password does not exist. Please try again.");
+            }
+
             setIsLoading(false);
-        }
+        });
     };
 
     const handleSignup = async () => {
@@ -91,8 +92,8 @@ export default function LoginWindow(props) {
             let response = await registerUser(userData.username, userData.password);
              // Call the function to send data to the server
             
-            console.log("User data to be sent to server:", userData);
-            console.log("Response from server:", userData);
+            //console.log("User data to be sent to server:", userData);
+            //console.log("Response from server:", userData);
             
             // Show success message
             setSuccessMessage("Account created successfully! You can now login.");
@@ -112,24 +113,6 @@ export default function LoginWindow(props) {
     };
 
 
-    if (isLoggedIn) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Welcome!</Text>
-                <Text style={styles.subtitle}>You are successfully logged in.</Text>
-                <TouchableOpacity 
-                    style={styles.button} 
-                    onPress={() => {
-                        setIsLoggedIn(false);
-                        setUsername("");
-                        setPassword("");
-                    }}
-                >
-                    <Text style={styles.buttonText}>Logout</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
 
     const [isUserInputHovered, setIsUserInputHovered] = useState(false);
     const [isPassInputHovered, setIsPassInputHovered] = useState(false);
@@ -137,8 +120,7 @@ export default function LoginWindow(props) {
     const [isButtonHovered, setIsButtonHovered] = useState(false);
     const [isToggleAccountButton, setIsToggleAccountButton] = useState(false);
 
-
-    return (
+    return ( 
         <View style={styles.container}>
             <View style={{alignItems: "center"}}>
                 <Text style={{color: "white", fontWeight: "bold", fontSize: "4rem"}}>Dashify</Text>
@@ -235,6 +217,23 @@ export default function LoginWindow(props) {
                     </TouchableOpacity>
                 </View>
             </View>
+        </View>
+    );
+}
+
+let WelcomeLoginPage = () => {
+    return(
+        <View style={styles.container}>
+            <Text style={styles.title}>Welcome!</Text>
+            <Text style={styles.subtitle}>You are successfully logged in.</Text>
+            <TouchableOpacity 
+                style={styles.button} 
+                onPress={() => {
+
+                }}
+            >
+                <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
         </View>
     );
 }

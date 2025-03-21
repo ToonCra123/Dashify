@@ -1,35 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, Image, StyleSheet, Platform } from 'react-native';
 
-const PlaylistPopup = (props, { onCreatePlaylist }) => {
+const PlaylistPopup = (props) => {
   
   const [isVisible, setIsVisible] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
   const [description, setDescription] = useState('');
 
   const handleSubmit = () => {
-    if (onCreatePlaylist) {
-      onCreatePlaylist({
-        playlistName: playlistName.trim(), // This property name matters
-        description: description.trim()
-      });
-    }
-    props.setIsVisible(false);
-    setPlaylistName('');
-    setDescription('');
+    console.log("bruh");
+    setIsVisible(false);
   };
 
+
+  const [playlistButtonHovered, setPlaylistButtonHovered] = useState(false);
+
+  let toggle_hovered_state = (v) => {
+    v === undefined ? setPlaylistButtonHovered(!playlistButtonHovered) : setPlaylistButtonHovered(v);
+  }
 
 
   return (
     <View>
-      <Image source={require("../../images/png/add.png")} style={styles.button}></Image>
+      
+      {props.windowMinimized ? (
 
-      <Modal visible={props.isVisible} transparent animationType="fade">
+        <TouchableOpacity onPress={() => setIsVisible(true)} onMouseEnter={() => toggle_hovered_state(true)} onMouseLeave={() => toggle_hovered_state(false)}>
+          <View style={playlistButtonHovered ? styles.buttonWindowMinimizedHovered : styles.buttonWindowMinimized}>
+            
+            <Image source={require("../../images/png/add.png")} style={styles.button}></Image>
+          </View>
+        </TouchableOpacity>
+        ) : (
+          
+          <TouchableOpacity onPress={() => setIsVisible(true)} onMouseEnter={() => toggle_hovered_state(true)} onMouseLeave={() => toggle_hovered_state(false)}>
+            <View style={playlistButtonHovered ? styles.buttonWindowHovered : styles.buttonWindow}>
+                
+              <Image source={require("../../images/png/add.png")} style={styles.button}></Image>
+
+              <View>
+                <Text style={{color: "white", fontWeight: "bold"}}>Create</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+      )}
+
+      <Modal visible={isVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.popup}>
             <Text style={styles.title}>Playlist Details</Text>
-            <TouchableOpacity style={styles.arrow} onPress={{}}>
+
+            <TouchableOpacity style={styles.arrow} onPress={() => setIsVisible(false)}>
               <Image source={require('../../images/png/close.png')} style={styles.arrow}/>
             </TouchableOpacity>
             
@@ -70,7 +91,45 @@ const PlaylistPopup = (props, { onCreatePlaylist }) => {
 };
 
 
+
+
 const styles = StyleSheet.create({
+  buttonWindowMinimized: {
+    backgroundColor: "rgba(255, 255, 255, 0.05)", 
+    padding: 10,
+    borderRadius: 35,
+    opacity: 0.8,
+  },
+  buttonWindowMinimizedHovered: {
+    backgroundColor: "rgba(255, 255, 255, 0.05)", 
+    padding: 10,
+    borderRadius: 35,
+  },
+  buttonWindow:{
+    flexDirection: "row", 
+    backgroundColor: "rgba(255, 255, 255, 0.05)", 
+    justifyContent: "center", 
+    alignItems:"center", 
+    gap: 5, 
+    padding: 5, 
+    borderRadius: 35,
+    paddingHorizontal: 10,
+    paddingRight: 15,
+    opacity: 0.8,
+  },
+
+  buttonWindowHovered:{
+    flexDirection: "row", 
+    backgroundColor: "rgba(255, 255, 255, 0.05)", 
+    justifyContent: "center", 
+    alignItems:"center", 
+    gap: 5, 
+    padding: 5, 
+    borderRadius: 35,
+    paddingHorizontal: 10,
+    paddingRight: 15,
+  },
+
   button: {
     height: 30,
     width: 30,

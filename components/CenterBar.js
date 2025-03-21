@@ -48,6 +48,9 @@ function Centerbar(props)
         setSelectedContent={props.setSelectedContent} 
         setCurrentSong={props.setCurrentSong}
 
+        setUserData={props.setUserData}
+        userData={props.userData}
+
         /> ) : 
         
         <CenterbarWindowCollapsed
@@ -60,6 +63,9 @@ function Centerbar(props)
           selected_content={props.selected_content} 
           setSelectedContent={props.setSelectedContent} 
           setCurrentSong={props.setCurrentSong}
+
+          setUserData={props.setUserData}
+          userData={props.userData}
         />}
       {
 
@@ -382,6 +388,8 @@ function CenterbarWindow(props){
 
   }
 
+  console.log(props.userData, "CenterBarWindow")
+
   useEffect(() => {
     if (props.collapse_menu_icons) {
       props.collapseMenu 
@@ -392,6 +400,7 @@ function CenterbarWindow(props){
 
 
     const [isAddPlaylistVisible, setIsAddPlaylistVisible] = useState(false);
+    const [playlistData, setPlaylistData] = useState([]);
   
     return(
       <LinearGradient 
@@ -404,10 +413,11 @@ function CenterbarWindow(props){
 
           <View style={styles.PlaylistBarGroupLeft}>
 
-          <WindowBarButtonUI
-          imageSource={require('../images/png/library_selected.png')}>
-
-          </WindowBarButtonUI>
+            <WindowBarButtonUI
+              imageSource={require('../images/png/library_selected.png')}
+              activation={toggle_menu_state}>
+          
+            </WindowBarButtonUI>
 
             <View>
               <Text style={styles.libraryHeader}>Your Library</Text>
@@ -421,18 +431,16 @@ function CenterbarWindow(props){
             <TouchableOpacity style={{flexDirection:"row", justifyContent: "center", alignItems: "center", gap: 5}}
               onPress={{}}>
 
-              <View style={addPlaylistHovered ? styles.addPlaylistHovered : styles.addPlaylist}
-                onMouseEnter={() => hover_add_playlist(true)}
-                onMouseLeave={() => hover_add_playlist(false)}
-                >
-                
-                  <PlaylistPopup onCreatePlaylist={playlistHandler} setIsVisible={setIsAddPlaylistVisible} isVisible={isAddPlaylistVisible}/>
-                  
-                  <View>
-                    <Text style={{color: "white", fontWeight: "bold"}}>Create</Text>
-                  </View>
 
-              </View>
+              <PlaylistPopup 
+                playlistData={playlistData} 
+                setPlaylistData={setPlaylistData} 
+                onCreatePlaylist={playlistHandler} 
+                setIsVisible={setIsAddPlaylistVisible} 
+                isVisible={isAddPlaylistVisible} 
+                windowMinimized={false}/>
+                  
+
             </TouchableOpacity>
 
             <WindowBarButtonUI
@@ -519,6 +527,7 @@ function CenterbarWindowCollapsed(props){
 
     const [addPlaylistHovered, setAddPlaylistHovered] = useState(false);
     const [isAddPlaylistVisible, setIsAddPlaylistVisible] = useState(false);
+    const [playlistData, setPlaylistData] = useState([]);
     
 
     let hover_add_playlist = (v) => {
@@ -546,12 +555,14 @@ function CenterbarWindowCollapsed(props){
               >
             </WindowBarButtonUI>
 
-            <View style={addPlaylistHovered ? styles.addPlaylistHovered : styles.addPlaylist}
-                      onMouseEnter={() => hover_add_playlist(true)}
-                      onMouseLeave={() => hover_add_playlist(false)}
-                      >
-                      <PlaylistPopup onCreatePlaylist={playlistHandler} setIsVisible={setIsAddPlaylistVisible} isVisible={isAddPlaylistVisible}/>
-            </View>
+            <PlaylistPopup 
+              playlistData={playlistData} 
+              setPlaylistData={setPlaylistData} 
+              onCreatePlaylist={playlistHandler} 
+              setIsVisible={setIsAddPlaylistVisible} 
+              isVisible={isAddPlaylistVisible} 
+              windowMinimized/>
+
             
             <View>
               <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>

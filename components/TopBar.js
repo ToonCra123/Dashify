@@ -13,6 +13,8 @@ let TopBar = (props) => {
         if (navigationRef.current) {
             navigationRef.current.navigate('Home');
         }
+
+        props.setQuery("");
     }
 
     const navigation = useNavigation();

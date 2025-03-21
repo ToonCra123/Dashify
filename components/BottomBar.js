@@ -1,9 +1,9 @@
 import React, { useState, useEffect  } from 'react';
-import { StyleSheet, View, Text, Image, Animated, Easing } from 'react-native';
+import { StyleSheet, View, Text, Image, Animated, Easing, TouchableOpacity } from 'react-native';
 import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
 import { Audio } from 'expo-av';
-import { getSong } from './UI/WebRequests';
+import { addSongToPlaylist, getSong } from './UI/WebRequests';
 import useAnimatedValue from "./UI/UIAnimations.js"
 import { ImageBackground } from 'react-native-web';
 
@@ -269,6 +269,33 @@ let BottomBar = (props) => {
 
   //set what ever number you are animating to actualExampleValue.
 
+
+
+
+  const [isAddSongButtonHovered, setIsAddSongButtonHovered] = useState(false);
+  const [isAddSongButtonToggled, setIsAddSongButtonToggled] = useState(false);
+
+  const addSongButtonIcons = {
+    add_circle: require("./../images/png/add_circle.png"),
+    check_circle: require("./../images/png/check_circle.png"),
+  }
+
+
+  let handle_addSongButtonHover = (v) => {
+    v === undefined ? setIsAddSongButtonHovered(!isAddSongButtonHovered) : setIsAddSongButtonHovered(v);
+  }
+
+  let handle_addSongButtonToggled = async (v) => {
+    (v === undefined) ? setIsAddSongButtonToggled(!isAddSongButtonToggled) : setIsAddSongButtonToggled(v);
+
+    console.log(props.selected_playlistID, props.currSong._id, "call");
+    await addSongToPlaylist(props.selected_playlistID, props.currSong._id);
+  }
+
+
+
+
+
   
 
 
@@ -299,6 +326,43 @@ let BottomBar = (props) => {
           <Text style={styles.songInfo_name}>{props.currSong.title}</Text>
           <Text style={styles.songInfo_artist}>{props.currSong.artist}</Text>
         </View>
+        
+        <TouchableOpacity 
+          style={isAddSongButtonHovered ? 
+            {
+              width: 20, 
+              height: 20,
+              transform: [{scale: 1.1}]
+            }
+            : 
+            {
+              width: 20, 
+              height: 20,
+              opacity: isAddSongButtonToggled ? 1 : 0.7,
+            }} 
+          onMouseEnter={() =>handle_addSongButtonHover(true)}
+          onMouseLeave={() => handle_addSongButtonHover(false)}
+          onPress={() => handle_addSongButtonToggled()}
+          >
+          
+          <Image 
+            source={isAddSongButtonToggled ? addSongButtonIcons.check_circle : addSongButtonIcons.add_circle}
+            resizeMode="contain"
+            style={isAddSongButtonToggled ? 
+              {
+                width: "100%",
+                height: "100%",
+                tintColor: "#46eba1",
+              } : {
+              width: "100%",
+              height: "100%",
+
+            }}
+            >
+
+          </Image>
+        </TouchableOpacity>
+
       </View>
 
 

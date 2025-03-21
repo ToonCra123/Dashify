@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, Image, StyleSheet, Platform } from 'react-native';
+import { addPlaylistToUser, createPlaylist } from './WebRequests';
 
 const PlaylistPopup = (props) => {
   
@@ -7,8 +8,25 @@ const PlaylistPopup = (props) => {
   const [playlistName, setPlaylistName] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSubmit = () => {
-    console.log("bruh");
+  const handleSubmit = async () => {
+    console.log(props.username, props.password);
+
+    let playlist_id = "";
+
+    await createPlaylist(playlistName, description).then(async (data)=>{
+      console.log(data)
+
+      if(data.status === 201)
+        {
+          playlist_id = data._id;
+
+          console.log(props.username, props.password, playlist_id);
+
+          //await addPlaylistToUser(props.username, props.password, playlist_id).then((r)=>{console.log(r, "this")});
+        }
+    });
+
+
     setIsVisible(false);
   };
 

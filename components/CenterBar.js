@@ -27,6 +27,7 @@ function Centerbar(props)
   }
 
   
+
   const [collapseMenu, setCollapseMenu] = useState(false);
   const [collapseMenuIcon, setCollapseMenuIcon] = useState(collapseMenu ? collapse_menu_icons.left_open : collapse_menu_icons.left_close);
 
@@ -50,6 +51,13 @@ function Centerbar(props)
 
         setUserData={props.setUserData}
         userData={props.userData}
+        username={props.username}
+        setUsername={props.setUsername}
+        password={props.password}
+        setPassword={props.setPassword}
+
+        selected_playlistID={props.selected_playlistID}
+        setSelectedPlaylistID={props.setSelectedPlaylistID}
 
         /> ) : 
         
@@ -66,6 +74,13 @@ function Centerbar(props)
 
           setUserData={props.setUserData}
           userData={props.userData}
+          username={props.username}
+          setUsername={props.setUsername}
+          password={props.password}
+          setPassword={props.setPassword}
+
+          selected_playlistID={props.selected_playlistID}
+          setSelectedPlaylistID={props.setSelectedPlaylistID}
         />}
       {
 
@@ -86,6 +101,8 @@ function Centerbar(props)
           setCurrentSong={props.setCurrentSong} 
           songSearchData={props.songSearchData} 
           artistSearchData={props.artistSearchData} 
+          selected_playlistID={props.selected_playlistID}
+          setSelectedPlaylistID={props.setSelectedPlaylistID}
         />
       ) : (
         <CenterbarWindowFeed 
@@ -257,7 +274,7 @@ function CenterbarWindowContentDetails(props){
 
   useEffect(() => {
 
-    getPlaylist("67d38e527de6a9174989d40e").then((obj) =>{
+    getPlaylist(props.selected_playlistID).then((obj) =>{
       asyncGetSongs(obj.songs).then(()=>{
         setIsPlaylistLoading(false);
       })
@@ -266,7 +283,7 @@ function CenterbarWindowContentDetails(props){
       setFetchedPlaylistDesc(obj.description);
     })
     
-  }, []);
+  }, [props.selected_playlistID]);
 
   let contentTitle = JSON.parse(sessionStorage.getItem("content_title"));
   let contentArtist = JSON.parse(sessionStorage.getItem("content_artist"));
@@ -304,8 +321,8 @@ function CenterbarWindowContentDetails(props){
 
   const [fetchedPlaylistName, setFetchedPlaylistName] = useState(".......")
   const [fetchedPlaylistDesc, setFetchedPlaylistDesc] = useState(".......")
-  const [fetchedPlaylistImage, setFetchedPlaylistImage] = useState("https://i.pinimg.com/originals/80/b5/81/80b5813d8ad81a765ca47ebc59a65ac3.jpg");
-  
+  const [fetchedPlaylistImage, setFetchedPlaylistImage] = useState("https://media.discordapp.net/attachments/982149047563452456/1352577605337092176/default_album_cover.png?ex=67de858e&is=67dd340e&hm=2da92bce7bdd0a0ad6be6409d90a7204a130288e9090c158c0f0bf02a8d5ded9&=&format=webp&quality=lossless");
+  //lmao that worked
 
   return(
     <LinearGradient style={styles.centerbarWindowContent}
@@ -358,6 +375,62 @@ function CenterbarWindowContentDetails(props){
   );
 }
 
+const ids = [
+  "67dd090ae6b3980bca16f189",
+  "67dd092ee6b3980bca16f18b",
+  "67dd0944e6b3980bca16f18d",
+  "67dd0957e6b3980bca16f18f"
+];
+
+const temp_responses = [
+  {
+    _id: "67dd090ae6b3980bca16f189",
+    title: "lmao what is this",
+    description: "true true",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    _id: "67dd092ee6b3980bca16f18b",
+    title: "nah id win AAAA",
+    description: "dfrf",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    _id: "67dd0944e6b3980bca16f18d",
+    title: "W rizz?",
+    description: "yes W",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    _id: "67dd0957e6b3980bca16f18f",
+    title: "HBRIUYGBUI",
+    description: "yooo haha",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    __v: 4,
+    _id: "67d38e527de6a9174989d40e",
+    description: "I really need to update this... Oh a 98",
+    songs: [
+      "67d25f2e31ba33534c6a6e37",
+      "67d22d2c31ba33534c6a6e03",
+      "67d26b277de6a9174989d3b8",
+      "67d22ef331ba33534c6a6e07"
+    ],
+    status: 200,
+    title: "Awesome Tunes ❤️"
+  },
+];
+
+
 function CenterbarWindow(props){
 
   // TODO: Add a call to get playlists from backend
@@ -388,7 +461,7 @@ function CenterbarWindow(props){
 
   }
 
-  console.log(props.userData, "CenterBarWindow")
+  //console.log(props.userData, "CenterBarWindow")
 
   useEffect(() => {
     if (props.collapse_menu_icons) {
@@ -401,6 +474,32 @@ function CenterbarWindow(props){
 
     const [isAddPlaylistVisible, setIsAddPlaylistVisible] = useState(false);
     const [playlistData, setPlaylistData] = useState([]);
+
+    
+    const [playlistCovers, setPlaylistCovers] = useState({});
+
+    let grabPlaylistCover = async (pl) => {
+      //console.log(pl, "ok");
+
+      if(pl.length > 0)
+        {
+          //console.log(await getSong(pl.songs[0]).then((s) => s.imagePath));
+          return await getSong(pl[0]).then((s) => s.imagePath);
+        }
+    };
+
+    useEffect(() => {
+      const fetchCovers = async () => {
+        let covers = {};
+        for (let response of temp_responses) {
+          //console.log("response.songs:", response.songs);
+          covers[response._id] = await grabPlaylistCover(response.songs);
+        }
+        setPlaylistCovers(covers);
+      };
+    
+      fetchCovers();
+    }, [temp_responses]);
   
     return(
       <LinearGradient 
@@ -438,7 +537,14 @@ function CenterbarWindow(props){
                 onCreatePlaylist={playlistHandler} 
                 setIsVisible={setIsAddPlaylistVisible} 
                 isVisible={isAddPlaylistVisible} 
-                windowMinimized={false}/>
+                windowMinimized={false}
+                setUserData={props.setUserData}
+                userData={props.userData}
+                username={props.username}
+                setUsername={props.setUsername}
+                password={props.password}
+                setPassword={props.setPassword}/>
+                
                   
 
             </TouchableOpacity>
@@ -481,14 +587,26 @@ function CenterbarWindow(props){
                       activation={() =>  navigation.navigate('AlbumView', { 
                         playlist: playlist
                       })}
+
+                      
                     />
                   ))}
-            <LibraryRow 
-              rowName="Skibity" 
-              rowDesc="very cool playlist" 
-              activation={props.setSelectedContent}
-              setCurrentSong={props.setCurrentSong}
-            ></LibraryRow>
+            
+            {temp_responses.map((response) => (
+              <LibraryRow
+                key={response._id}
+                rowName={response.title}
+                rowDesc={response.description}
+                activation={props.setSelectedContent}
+                setCurrentSong={props.setCurrentSong}
+
+                selected_playlistID={props.selected_playlistID}
+                setSelectedPlaylistID={props.setSelectedPlaylistID}
+
+                rowID={response._id}
+                imageSource={playlistCovers[response._id]} 
+              />
+            ))}
           </View>
         </ScrollView>
 
@@ -535,6 +653,54 @@ function CenterbarWindowCollapsed(props){
   
     }
     
+    
+
+    
+    let testPL = async () => {
+
+      for (let i = 0; i < 4; i++)
+        {
+          await getPlaylist(ids[i]).then((d)=> {
+            console.log(d);
+          });
+
+
+        }
+      
+        await getPlaylist("67d38e527de6a9174989d40e").then((a) => {
+          console.log(a, "oooo")
+        });
+
+    }
+
+    //testPL();
+
+    const [playlistCovers, setPlaylistCovers] = useState({});
+
+    let grabPlaylistCover = async (pl) => {
+      //console.log(pl, "ok");
+
+      if(pl.length > 0)
+        {
+          //console.log(await getSong(pl.songs[0]).then((s) => s.imagePath));
+          return await getSong(pl[0]).then((s) => s.imagePath);
+        }
+    };
+
+    useEffect(() => {
+      const fetchCovers = async () => {
+        let covers = {};
+        for (let response of temp_responses) {
+          //console.log("response.songs:", response.songs);
+          covers[response._id] = await grabPlaylistCover(response.songs);
+        }
+        setPlaylistCovers(covers);
+      };
+    
+      fetchCovers();
+    }, [temp_responses]);
+    
+    
 
   
     return(
@@ -561,13 +727,40 @@ function CenterbarWindowCollapsed(props){
               onCreatePlaylist={playlistHandler} 
               setIsVisible={setIsAddPlaylistVisible} 
               isVisible={isAddPlaylistVisible} 
-              windowMinimized/>
+              windowMinimized
+              setUserData={props.setUserData}
+              userData={props.userData}
+              username={props.username}
+              setUsername={props.setUsername}
+              password={props.password}
+              setPassword={props.setPassword}
+              />
+              
 
             
             <View>
               <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
                 <View style={styles.libraryContents}>
-                  <CollapseLibraryRow rowName="Skibity" rowDesc="very cool playlist" activation={props.setSelectedContent}></CollapseLibraryRow>
+                  {temp_responses.map((response) => (
+
+                    
+
+                    <CollapseLibraryRow
+                      key={response._id}
+                      rowName={response.title}
+                      rowDesc={response.description}
+                      activation={props.setSelectedContent}
+                      //activation={() => {grabPlaylistCover(response.songs)}}
+
+                      selected_playlistID={props.selected_playlistID}
+                      setSelectedPlaylistID={props.setSelectedPlaylistID}
+                      rowID={response._id}
+                      imageSource={playlistCovers[response._id]} 
+
+                      
+                      
+                    />
+                  ))}
                 </View>
               </ScrollView>
             </View>
@@ -594,10 +787,12 @@ const LibraryRow = (props) => {
       props.activation();
     }
 
+    //props.setSelectedPlaylistID(props.rowID);
+
     // Add check to ensure setCurrentSong exists before calling it
     if (props.setCurrentSong && typeof props.setCurrentSong === 'function' && props.songdata) {
       props.setCurrentSong(props.songdata);
-      console.log(props.songdata, props.setCurrentSong);
+      //console.log(props.songdata, props.setCurrentSong);
     }
   };
 
@@ -611,7 +806,7 @@ const LibraryRow = (props) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         <Image
-          source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/test_album.png")}
+          source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/default_album_cover.png")}
           style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
         />
         
@@ -658,9 +853,14 @@ const CollapseLibraryRow = (props) => {
       props.activation();
     }
 
-    props.setCurrentSong(props.songdata);
-    console.log(props.songdata, props.setCurrentSong);
+
+    props.setSelectedPlaylistID(props.rowID);
+
+    //props.setCurrentSong(props.songdata);
+    //console.log(props.songdata, props.setCurrentSong);
   };
+
+  //console.log(props.imageSource);
 
   return(
     <TouchableOpacity 
@@ -672,7 +872,7 @@ const CollapseLibraryRow = (props) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         <Image
-          source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/test_album.png")}
+          source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/default_album_cover.png")}
           style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
         />
       </View>
@@ -734,7 +934,7 @@ let FeedBox = (props) => {
             >
             
               <ImageBackground
-                source={props.imageSource ? props.imageSource : require("./../images/png/test_album.png")}
+                source={props.imageSource ? props.imageSource : require("./../images/png/default_album_cover.png")}
                 style={{flex:1,}}
                 />
               
@@ -810,7 +1010,7 @@ let Catagory = (props) => {
             >
         
           </FlatList>
-          : <FeedBox rowName={"EMPTY CATAGROY DATA"}rowDesc={"MAKE SURE YOU ARE REQUESTING DATA"} imageSource={{uri: "https://media.tenor.com/UnFx-k_lSckAAAAM/amalie-steiness.gif"}}></FeedBox>}
+          : <FeedBox rowName={"EMPTY CATAGROY DATA"}rowDesc={"MAKE SURE YOU ARE REQUESTING DATA"} imageSource={{uri: "https://media.discordapp.net/attachments/982149047563452456/1352577605337092176/default_album_cover.png?ex=67de858e&is=67dd340e&hm=2da92bce7bdd0a0ad6be6409d90a7204a130288e9090c158c0f0bf02a8d5ded9&=&format=webp&quality=lossless"}}></FeedBox>}
         </View>
       </WebScrollView>
     </View>

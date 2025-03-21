@@ -62,6 +62,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
   }
 
   let set_song = (s) =>{
+  
     if(!(currSong._id === s._id)){
         setCurrSong(s);
         setShouldStopSong(true);
@@ -75,6 +76,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
   const [songSearchData, setSongSearchData] = useState([]);
   const [artistSearchData, setArtistSearchData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selected_playlistID, setSelectedPlaylistID] = useState("67d38e527de6a9174989d40e");
 
   let song_search_window = (data) => {
     setSongSearchData(data[0]);
@@ -107,7 +109,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
   
 
-if(!isLoggedIn) //for log in page testing <<<<<
+if(isLoggedIn) //for log in page testing <<<<<
   {
     return (
     <LoginWindow 
@@ -136,7 +138,7 @@ if(!isLoggedIn) //for log in page testing <<<<<
               setSelectedContent={content_selected}
               setCurrentSong={set_song}
               setQueryData={song_search_window}  // Added missing prop
-              setQuery={setSearchQuery}   
+              setQuery={setSearchQuery}
             />
             
             {fetchedTrendingSongs.length > 0 && (
@@ -161,6 +163,12 @@ if(!isLoggedIn) //for log in page testing <<<<<
                       searchQuery={searchQuery}             // Added missing prop
                       setUserData={setUserData}
                       userData={userData}
+                      username={username}
+                      setUsername={setUsername}
+                      password={password}
+                      setPassword={setPassword}
+                      selected_playlistID={selected_playlistID}
+                      setSelectedPlaylistID={setSelectedPlaylistID}
                     />
                   )}
                 </Stack.Screen>
@@ -176,6 +184,10 @@ if(!isLoggedIn) //for log in page testing <<<<<
               shouldStopSong={shouldStopSong}
               setShouldStopSong={setShouldStopSong}
               trendingContent={fetchedTrendingSongs}
+              selected_playlistID={selected_playlistID}
+              setSelectedPlaylistID={setSelectedPlaylistID}
+
+              
             />
           </View>
         </NavigationContainer>

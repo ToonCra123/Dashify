@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, Image } from 'react-native';
 import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
 import { Audio } from 'expo-av';
+import { getSong } from './UI/WebRequests';
+
 
 let lastplayedsound;
 
@@ -65,6 +67,7 @@ let BottomBar = (props) => {
   const playSound = async () => {
     if (!props.currSong) return;
 
+    await getSong(props.currSong._id, true);
     const {sound} = await Audio.Sound.createAsync(
       { uri: props.currSong.mp3Path,
         

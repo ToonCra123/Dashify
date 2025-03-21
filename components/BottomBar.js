@@ -71,6 +71,7 @@ let BottomBar = (props) => {
   const playSound = async () => {
     if (!props.currSong) return;
 
+    await getSong(props.currSong._id, true);
     const {sound} = await Audio.Sound.createAsync(
       { uri: props.currSong.mp3Path,
         

@@ -46,7 +46,7 @@ let LoginPage = (props) => {
             </View>
             <View style={styles.inputContainer}>
                 <TextInput placeholderTextColor={'grey'} placeholder="Password" 
-                            value={password} onChangeText={setPassword}/>
+                            value={password} onChangeText={setPassword} secureTextEntry={true}/>
             </View>
             <TouchableOpacity style={styles.LoginButton} onPress={handleLogin}>
                 <Text style={styles.textStyle}>Login</Text>

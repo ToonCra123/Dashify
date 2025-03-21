@@ -111,7 +111,7 @@ let MainMobile = () => {
     // Page States and User States
     let [pageSelection, setPageSelection] = useState(0);
     let [user, setUser] = useState({});
-    let [loggedIn, setLoggedIn] = useState(true);
+    let [loggedIn, setLoggedIn] = useState(false);
 
 
     return (  

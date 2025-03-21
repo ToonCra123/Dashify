@@ -107,91 +107,78 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
     return data
   }
 
-  
-
-if(isLoggedIn) //for log in page testing <<<<<
-  {
-    return (
-    <LoginWindow 
-      username={username}
-      setUsername={setUsername}
-      password={password}
-      setPassword={setPassword}
-      syncUserData={syncUserData}
-      isLoggedIn={isLoggedIn}
-      setIsLoggedIn={setIsLoggedIn}
-      setUserData={setUserData}
-      userData={userData}
-
-    />
-    ); //this is the login page, if you want to test it, set the above 'if' statement to true and comment out the rest of the code
-  }
-
-  else
-  {
     if (Platform.OS === 'web') {
-      return (
-        <NavigationContainer ref={navigationRef}>
-          <View style={styles.container}>
-            <TopBar
-              selected_content={selected_content}
-              setSelectedContent={content_selected}
-              setCurrentSong={set_song}
-              setQueryData={song_search_window}  // Added missing prop
-              setQuery={setSearchQuery}
-            />
-            
-            {fetchedTrendingSongs.length > 0 && (
-              <Stack.Navigator
-                screenOptions={{
-                  headerShown: false,
-                  cardStyle: { backgroundColor: '#08090A' }
-                }}
-              >
-                <Stack.Screen name="Home">
-                  {(props) => (
-                    <Centerbar
-                      {...props}
-                      navigation={props.navigation}
-                      selected_content={selected_content}
-                      currSong={currSong}
-                      setSelectedContent={content_selected}
-                      trendingContent={fetchedTrendingSongs}
-                      setCurrentSong={set_song}
-                      songSearchData={songSearchData}      // Added missing prop
-                      artistSearchData={artistSearchData}   // Added missing prop
-                      searchQuery={searchQuery}             // Added missing prop
-                      setUserData={setUserData}
-                      userData={userData}
-                      username={username}
-                      setUsername={setUsername}
-                      password={password}
-                      setPassword={setPassword}
-                      selected_playlistID={selected_playlistID}
-                      setSelectedPlaylistID={setSelectedPlaylistID}
-                    />
-                  )}
-                </Stack.Screen>
-                <Stack.Screen name="AlbumView" component={AlbumView} />
-              </Stack.Navigator>
-            )}
-    
-            <BottomBar
-              currSong={currSong}
-              selected_content={selected_content}
-              setSelectedContent={content_selected}
-              setCurrentSong={set_song}
-              shouldStopSong={shouldStopSong}
-              setShouldStopSong={setShouldStopSong}
-              trendingContent={fetchedTrendingSongs}
-              selected_playlistID={selected_playlistID}
-              setSelectedPlaylistID={setSelectedPlaylistID}
 
+      if(!isLoggedIn) //for log in page testing <<<<<
+      {
+        return (
+        <LoginWindow 
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+          syncUserData={syncUserData}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+          setUserData={setUserData}
+          userData={userData}
+
+        />
+        ); //this is the login page, if you want to test it, set the above 'if' statement to true and comment out the rest of the code
+      } else {
+        return (
+          <NavigationContainer ref={navigationRef}>
+            <View style={styles.container}>
+              <TopBar
+                selected_content={selected_content}
+                setSelectedContent={content_selected}
+                setCurrentSong={set_song}
+                setQueryData={song_search_window}  // Added missing prop
+                setQuery={setSearchQuery}   
+              />
               
-            />
-          </View>
-        </NavigationContainer>
-      );
+              {fetchedTrendingSongs.length > 0 && (
+                <Stack.Navigator
+                  screenOptions={{
+                    headerShown: false,
+                    cardStyle: { backgroundColor: '#08090A' }
+                  }}
+                >
+                  <Stack.Screen name="Home">
+                    {(props) => (
+                      <Centerbar
+                        {...props}
+                        navigation={props.navigation}
+                        selected_content={selected_content}
+                        currSong={currSong}
+                        setSelectedContent={content_selected}
+                        trendingContent={fetchedTrendingSongs}
+                        setCurrentSong={set_song}
+                        songSearchData={songSearchData}      // Added missing prop
+                        artistSearchData={artistSearchData}   // Added missing prop
+                        searchQuery={searchQuery}             // Added missing prop
+                        setUserData={setUserData}
+                        userData={userData}
+                      />
+                    )}
+                  </Stack.Screen>
+                  <Stack.Screen name="AlbumView" component={AlbumView} />
+                </Stack.Navigator>
+              )}
+      
+              <BottomBar
+                currSong={currSong}
+                selected_content={selected_content}
+                setSelectedContent={content_selected}
+                setCurrentSong={set_song}
+                shouldStopSong={shouldStopSong}
+                setShouldStopSong={setShouldStopSong}
+                trendingContent={fetchedTrendingSongs}
+              />
+            </View>
+          </NavigationContainer>
+        );
+      }
     } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
       return (
         <View style={styles.container}>
@@ -199,7 +186,7 @@ if(isLoggedIn) //for log in page testing <<<<<
         </View>
       );
     }
-  }
+  
 }
 
 let popups = () => {}

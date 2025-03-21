@@ -1,8 +1,6 @@
 import React, { useState, useRef} from 'react';
 import { View, Button, Modal, Text, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
 
-
-
 const Popup = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false); 
 
@@ -77,7 +75,6 @@ const Popup = () => {
       return;
     }
     
-
     setErrorMsg('');
     if (song) {
       setSelectedSong(song);
@@ -116,67 +113,70 @@ const Popup = () => {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <TouchableOpacity style={styles.arrow} onPress={() => setIsPopupVisible(false)}>
-                <Image style={styles.uploadImg} source={require('../../images/png/close.png')}/>
+                <Image style={{height: 50, width: 50}} source={require('../../images/png/close.png')}/>
               </TouchableOpacity>
               <Text style={styles.text}>Upload a Song</Text>
               <Text style={styles.text}>MP3 or WAV file format</Text>
-
               <Text style={styles.errorText}>{errorMsg}</Text>
 
+              <View style={styles.uploadContainer}>
+
+              <View>
+              <Text style={styles.label}>Song Title</Text>
+              <TextInput
+                  style={styles.TextInput}
+                  onChangeText={text => setTitle(text)}
+                  placeholder='Title'
+                  value={title} />
+                  </View>
+                
+                  <View>
+                  <Text style={styles.label}>Song Artist</Text>
+                <TextInput
+                  style={styles.TextInput}
+                  onChangeText={text => setArtist(text)}
+                  placeholder='Artist'
+                  value={artist} />
+                  </View>
+                
+                  <View>
+                  <Text style={styles.label}>Release Year</Text>
+                <TextInput
+                  style={styles.TextInput}
+                  onChangeText={text => setYear(text)}
+                  placeholder='Year'
+                  value={year} />
+                  </View>
 
               <View style={styles.uploadBar}>
-                <Text>Upload Image</Text>
+                <Text style={styles.text2}>Upload Image</Text>
                 {selectedFile && (
-                  <Text>
+                  <Text style={styles.text2}>
                     Selected: {selectedFile.name} (Size: {(selectedFile.size / 1024).toFixed(2)} kbs)
                   </Text>
                 )}
                 <TouchableOpacity onPress={handlePress}>
-                  <Image style={styles.uploadImg} source={require('../../images/png/upload_icon.jpg')}/>
+                  <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
                 </TouchableOpacity>
-              </View>
+                </View>
 
-
-              <View style={styles.uploadBar}>
-                <Text>Upload Song</Text>
+                <View style={styles.uploadBar}>
+                <Text style={styles.text2}>Upload Audio</Text>
                 {selectedSong && (
-                  <Text>
+                  <Text style={styles.text2}>
                     Selected: {selectedSong.name} (Size: {(selectedSong.size / 1024).toFixed(2)} kbs)
                   </Text>
                 )}
                 <TouchableOpacity onPress={handleSongPress}>
-                  <Image style={styles.uploadImg} source={require('../../images/png/upload_icon.jpg')}/>
+                  <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
                 </TouchableOpacity>
+                </View>
+
               </View>
 
-
-              <View style={styles.uploadBar}>
-                <Text>Title</Text>
-                <TextInput
-                  style={{ height: 45, width: 300, borderWidth: 2, borderRadius: 10, padding: 10}}
-                  onChangeText={text => setTitle(text)}
-                  value={title} />
-              </View>
-
-
-              <View style={styles.uploadBar}>
-                <Text>Artist</Text>
-                <TextInput
-                  style={{ height: 45, width: 300, borderWidth: 2, borderRadius: 10, padding: 10}}
-                  onChangeText={text => setArtist(text)}
-                  value={artist} />
-              </View>
-
-              
-              <View style={styles.uploadBar}>
-                <Text>Year</Text>
-                <TextInput
-                  style={{ height: 45, width: 300, borderWidth: 2, borderRadius: 10, padding: 10}}
-                  onChangeText={text => setYear(text)}
-                  value={year} />
-              </View>
-
-              <Button title="Upload" onPress={handleUpload} />
+                <TouchableOpacity style={styles.button} onPress={handleUpload}>
+                  <Text style={styles.text2}>Upload</Text>
+                </TouchableOpacity>
 
 
               <input
@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
       padding: 10,
       alignItems: "center",
       justifyContent: "center",
-      flexDirection: "row",
       gap: 2.5,
   },
   modalOverlay: {
@@ -223,44 +222,89 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'rgb(32, 31, 31)',
-    padding: 20,
-    borderRadius: 50,
-    height: '70%',
-    width: '50%',
-    alignItems: "center"
+    borderRadius: 20,
+    padding: 15,
+    color: "white",
+    width: "50%",
+    alignContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    flexWrap: "wrap",
   },
+
   text: {
     color: "white",
     fontWeight: "bold",
     fontSize: 25
   },
   errorText: {
+    marginTop: 10,
     color: "red",
     fontWeight: "bold",
     fontSize: 15
   },
   arrow: {
     position: "absolute",
-    left: 20
+    left: 15
   },
   text2: {
     color: "white",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 15,
   },
   uploadImg: {
-    width: 50,
-    height: 50
+    width: 150,
+    height: 150
   },
   uploadBar: {
-    color: "black",
-    width: "80%",
-    height: 50,
-    backgroundColor: "white",
+    color: "white",
+    backgroundColor: "#323232",
     borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    margin: 5,
+    padding: 5,
+    justifyContent: "center",
     alignItems: "center",
+    borderStyle: "solid",
+    borderWidth: 5,
+    borderColor: "#E50000",
+    width: "35%",
+    paddingBottom: 0
+  },
+  uploadContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+    flexWrap: "wrap",
     padding: 10,
-    margin: 10
-  }
+    gap: 20,
+    marginTop: 5,
+  },
+  TextInput: {
+    color: "white",
+    padding: 10,
+    backgroundColor: "#323232",
+    outlineColor: "transparent",
+    borderStyle: "solid",
+    borderWidth: 5,
+    borderColor: "#E50000",
+    borderRadius: 5,
+  },
+  button: {
+    backgroundColor: "#E50000",
+    height: 50,
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 15,
+    width: "50%",
+    marginBottom: 5
+},
+  label: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15,
+    textAlign: "center",
+    marginBottom: 5,
+  },
 });

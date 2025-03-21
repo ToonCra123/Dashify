@@ -35,7 +35,6 @@ const AlbumView = ({ route }) => {
             <WindowInput placeholder={"Search for songs"}/>
           </ScrollView>
         </View>
-      <BottomBar/>
      </View>
   );
 };

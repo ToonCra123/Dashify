@@ -1,26 +1,82 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useState, useEffect} from 'react';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { BarButton } from './UI/BarButton';
 import { BarInput } from './UI/BarInputField';
 import { ImageBackground } from 'react-native-web';
+import { useNavigation } from '@react-navigation/native';
+import { searchSongByArtist, searchSongByTitle } from './UI/WebRequests';
+import { navigationRef } from '../App.js'; 
 
-let TopBar = () => {
 
+let TopBar = (props) => {
+    const handleHomePress = () => {
+        if (navigationRef.current) {
+            navigationRef.current.navigate('Home');
+        }
+    }
+
+    const navigation = useNavigation();
+    
     let haspfp = true;
+    const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            try{
+                if(searchQuery.length > 0){
+                    props.setQuery(searchQuery);
+
+                    let songData = await searchSongByTitle(searchQuery, 20);
+                    let artistData = await searchSongByArtist(searchQuery, 20);
+
+                    let data = [songData, artistData]
+
+                    props.setQueryData(data);
+
+                }
+                else
+                {
+                    props.setQuery(searchQuery);
+                }
+            }
+            catch (error)
+            {
+                console.log("ERROR FETCHING SEARCH DATA: ", error);
+                searchQuery ? props.setQuery(searchQuery) : props.setQuery("");
+            }
+        }
+
+        fetchData();
+
+    }, [searchQuery]);
+
+
+    const home_icons = {
+        home: require("../images/png/home.png"),
+        homeHovered: require("../images/png/home_solid.png"),
+    }
 
     return (
         <View style={styles.topBar}>
             <View style={styles.topBarGroupLeft}>
-                <BarButton imageSource={require('../images/png/more.png')} activation={buttonTest2} />
-                <BarButton imageSource={require('../images/png/arrow_back.png')} activation={buttonTest} />
+                <BarButton imageSource={require('../images/png/more.png')} activation={buttonTest} />
+                <BarButton imageSource={require('../images/png/arrow_back.png')} activation={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        }}/>
                 <BarButton imageSource={require('../images/png/arrow_forward.png')} activation={buttonTest} />
             </View>
 
             <View style={styles.topBarGroupCenter}>
+            <Image style={{width: 50, height: 50, marginLeft: 10}} source={require("../images/png/Red-logo.png")}/>
                 <View style={{justifyContent: "center", backgroundColor: "rgba(255, 255, 255, 0.1)", borderRadius: 35}}>
-                    <BarButton imageSource={require('../images/png/home.png')} activation={buttonTest2}></BarButton>
+                    <BarButton imageSource={home_icons.home} imageSourceHovered={home_icons.homeHovered} activation={handleHomePress}/>
                 </View>
-                <BarInput placeholder="What do you want to play?"></BarInput>
+
+                <BarInput placeholder="What do you want to play?" setQuery={setSearchQuery}></BarInput>
             </View>
             
             { haspfp ? (
@@ -57,6 +113,7 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         backgroundColor: "#08090A",
         alignItems: "center",
+        overflow: "hidden",
       },
 
       topBarGroupLeft:{
@@ -72,6 +129,7 @@ const styles = StyleSheet.create({
         gap: 15,
         paddingHorizontal: 10,
         justifyContent: "center",
+        alignItems: "center",
       },
     
 

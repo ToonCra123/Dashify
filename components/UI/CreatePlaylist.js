@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, Image, StyleSheet, Platform } from 'react-native';
 
-const PlaylistPopup = ({ onCreatePlaylist }) => {
+const PlaylistPopup = (props, { onCreatePlaylist }) => {
+  
   const [isVisible, setIsVisible] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
   const [description, setDescription] = useState('');
-
 
   const handleSubmit = () => {
     if (onCreatePlaylist) {
@@ -14,25 +14,22 @@ const PlaylistPopup = ({ onCreatePlaylist }) => {
         description: description.trim()
       });
     }
-    setIsVisible(false);
+    props.setIsVisible(false);
     setPlaylistName('');
     setDescription('');
   };
 
+
+
   return (
     <View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => setIsVisible(true)}
-      >
-        <Image source={require("../../images/png/add.png")} style={styles.button}></Image>
-      </TouchableOpacity>
+      <Image source={require("../../images/png/add.png")} style={styles.button}></Image>
 
-      <Modal visible={isVisible} transparent animationType="fade">
+      <Modal visible={props.isVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.popup}>
             <Text style={styles.title}>Playlist Details</Text>
-            <TouchableOpacity style={styles.arrow} onPress={() => setIsVisible(false)}>
+            <TouchableOpacity style={styles.arrow} onPress={{}}>
               <Image source={require('../../images/png/close.png')} style={styles.arrow}/>
             </TouchableOpacity>
             
@@ -73,13 +70,11 @@ const PlaylistPopup = ({ onCreatePlaylist }) => {
 };
 
 
-
-// Keep the same styles as previous version
 const styles = StyleSheet.create({
   button: {
-    height: "3vh",
-        width: "1.5vw",
-        resizeMode: "contain",
+    height: 30,
+    width: 30,
+    resizeMode: "contain",
   },
   buttonText: {
     color: 'white',

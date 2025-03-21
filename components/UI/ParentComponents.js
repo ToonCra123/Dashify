@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { LibraryRow } from '../CenterBar';
-import PlaylistPopup from './CreatePlaylist';
 import { useNavigation } from '@react-navigation/native';
+import PlaylistPopup from './CreatePlaylist'; 
 
-const ParentComponent = ({ playlists, setPlaylists}) => {
+const ParentComponent = () => {
   const navigation = useNavigation();
+  const [playlists, setPlaylists] = useState([]);
 
   const handleAddPlaylist = (newPlaylist) => {
     setPlaylists(prev => [...prev, {
@@ -17,6 +18,7 @@ const ParentComponent = ({ playlists, setPlaylists}) => {
 
   return (
     <View style={styles.container}>
+      <PlaylistPopup onCreatePlaylist={handleAddPlaylist} /> 
       {playlists.map(playlist => (
         <LibraryRow
           key={playlist.id}
@@ -35,7 +37,7 @@ const ParentComponent = ({ playlists, setPlaylists}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column-reverse",
+    flexDirection: 'column-reverse'
   },
 });
 

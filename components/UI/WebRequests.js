@@ -43,7 +43,7 @@ let searchSongByTitle = async (query, limit = 10) => {
 let searchSongByArtist = async (query, limit = 10) => {
     query = query.replace(' ', '%20');
     try {
-        let response = await fetch(`https://api.toonhosting.net/search/song/?name=${query}&limit=${limit}`);
+        let response = await fetch(`https://api.toonhosting.net/search/artist/?name=${query}&limit=${limit}`);
         let data = await response.json();
         return data;
     } catch (error) {
@@ -103,6 +103,7 @@ let registerUser = async (username, password) => {
             body: JSON.stringify({ username, password })
         });
         let data = await response.json();
+        data.status = response.status;
         return data;
     } catch (error) {
         console.error(error);
@@ -122,7 +123,7 @@ let loginUser = async (username, password) => {
         data.status = response.status;
         return data;
     } catch (error) {
-        console.error(error);
+        console.log('bitch', error)
     }
 };
 

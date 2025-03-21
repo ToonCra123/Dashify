@@ -77,7 +77,7 @@ function isEmptyOrNull(str) {
 const styles = StyleSheet.create({
     windowInput:{
         height: 40,
-        width: "12rem",
+        width: 200,
         paddingHorizontal: 10,
         color:"white",
 
@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
 
     inputImage:{
         height: "100%",
-        width: "1.25rem",
+        width: 20,
+        aspectRatio: 1,
         resizeMode: "contain",
     },
 

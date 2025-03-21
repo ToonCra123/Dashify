@@ -46,6 +46,7 @@ export default function LoginWindow(props) {
 
 
     const handleLogin = async () => {
+        setError("");
         setIsLoading(true);
         await props.syncUserData(username, password).then((data)=>{
             //console.log(data);
@@ -54,6 +55,10 @@ export default function LoginWindow(props) {
             {
                 setIsLoggedIn(true);
                 props.setIsLoggedIn(true);
+            }
+            else
+            {
+                setError("Username or Password does not exist. Please try again.");
             }
 
             setIsLoading(false);

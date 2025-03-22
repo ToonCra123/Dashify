@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Platform, StyleSheet, View, Text, TextInput, TouchableOpacity, ActivityIndicator, Switch, Image, Animated, Easing } from "react-native";
+import { Platform, StyleSheet, View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { loginUser } from './WebRequests';
 import { registerUser } from './WebRequests';
 
@@ -13,27 +13,7 @@ export default function LoginWindow(props) {
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     
-    // Create a rotation animated value
-    const spinValue = useRef(new Animated.Value(0)).current;
-    
-    // Set up the spinning animation when component mounts
-    useEffect(() => {
-        // Create a looping animation that spins the image 360 degrees over 5 seconds
-        Animated.loop(
-            Animated.timing(spinValue, {
-                toValue: 1,
-                duration: 5000, // 5 seconds per rotation
-                easing: Easing.linear,
-                useNativeDriver: true, // Better performance
-            })
-        ).start();
-    }, []);
-    
-    // Map the spin value to a rotation interpolation
-    const spin = spinValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg']
-    });
+
 
     // Reset form fields when toggling between login and signup
     useEffect(() => {
@@ -54,8 +34,8 @@ export default function LoginWindow(props) {
 
             if(data.status === 200)
             {
-                setIsLoggedIn(true);
-                props.setIsLoggedIn(true);
+                setIsLoggedIn(false);
+                props.setIsLoggedIn(false);
                 props.setUserData(data);
             }
             else

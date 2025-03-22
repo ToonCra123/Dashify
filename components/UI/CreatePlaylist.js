@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     modalContainer: {
       width: "50%",
       padding: 20,
-      backgroundColor: '#171717',
+      backgroundColor: '#201F1F',
       borderRadius: 10,
     },
     image: {
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
       padding: 10,
       borderRadius: 100,
       alignItems: 'center',
-      width: "30%",
+      width: "50%",
       backgroundColor: 'white',
       marginTop: 15,
     },

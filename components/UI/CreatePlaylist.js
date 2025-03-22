@@ -257,8 +257,8 @@ const styles = StyleSheet.create({
       right: 5,
       height: "3vh",
       width: "3vw",
-      top: 1,
-      left: 345
+      top: 0,
+      right: -5
     },
 });
 

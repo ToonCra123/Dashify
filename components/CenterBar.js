@@ -587,8 +587,6 @@ function CenterbarWindow(props){
                       activation={() =>  navigation.navigate('AlbumView', { 
                         playlist: playlist
                       })}
-
-                      
                     />
                   ))}
             
@@ -711,6 +709,7 @@ function CenterbarWindowCollapsed(props){
       end={{x: 0, y:0}}>
 
       <View style={{gap: 30, alignItems: "center", width: "100%", height: "100%"}}>
+      <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
         <View style={styles.PlaylistBarCollapsed}>
 
           <View style={styles.PlaylistBarGroupCenter}>
@@ -739,7 +738,6 @@ function CenterbarWindowCollapsed(props){
 
             
             <View>
-              <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
                 <View style={styles.libraryContents}>
                   {temp_responses.map((response) => (
 
@@ -762,13 +760,12 @@ function CenterbarWindowCollapsed(props){
                     />
                   ))}
                 </View>
-              </ScrollView>
             </View>
 
           </View>
 
         </View>
-
+        </ScrollView>
       </View>
 
       </LinearGradient>

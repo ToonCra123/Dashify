@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TopBar } from "./components/TopBar.js";
 import { BottomBar } from "./components/BottomBar.js";
 import { Centerbar } from "./components/CenterBar.js";
@@ -14,6 +15,30 @@ import LoginWindow from './components/UI/Login.js';
 
 const Stack = createStackNavigator();
 export const navigationRef = createNavigationContainerRef();
+
+// Platform-agnostic storage solution
+const storage = {
+  setItem: async (key, value) => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  },
+  getItem: async (key) => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    }
+    return await AsyncStorage.getItem(key);
+  },
+  removeItem: async (key) => {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+    } else {
+      await AsyncStorage.removeItem(key);
+    }
+  }
+};
 
 export default function App() {
   const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]);
@@ -29,23 +54,38 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [userData, setUserData] = useState({});
 
-  // Check for persisted login on initial load
+  // Load persisted data on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUserData(parsedUser);
-      setIsLoggedIn(false);
-    }
+    const loadPersistedData = async () => {
+      try {
+        const storedUser = await storage.getItem('user');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setUserData(parsedUser);
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('Error loading persisted data:', error);
+      }
+    };
+    loadPersistedData();
   }, []);
 
-  // Sync user data to localStorage
+  // Persist user data changes
   useEffect(() => {
-    if (userData?.status === 200) {
-      localStorage.setItem('user', JSON.stringify(userData));
-    }
+    const saveUserData = async () => {
+      try {
+        if (userData?.status === 200) {
+          await storage.setItem('user', JSON.stringify(userData));
+        }
+      } catch (error) {
+        console.error('Error saving user data:', error);
+      }
+    };
+    saveUserData();
   }, [userData]);
 
+  // Trending songs initialization
   let requestTrendingSongs = async () => {};
   if (fetchedTrendingSongs.length === 0) {
     requestTrendingSongs = async (a) => {
@@ -62,11 +102,11 @@ export default function App() {
     }
   }, [fetchedTrendingSongs]);
 
-  let content_selected = (v) => {
+  const content_selected = (v) => {
     v === undefined ? setSelectedContent(!selected_content) : setSelectedContent(v);
   };
 
-  let set_song = (s) => {
+  const set_song = (s) => {
     if (!(currSong._id === s._id)) {
       setCurrSong(s);
       setShouldStopSong(true);
@@ -74,23 +114,28 @@ export default function App() {
     }
   };
 
-  let onSongChange = () => {};
+  const onSongChange = () => {};
 
-  let song_search_window = (data) => {
+  const song_search_window = (data) => {
     setSongSearchData(data[0]);
     setArtistSearchData(data[1]);
   };
 
-  let syncUserData = async (name, pass) => {
-    let data = await loginUser(name, pass);
-    if (data.status === 200) {
-      setUsername(name);
-      setPassword(pass);
-      setUserData(data);
-      setIsLoggedIn(false);
-      localStorage.setItem('user', JSON.stringify(data));
+  const syncUserData = async (name, pass) => {
+    try {
+      const data = await loginUser(name, pass);
+      if (data.status === 200) {
+        setUsername(name);
+        setPassword(pass);
+        setUserData(data);
+        setIsLoggedIn(false);
+        await storage.setItem('user', JSON.stringify(data));
+      }
+      return data;
+    } catch (error) {
+      console.error('Login error:', error);
+      return { status: 500, error: 'Login failed' };
     }
-    return data;
   };
 
   if (Platform.OS === 'web') {
@@ -182,4 +227,4 @@ const styles = StyleSheet.create({
   },
 });
 
-let popups = () => {};
+const popups = () => {};

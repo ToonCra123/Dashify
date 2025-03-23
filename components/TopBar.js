@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { BarButton } from './UI/BarButton';
 import { BarInput } from './UI/BarInputField';
 import { ImageBackground } from 'react-native-web';
@@ -9,39 +9,6 @@ import { navigationRef } from '../App.js';
 
 
 let TopBar = (props) => {
-
-    const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [isProfileHovered, setProfileHovered] = useState(false);
-    const [isSettingsHovered, setSettingsHovered] = useState(false);
-    const [isLogoutHovered, setLogoutHovered] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-
-    const toggleDropdown = () => {
-        setDropdownVisible(!dropdownVisible);
-    };
-
-    const handleProfilePress = () => {
-        console.log("Profile pressed");
-        setDropdownVisible(false);
-        // Navigate to profile page
-    };
-
-    const handleSettingsPress = () => {
-        console.log("Settings pressed");
-        setDropdownVisible(false);
-        // Navigate to settings page
-    };
-
-    const handleLogout = async () => {
-            setIsLoggedIn(true);
-            props.setIsLoggedIn(true);
-            window.location.reload();
-            window.localStorage.removeItem('user');
-    };
-
-
-
     const handleHomePress = () => {
         if (navigationRef.current) {
             navigationRef.current.navigate('Home');
@@ -115,66 +82,16 @@ let TopBar = (props) => {
             </View>
             
             { haspfp ? (
-                <TouchableOpacity 
-                    style={styles.topBarGroupRight}
-                    onPress={toggleDropdown}
-                >
+                <View style={styles.topBarGroupRight}>
                     <ImageBackground 
-                    style={styles.profilePictureImage}
+                    style={styles.profilePicutureImage}
                     source={require("./../images/png/test_album.png")}>
                     </ImageBackground>
-                    
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={dropdownVisible}
-                        onRequestClose={() => {
-                            setDropdownVisible(false);
-                        }}
-                    >
-                        <TouchableOpacity 
-                            style={styles.modalOverlay}
-                            activeOpacity={1}
-                            onPress={() => setDropdownVisible(false)}
-                        >
-                            <View style={styles.modalContainer}>
-                                <View style={styles.dropdown}>
-                                    <TouchableOpacity 
-                                        style={isProfileHovered ? styles.dropdownItemHovered : styles.dropdownItem} 
-                                        onPress={handleProfilePress}
-                                        onMouseEnter={() => setProfileHovered(true)}
-                                        onMouseLeave={() => setProfileHovered(false)}
-                                    >
-                                        <Text style={styles.dropdownText}>Profile</Text>
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity 
-                                        style={isSettingsHovered ? styles.dropdownItemHovered : styles.dropdownItem} 
-                                        onPress={handleSettingsPress}
-                                        onMouseEnter={() => setSettingsHovered(true)}
-                                        onMouseLeave={() => setSettingsHovered(false)}
-                                    >
-                                        <Text style={styles.dropdownText}>Settings</Text>
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity 
-                                        style={isLogoutHovered ? styles.dropdownItemHovered : styles.dropdownItem} 
-                                        onPress={handleLogout}
-                                        onMouseEnter={() => setLogoutHovered(true)}
-                                        onMouseLeave={() => setLogoutHovered(false)}
-                                    >
-                                        <Text style={styles.dropdownText}>Logout</Text>
-                                    </TouchableOpacity>
-
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    </Modal>
-                </TouchableOpacity>
+                </View>
             ) : (
                 <View style={styles.topBarGroupRight}>
-                    <View style={styles.profilePictureDefault}>
-                        <Text style={styles.pfpText}>D</Text>
+                    <View style={styles.profilePicutureDefault}>
+                        <Text style={styles.pfpText}>J</Text>
                     </View>
                 </View>
             )}
@@ -217,17 +134,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
       },
     
+
+    
       topBarGroupRight:{
         flex: 0.1,
-        justifyContent: "space-around",
-        alignItems: "center",
+        justifyContent: "flex-end",
         flexDirection: "row",
         paddingHorizontal: 10,
         gap: 15,
+
         paddingRight: 20,
       },
 
-      profilePictureDefault:{
+      profilePicutureDefault:{
         backgroundColor: "rgb(0, 183, 255)", 
         borderRadius: 35, 
         height: "3rem", 
@@ -238,14 +157,15 @@ const styles = StyleSheet.create({
         boxShadow: "0 0 0 10px rgba(255, 255, 255, 0.1)",
       },
 
-      profilePictureImage:{
+      profilePicutureImage:{
         borderRadius: 35,
         overflow: "hidden",
         height: "3rem", 
         width: "3rem", 
         justifyContent: "center", 
         alignItems: "center",
-        boxShadow: "0 0 0 5px rgba(255, 255, 255, 0.1)",
+
+        boxShadow: "0 0 0 10px rgba(255, 255, 255, 0.1)",
       },
 
       pfpText:{
@@ -253,39 +173,6 @@ const styles = StyleSheet.create({
         fontSize: "1.15rem",
         userSelect: "none",
       },
-
-      dropdown: {
-        backgroundColor: '#2E2E2E',
-        borderRadius: 5,
-        padding: 5,
-        width: 150,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    },
-      
-    dropdownItem: {
-        padding: 10,
-        borderRadius: 5,
-    },
-    dropdownItemHovered: {
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: "rgba(255, 255, 255, 0.1)",
-    },
-    dropdownText: {
-        color: 'white',
-        fontSize: '0.9rem',
-    },
-
-    modalOverlay: {
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    },
-
-    modalContainer: {
-        position: 'absolute',
-        top: 60, // Position below the top bar
-        right: 50,
-        zIndex: 1000,
-    },
 });
 
 export { TopBar };

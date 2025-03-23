@@ -258,7 +258,6 @@ function CenterbarWindowContentDetails(props){
   const [songlist, setSonglist] = useState([]);
 
   let asyncGetSongs = async (songs)=>{
-    console.log(songs);
     for(let i = 0; i < songs.length; i++)
       {
         let song = await getSong(songs[i], false);
@@ -712,7 +711,6 @@ function CenterbarWindowCollapsed(props){
       end={{x: 0, y:0}}>
 
       <View style={{gap: 30, alignItems: "center", width: "100%", height: "100%"}}>
-      <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
         <View style={styles.PlaylistBarCollapsed}>
 
           <View style={styles.PlaylistBarGroupCenter}>
@@ -741,6 +739,7 @@ function CenterbarWindowCollapsed(props){
 
             
             <View>
+              <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
                 <View style={styles.libraryContents}>
                   {temp_responses.map((response) => (
 
@@ -763,12 +762,13 @@ function CenterbarWindowCollapsed(props){
                     />
                   ))}
                 </View>
+              </ScrollView>
             </View>
 
           </View>
 
         </View>
-        </ScrollView>
+
       </View>
 
       </LinearGradient>
@@ -853,6 +853,7 @@ const CollapseLibraryRow = (props) => {
       props.activation();
     }
 
+    props.setSelectedPlaylistID(props.rowID);
 
     props.setSelectedPlaylistID(props.rowID);
 

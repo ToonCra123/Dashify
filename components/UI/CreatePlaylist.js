@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, Image, StyleSheet, Platform } from 'react-native';
-import { addPlaylistToUser, createPlaylist } from './WebRequests';
+import { addPlaylistToUser, createPlaylist, loginUser} from './WebRequests';
 
 const PlaylistPopup = (props) => {
   
@@ -14,7 +14,7 @@ const PlaylistPopup = (props) => {
     let playlist_id = "";
 
     await createPlaylist(playlistName, description).then(async (data)=>{
-      console.log(data)
+      console.log(data, "created playlist daya")
 
       if(data.status === 201)
         {
@@ -22,7 +22,12 @@ const PlaylistPopup = (props) => {
 
           console.log(props.username, props.password, playlist_id);
 
-          //await addPlaylistToUser(props.username, props.password, playlist_id).then((r)=>{console.log(r, "this")});
+          await addPlaylistToUser(props.username, props.password, playlist_id).then((r)=>{console.log(r, "has been added to user")});
+
+          let udata = await loginUser(props.username, props.password);
+          props.setUserData(udata);
+    
+          console.log(udata, "resuit");
         }
     });
 

@@ -55,6 +55,7 @@ function Centerbar(props)
         setUsername={props.setUsername}
         password={props.password}
         setPassword={props.setPassword}
+        syncUserData={() => props.syncUserData}
 
         selected_playlistID={props.selected_playlistID}
         setSelectedPlaylistID={props.setSelectedPlaylistID}
@@ -78,6 +79,7 @@ function Centerbar(props)
           setUsername={props.setUsername}
           password={props.password}
           setPassword={props.setPassword}
+          syncUserData={() => props.syncUserData}
 
           selected_playlistID={props.selected_playlistID}
           setSelectedPlaylistID={props.setSelectedPlaylistID}
@@ -94,7 +96,7 @@ function Centerbar(props)
           songSearchData={props.songSearchData} 
           artistSearchData={props.artistSearchData} 
         />
-      ) : props.selected_content ? (
+      ) : (props.selected_content && collapseMenu) ? (
         <CenterbarWindowContentDetails 
           selected_content={props.selected_content} 
           setSelectedContent={props.setSelectedContent} 
@@ -285,39 +287,6 @@ function CenterbarWindowContentDetails(props){
     
   }, [props.selected_playlistID]);
 
-  let contentTitle = JSON.parse(sessionStorage.getItem("content_title"));
-  let contentArtist = JSON.parse(sessionStorage.getItem("content_artist"));
-  let contentCover = JSON.parse(sessionStorage.getItem("content_cover"));
-
-  let contentType = JSON.parse(sessionStorage.getItem("content_type"));
-
-  let default_webImage = "https://imgs3.goodsmileus.com/image/cache/data/productimages/HELLO/SnowMiku/01_240828124748305-1200x1200.jpg";
-
-
-  let title = !contentTitle ? "Stone Pebble Pirates" : contentTitle;
-  let artist = !contentArtist ? "ALABAMA ROCK" : contentArtist;
-  let albumCover = !contentCover ? default_webImage : contentCover; //URL OR FILEPATH TO COVER IMAGE (MUST BE 1:1 ACPECT RATIO)
-
-  let type = !contentType ? "{content_type}" : contentType;
-
-
-  let tempgetsong = [
-    { id: '1234'}
-    // Add more items as needed
-  ];
-
-  let tempsongdata = [
-      {
-        "_id": "67d20f2e545d22af7e35a887",
-        "title": "A Thousand Miles",
-        "artist": "Vanessa Carlton",
-        "year": 2001,
-        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741819692536-654986767.mp3",
-        "imagePath": "http://api.toonhosting.net/img/image-1741819694111-923389136.jpg",
-        "listens": 6
-      }
-      // Add more items as needed
-  ];
 
   const [fetchedPlaylistName, setFetchedPlaylistName] = useState(".......")
   const [fetchedPlaylistDesc, setFetchedPlaylistDesc] = useState(".......")
@@ -565,7 +534,10 @@ function CenterbarWindow(props){
                 username={props.username}
                 setUsername={props.setUsername}
                 password={props.password}
-                setPassword={props.setPassword}/>
+                setPassword={props.setPassword}
+                syncUserData={() => props.syncUserData}
+                />
+                
                 
                   
 
@@ -658,6 +630,7 @@ function CenterbarWindowCollapsed(props){
 
   let toggle_menu_state = (v) => {
     props.setCollapseMenu(!props.collapseMenu);
+    
   }
   
 
@@ -677,8 +650,8 @@ function CenterbarWindowCollapsed(props){
 
 
     useEffect(() => {
-      console.log(playlistData, "sded");
-    }, []);
+      console.log(props.userData, "sded");
+    }, [props.userData]);
     
     
 
@@ -766,6 +739,7 @@ function CenterbarWindowCollapsed(props){
               setUsername={props.setUsername}
               password={props.password}
               setPassword={props.setPassword}
+              syncUserData={() => props.syncUserData}
               />
               
 
@@ -883,11 +857,13 @@ const CollapseLibraryRow = (props) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
+  const [isPL, setIsPL] = useState(props.isPlaylist === undefined ? false : props.isPlaylist);
 
   // Add this handler function
   const handlePress = () => {
     if (props.activation) {
       props.activation();
+
     }
     
     if(props.rowID)
@@ -907,7 +883,7 @@ const CollapseLibraryRow = (props) => {
       onPress={handlePress} // Fixed: Directly use handler function
     >
       <View 
-        style={isHovered ? styles.CollapseLibraryRowHovered : styles.CollapseLibraryRow}
+        style={(isHovered || isPL) ? styles.CollapseLibraryRowHovered : styles.CollapseLibraryRow}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -1322,7 +1298,7 @@ const styles = StyleSheet.create({
         height: 100,
         paddingLeft: 10,
         paddingRight: 10,
-        opacity: 0.95,
+        opacity: 0.5,
       },
 
       CollapseLibraryRowHovered:{

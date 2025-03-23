@@ -104,6 +104,8 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
       setUserData(data);
     }
 
+    console.log(data, "data synced");
+
     return data
   }
 
@@ -135,6 +137,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
                 setCurrentSong={set_song}
                 setQueryData={song_search_window}  // Added missing prop
                 setQuery={setSearchQuery}   
+                syncUserData={() => syncUserData}
               />
               
               {fetchedTrendingSongs.length > 0 && (
@@ -160,6 +163,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
                         searchQuery={searchQuery}             // Added missing prop
                         setUserData={setUserData}
                         userData={userData}
+                        syncUserData={() => syncUserData}
 
                         username={username}
                         setUsername={setUsername}
@@ -183,6 +187,10 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
                 shouldStopSong={shouldStopSong}
                 setShouldStopSong={setShouldStopSong}
                 trendingContent={fetchedTrendingSongs}
+                syncUserData={() => syncUserData}
+
+                selected_playlistID={selected_playlistID}
+                setSelectedPlaylistID={setSelectedPlaylistID}
               />
             </View>
           </NavigationContainer>

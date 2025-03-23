@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, Animated, Easing, TouchableOpacity } fro
 import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
 import { Audio } from 'expo-av';
-import { addSongToPlaylist, getSong } from './UI/WebRequests';
+import { addSongToPlaylist, getPlaylist, getSong } from './UI/WebRequests';
 import useAnimatedValue from "./UI/UIAnimations.js"
 import { ImageBackground } from 'react-native-web';
 
@@ -169,38 +169,91 @@ let BottomBar = (props) => {
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
-  let skip_previous_button = () =>{
-  
-    if((props.trendingContent.length > 0))
+  let skip_previous_button = async () =>{
+
+    let plylist = await getPlaylist(props.selected_playlistID);
+
+    if(props.selected_playlistID === "" || plylist.songs.length === 0)
       {
-        
-        for (let i = 0; i < props.trendingContent.length; i++)
+        if((props.trendingContent.length > 0))
           {
-
-            if((props.trendingContent[i]._id === props.currSong._id))
+            
+            for (let i = 0; i < props.trendingContent.length; i++)
               {
-                let check_i = (i - 1 + props.trendingContent.length) % props.trendingContent.length;
-
-                props.setCurrentSong(props.trendingContent[check_i]);
+    
+                if((props.trendingContent[i]._id === props.currSong._id))
+                  {
+                    let check_i = (i - 1 + props.trendingContent.length) % props.trendingContent.length;
+    
+                    props.setCurrentSong(props.trendingContent[check_i]);
+                  }
               }
           }
       }
+      else
+      {
+        if(plylist.songs.length > 0)
+          {
+            
+            for (let i = 0; i < plylist.songs.length; i++)
+              {
+    
+    
+                if((plylist.songs[i] === props.currSong._id))
+                  {
+                    let check_i = (i - 1 + plylist.songs.length) % plylist.songs.length;
+                    
+                    let fetchedsong = await getSong(plylist.songs[check_i]);
+                    props.setCurrentSong(fetchedsong);
+                  }
+              }
+          }
+      }
+  
   }
 
-  let skip_next_button = () =>{
-  
-    if((props.trendingContent.length > 0))
+  const [plylist, setPlylist] = useState({});
+
+  let skip_next_button = async () =>{
+
+    setPlylist(await getPlaylist(props.selected_playlistID));
+
+
+    if(props.selected_playlistID === "" || plylist.songs.length === 0)
       {
-        
-        for (let i = 0; i < props.trendingContent.length; i++)
+        if((props.trendingContent.length > 0))
           {
-
-
-            if((props.trendingContent[i]._id === props.currSong._id))
+            
+            for (let i = 0; i < props.trendingContent.length; i++)
               {
-                let check_i = (i + 1) % props.trendingContent.length;
-
-                props.setCurrentSong(props.trendingContent[check_i]);
+    
+    
+                if((props.trendingContent[i]._id === props.currSong._id))
+                  {
+                    let check_i = (i + 1) % props.trendingContent.length;
+                    
+                    //console.log(props.selected_playlistID, "id to playlist");
+                    props.setCurrentSong(props.trendingContent[check_i]);
+                  }
+              }
+          }
+      }
+      else
+      {
+        if(plylist.songs.length > 0)
+          {
+            
+            for (let i = 0; i < plylist.songs.length; i++)
+              {
+    
+    
+                if((plylist.songs[i] === props.currSong._id))
+                  {
+                    let check_i = (i + 1) % plylist.songs.length;
+                    
+                    let fetchedsong = await getSong(plylist.songs[check_i]);
+                    props.setCurrentSong(fetchedsong);
+                  }
               }
           }
       }
@@ -263,11 +316,12 @@ let BottomBar = (props) => {
   }, [volume, mute]);
 
   //example on how to make animated value aka animations
-  exampleValue = new Animated.Value(0);
-  const [actualExampleValue, setActualExampleValue] = useState(new Animated.Value(0));
-  useAnimatedValue(exampleValue, setActualExampleValue, 1000, 2 * 1000, Easing.bounce);
+  //exampleValue = new Animated.Value(0);
+  //const [actualExampleValue, setActualExampleValue] = useState(new Animated.Value(0));
+  //useAnimatedValue(exampleValue, setActualExampleValue, 1000, 2 * 1000, Easing.bounce);
 
   //set what ever number you are animating to actualExampleValue.
+
 
 
 
@@ -285,12 +339,63 @@ let BottomBar = (props) => {
     v === undefined ? setIsAddSongButtonHovered(!isAddSongButtonHovered) : setIsAddSongButtonHovered(v);
   }
 
-  let handle_addSongButtonToggled = async (v) => {
-    (v === undefined) ? setIsAddSongButtonToggled(!isAddSongButtonToggled) : setIsAddSongButtonToggled(v);
 
-    console.log(props.selected_playlistID, props.currSong._id, "call");
-    await addSongToPlaylist(props.selected_playlistID, props.currSong._id);
-  }
+  
+
+const isSongInPlaylist = (playlist, songId) => {
+    if (!playlist || !playlist.songs) return false;
+    return playlist.songs.includes(songId);
+};
+
+let handle_addSongButtonToggled = async (v) => {
+
+    setPlylist(await getPlaylist(props.selected_playlistID));
+
+    if (!plylist || !plylist.songs) {
+        console.error("Invalid playlist data");
+        return;
+    }
+
+    if (!isSongInPlaylist(plylist, props.currSong._id)) {
+        await addSongToPlaylist(props.selected_playlistID, props.currSong._id);
+        setIsAddSongButtonToggled(true);
+    }
+    else
+    {
+      setIsAddSongButtonToggled(false);
+    }
+};
+
+
+  useEffect(() => {
+
+    let sync_pldata = async () => {
+      setPlylist(await getPlaylist(props.selected_playlistID));
+
+      if (!plylist || !plylist.songs) {
+          console.error("Invalid playlist data");
+          return;
+      }
+
+      
+  
+      if (!isSongInPlaylist(plylist, props.currSong._id)) {
+        setIsAddSongButtonToggled(false);
+      }
+      else
+      {
+        setIsAddSongButtonToggled(true);
+      }
+    }
+
+    sync_pldata();
+
+  },[props.currSong._id, props.selected_playlistID]);
+
+
+    useEffect(() => {
+      
+    }, [props.collapseMenu]);
 
 
 

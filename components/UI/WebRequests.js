@@ -100,7 +100,7 @@ let createPlaylist = async (title, desc) => {
 let addPlaylistToUser = async (user, pass, playlistId) => {
     try {
         let response = await fetch(`https://api.toonhosting.net/user/add-playlist`, {
-            method: 'PATCH',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -117,7 +117,7 @@ let addPlaylistToUser = async (user, pass, playlistId) => {
 let removePlaylistFromUser = async (user, pass, playlistId) => {
     try {
         let response = await fetch(`https://api.toonhosting.net/user/remove-playlist`, {
-            method: 'PATCH',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },

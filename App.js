@@ -141,7 +141,7 @@ export default function App() {
 
     if (Platform.OS === 'web') {
 
-      if(!isLoggedIn) //for log in page testing <<<<<
+      if(isLoggedIn) //for log in page testing <<<<<
       {
         return (
         <LoginWindow 

@@ -11,7 +11,7 @@ import ParentComponent from './UI/ParentComponents.js';
 import { FlatList, ImageBackground, ScrollView } from 'react-native-web';
 import { LinearGradient } from 'expo-linear-gradient';
 import {MAIN_COLOR_GRADIENT, MAIN_COLOR_BASE, CONTENTWINDOW_COLOR_BASE, CONTENTWINDOW_COLOR_GRADIENT} from './UI/Colors.js'
-import { addPlaylistToUser, getPlaylist, getSong, getTrending } from './UI/WebRequests.js';
+import { getPlaylist, getSong, getTrending } from './UI/WebRequests.js';
 import AlbumView from '../AlbumView.js';
 import { useNavigation } from '@react-navigation/native';
 
@@ -257,10 +257,6 @@ function CenterbarWindowContentDetails(props){
   const [isPlaylistLoading, setIsPlaylistLoading] = useState(true);
   const [songlist, setSonglist] = useState([]);
 
-  useEffect(() => {
-    //console.log(songlist, "sss");
-  }, [songlist]);
-
   let asyncGetSongs = async (songs)=>{
     console.log(songs);
     for(let i = 0; i < songs.length; i++)
@@ -306,6 +302,24 @@ function CenterbarWindowContentDetails(props){
   let type = !contentType ? "{content_type}" : contentType;
 
 
+  let tempgetsong = [
+    { id: '1234'}
+    // Add more items as needed
+  ];
+
+  let tempsongdata = [
+      {
+        "_id": "67d20f2e545d22af7e35a887",
+        "title": "A Thousand Miles",
+        "artist": "Vanessa Carlton",
+        "year": 2001,
+        "mp3Path": "http://api.toonhosting.net/mp3/mp3-1741819692536-654986767.mp3",
+        "imagePath": "http://api.toonhosting.net/img/image-1741819694111-923389136.jpg",
+        "listens": 6
+      }
+      // Add more items as needed
+  ];
+
   const [fetchedPlaylistName, setFetchedPlaylistName] = useState(".......")
   const [fetchedPlaylistDesc, setFetchedPlaylistDesc] = useState(".......")
   const [fetchedPlaylistImage, setFetchedPlaylistImage] = useState("https://media.discordapp.net/attachments/982149047563452456/1352577605337092176/default_album_cover.png?ex=67de858e&is=67dd340e&hm=2da92bce7bdd0a0ad6be6409d90a7204a130288e9090c158c0f0bf02a8d5ded9&=&format=webp&quality=lossless");
@@ -345,7 +359,6 @@ function CenterbarWindowContentDetails(props){
       { !isPlaylistLoading ? (
         <ScrollView style={{width: "100%"}} showsHorizontalScrollIndicator={false}>
           <FlatList
-              
               data={songlist}
               renderItem={({ item }) => (
                 <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens} setCurrentSong={props.setCurrentSong} songdata={item}></LibraryRow>   
@@ -363,7 +376,60 @@ function CenterbarWindowContentDetails(props){
   );
 }
 
+const ids = [
+  "67dd090ae6b3980bca16f189",
+  "67dd092ee6b3980bca16f18b",
+  "67dd0944e6b3980bca16f18d",
+  "67dd0957e6b3980bca16f18f"
+];
 
+const temp_responses = [
+  {
+    _id: "67dd090ae6b3980bca16f189",
+    title: "lmao what is this",
+    description: "true true",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    _id: "67dd092ee6b3980bca16f18b",
+    title: "nah id win AAAA",
+    description: "dfrf",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    _id: "67dd0944e6b3980bca16f18d",
+    title: "W rizz?",
+    description: "yes W",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    _id: "67dd0957e6b3980bca16f18f",
+    title: "HBRIUYGBUI",
+    description: "yooo haha",
+    songs: [],
+    __v: 0,
+    status: 200
+  },
+  {
+    __v: 4,
+    _id: "67d38e527de6a9174989d40e",
+    description: "I really need to update this... Oh a 98",
+    songs: [
+      "67d25f2e31ba33534c6a6e37",
+      "67d22d2c31ba33534c6a6e03",
+      "67d26b277de6a9174989d3b8",
+      "67d22ef331ba33534c6a6e07"
+    ],
+    status: 200,
+    title: "Awesome Tunes ❤️"
+  },
+];
 
 
 function CenterbarWindow(props){
@@ -371,25 +437,6 @@ function CenterbarWindow(props){
   // TODO: Add a call to get playlists from backend
   const [playlists, setPlaylists] = useState([]);
   const navigation = useNavigation();
-
-  const [playlistResponses, setPlaylistResponses] = useState([]);
-
-  useEffect(() => {
-    //console.log(playlistResponses, "Updated playlistResponses");
-  }, [playlistResponses]); // Logs when state updates
-
-
-  useEffect(() => {
-    if (Object.keys(props.userData.playlists || {}).length > 0) //check to see if userData is valid before proceeding.
-    {
-      setPlaylistResponses(props.userData.playlists);
-      //console.log(props.userData.playlists, "sent");
-    }
-  }, [props.userData]);
-
-
-
-
 
 
   // TODO: Add API call to add playlist to backend 
@@ -431,8 +478,6 @@ function CenterbarWindow(props){
 
     
     const [playlistCovers, setPlaylistCovers] = useState({});
-    const [playlistNames, setPlaylistNames] = useState({});
-    const [playlistDesc, setPlaylistDesc] = useState({});
 
     let grabPlaylistCover = async (pl) => {
       //console.log(pl, "ok");
@@ -447,44 +492,15 @@ function CenterbarWindow(props){
     useEffect(() => {
       const fetchCovers = async () => {
         let covers = {};
-        let names = {};
-        let descs = {};
-        for (let response of playlistResponses) {
-          //console.log("response", response);
-
-          await getPlaylist(response).then(async (pldata) => {
-            //console.log(pldata, "pl data")
-            
-            covers[pldata._id] = await grabPlaylistCover(pldata.songs);
-            names[pldata._id] = pldata.title;
-            descs[pldata._id] = pldata.description;
-
-            //console.log(covers[pldata._id], await grabPlaylistCover(pldata.songs));
-            //console.log(names[pldata._id], "-TITLE-",  pldata.title);
-            //console.log(descs[pldata._id], "-DESC-", pldata.description);
-
-            //console.log(covers, names, descs, "testtss");
-          });
+        for (let response of temp_responses) {
+          //console.log("response.songs:", response.songs);
+          covers[response._id] = await grabPlaylistCover(response.songs);
         }
-
         setPlaylistCovers(covers);
-        setPlaylistNames(names);
-        setPlaylistDesc(descs);
-
-
-        //console.log(playlistCovers, "covers");
-        //console.log(playlistNames, "names");
-        //console.log(playlistDesc, "descs");
       };
     
       fetchCovers();
-    }, [playlistResponses]);
-
-
-
-    useEffect(()=> {
-      //console.log(playlistCovers, playlistNames, playlistDesc, "testssss`11");
-    }, [playlistCovers, playlistNames, playlistDesc])
+    }, [temp_responses]);
   
     return(
       <LinearGradient 
@@ -563,20 +579,33 @@ function CenterbarWindow(props){
         {/* replace with a for loop that gets songs from back end vvv */}
 
         <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
-          <View style={styles.libraryContents}>            
-            {playlistResponses.map((response) => (
+          <View style={styles.libraryContents}>
+            {playlists.map(playlist => (
+                    <LibraryRow
+                      key={playlist.id}
+                      rowName={playlist.name}
+                      rowDesc={playlist.description}
+                      activation={() =>  navigation.navigate('AlbumView', { 
+                        playlist: playlist
+                      })}
+
+                      
+                    />
+                  ))}
+            
+            {temp_responses.map((response) => (
               <LibraryRow
-                key={response}
-                rowName={playlistNames[response]}
-                rowDesc={playlistDesc[response]}
+                key={response._id}
+                rowName={response.title}
+                rowDesc={response.description}
                 activation={props.setSelectedContent}
                 setCurrentSong={props.setCurrentSong}
 
                 selected_playlistID={props.selected_playlistID}
                 setSelectedPlaylistID={props.setSelectedPlaylistID}
 
-                rowID={response}
-                imageSource={playlistCovers[response]} 
+                rowID={response._id}
+                imageSource={playlistCovers[response._id]} 
               />
             ))}
           </View>
@@ -628,30 +657,26 @@ function CenterbarWindowCollapsed(props){
     
 
     
+    let testPL = async () => {
+
+      for (let i = 0; i < 4; i++)
+        {
+          await getPlaylist(ids[i]).then((d)=> {
+            console.log(d);
+          });
 
 
+        }
+      
+        await getPlaylist("67d38e527de6a9174989d40e").then((a) => {
+          console.log(a, "oooo")
+        });
 
-    const [songlist, setSonglist] = useState([]);
-    const [fetchedPlaylistImage, setFetchedPlaylistImage] = useState("https://media.discordapp.net/attachments/982149047563452456/1352577605337092176/default_album_cover.png?ex=67de858e&is=67dd340e&hm=2da92bce7bdd0a0ad6be6409d90a7204a130288e9090c158c0f0bf02a8d5ded9&=&format=webp&quality=lossless");
+    }
 
-    const [playlistResponses, setPlaylistResponses] = useState([]);
-
-    useEffect(() => {
-      if (Object.keys(props.userData.playlists || {}).length > 0) //check to see if userData is valid before proceeding.
-      {
-        setPlaylistResponses(props.userData.playlists);
-        //console.log(props.userData.playlists, "sent");
-      }
-    }, [props.userData]);
-
-    useEffect(() => {
-      //console.log(playlistResponses, "Updated playlistResponses");
-    }, [playlistResponses]); // Logs when state updates
-
+    //testPL();
 
     const [playlistCovers, setPlaylistCovers] = useState({});
-    const [playlistNames, setPlaylistNames] = useState({});
-    const [playlistDesc, setPlaylistDesc] = useState({});
 
     let grabPlaylistCover = async (pl) => {
       //console.log(pl, "ok");
@@ -666,39 +691,15 @@ function CenterbarWindowCollapsed(props){
     useEffect(() => {
       const fetchCovers = async () => {
         let covers = {};
-        let names = {};
-        let descs = {};
-        for (let response of playlistResponses) {
-          //console.log("response", response);
-
-          await getPlaylist(response).then(async (pldata) => {
-            //console.log(pldata, "pl data")
-            
-            covers[pldata._id] = await grabPlaylistCover(pldata.songs);
-            names[pldata._id] = pldata.title;
-            descs[pldata._id] = pldata.description;
-
-            //console.log(covers[pldata._id], await grabPlaylistCover(pldata.songs));
-            //console.log(names[pldata._id], "-TITLE-",  pldata.title);
-            //console.log(descs[pldata._id], "-DESC-", pldata.description);
-
-            //console.log(covers, names, descs, "testtss");
-          });
+        for (let response of temp_responses) {
+          //console.log("response.songs:", response.songs);
+          covers[response._id] = await grabPlaylistCover(response.songs);
         }
-
         setPlaylistCovers(covers);
-        setPlaylistNames(names);
-        setPlaylistDesc(descs);
-
-
-        //console.log(playlistCovers, "covers");
-        //console.log(playlistNames, "names");
-        //console.log(playlistDesc, "descs");
       };
     
       fetchCovers();
-    }, [playlistResponses]);
-
+    }, [temp_responses]);
     
     
 
@@ -741,22 +742,21 @@ function CenterbarWindowCollapsed(props){
             
             <View>
                 <View style={styles.libraryContents}>
-                  {playlistResponses.map((response) => (
+                  {temp_responses.map((response) => (
 
                     
 
                     <CollapseLibraryRow
-                      key={response}
-                      rowName={playlistNames[response]}
-                      rowDesc={playlistDesc[response]}
+                      key={response._id}
+                      rowName={response.title}
+                      rowDesc={response.description}
                       activation={props.setSelectedContent}
-                      setCurrentSong={props.setCurrentSong}
-      
+                      //activation={() => {grabPlaylistCover(response.songs)}}
+
                       selected_playlistID={props.selected_playlistID}
                       setSelectedPlaylistID={props.setSelectedPlaylistID}
-      
-                      rowID={response}
-                      imageSource={playlistCovers[response]} 
+                      rowID={response._id}
+                      imageSource={playlistCovers[response._id]} 
 
                       
                       
@@ -787,18 +787,12 @@ const LibraryRow = (props) => {
       props.activation();
     }
 
-    if(props.selected_playlistID)
-      {
-        props.setSelectedPlaylistID(props.rowID);
-      }
-
-
     //props.setSelectedPlaylistID(props.rowID);
 
     // Add check to ensure setCurrentSong exists before calling it
     if (props.setCurrentSong && typeof props.setCurrentSong === 'function' && props.songdata) {
       props.setCurrentSong(props.songdata);
-      //console.log(props.songdata, props.setCurrentSong), "dddd";
+      //console.log(props.songdata, props.setCurrentSong);
     }
   };
 
@@ -868,7 +862,6 @@ const CollapseLibraryRow = (props) => {
     //props.setCurrentSong(props.songdata);
     //console.log(props.songdata, props.setCurrentSong);
   };
-
 
   //console.log(props.imageSource);
 

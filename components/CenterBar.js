@@ -853,6 +853,7 @@ const CollapseLibraryRow = (props) => {
       props.activation();
     }
 
+
     props.setSelectedPlaylistID(props.rowID);
 
     //props.setCurrentSong(props.songdata);

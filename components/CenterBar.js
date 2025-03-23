@@ -477,6 +477,8 @@ function CenterbarWindow(props){
 
     
     const [playlistCovers, setPlaylistCovers] = useState({});
+    const [playlistNames, setPlaylistNames] = useState({});
+    const [playlistDescs, setPlaylistDescs] = useState({});
 
     let grabPlaylistCover = async (pl) => {
       //console.log(pl, "ok");
@@ -489,17 +491,37 @@ function CenterbarWindow(props){
     };
 
     useEffect(() => {
-      const fetchCovers = async () => {
+      const fetchPlaylistsData = async () => {
         let covers = {};
-        for (let response of temp_responses) {
-          //console.log("response.songs:", response.songs);
-          covers[response._id] = await grabPlaylistCover(response.songs);
+        let names = {};
+        let descs = {};
+
+        if (JSON.stringify(props.userData) === "{}") 
+        {
+          console.error("props.userData is empty");
+          return;
         }
+
+        for (let response of props.userData.playlists) {
+          console.log("response:", response);
+
+          let pl = await getPlaylist(response);
+          console.log(pl, "id");
+
+          covers[pl._id] = await grabPlaylistCover(pl.songs);
+          names[pl._id] = pl.title;
+          descs[pl._id] = pl.description;
+        }
+        console.log(covers, "covers");
         setPlaylistCovers(covers);
+        setPlaylistNames(names);
+        setPlaylistDescs(descs);
       };
+
+      console.log(props.userData, "DATA");
     
-      fetchCovers();
-    }, [temp_responses]);
+      fetchPlaylistsData();
+    }, [props.userData]);
   
     return(
       <LinearGradient 
@@ -592,19 +614,19 @@ function CenterbarWindow(props){
                     />
                   ))}
             
-            {temp_responses.map((response) => (
+            {props.userData.playlists.map((response) => (
               <LibraryRow
-                key={response._id}
-                rowName={response.title}
-                rowDesc={response.description}
+                key={response}
+                rowName={playlistNames[response]}
+                rowDesc={playlistDescs[response]}
                 activation={props.setSelectedContent}
                 setCurrentSong={props.setCurrentSong}
 
                 selected_playlistID={props.selected_playlistID}
                 setSelectedPlaylistID={props.setSelectedPlaylistID}
 
-                rowID={response._id}
-                imageSource={playlistCovers[response._id]} 
+                rowID={response}
+                imageSource={playlistCovers[response]} 
               />
             ))}
           </View>
@@ -652,12 +674,19 @@ function CenterbarWindowCollapsed(props){
       v === undefined ? setAddPlaylistHovered(!addPlaylistHovered) : setAddPlaylistHovered(v);
   
     }
+
+
+    useEffect(() => {
+      console.log(playlistData, "sded");
+    }, []);
     
     
 
   
 
     const [playlistCovers, setPlaylistCovers] = useState({});
+    const [playlistNames, setPlaylistNames] = useState({});
+    const [playlistDescs, setPlaylistDescs] = useState({});
 
     let grabPlaylistCover = async (pl) => {
       //console.log(pl, "ok");
@@ -670,17 +699,38 @@ function CenterbarWindowCollapsed(props){
     };
 
     useEffect(() => {
-      const fetchCovers = async () => {
+      const fetchPlaylistsData = async () => {
         let covers = {};
-        for (let response of temp_responses) {
-          //console.log("response.songs:", response.songs);
-          covers[response._id] = await grabPlaylistCover(response.songs);
+        let names = {};
+        let descs = {};
+
+        if (JSON.stringify(props.userData) === "{}") 
+        {
+          console.error("props.userData is empty");
+          return;
         }
+
+        for (let response of props.userData.playlists) {
+          console.log("response:", response);
+
+          let pl = await getPlaylist(response);
+          console.log(pl, "id");
+
+          covers[pl._id] = await grabPlaylistCover(pl.songs);
+          names[pl._id] = pl.title;
+          descs[pl._id] = pl.description;
+        }
+        console.log(covers, "covers");
         setPlaylistCovers(covers);
+        setPlaylistNames(names);
+        setPlaylistDescs(descs);
       };
+
+      console.log(props.userData, "DATA");
     
-      fetchCovers();
-    }, [temp_responses]);
+      fetchPlaylistsData();
+    }, [props.userData]);
+
     
     
 
@@ -723,21 +773,21 @@ function CenterbarWindowCollapsed(props){
             <View>
               <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
                 <View style={styles.libraryContents}>
-                  {temp_responses.map((response) => (
+                  {props.userData.playlists.map((response) => (
 
                     
 
                     <CollapseLibraryRow
-                      key={response._id}
-                      rowName={response.title}
-                      rowDesc={response.description}
+                      key={response}
+                      rowName={playlistNames[response]}
+                      rowDesc={playlistDescs[response]}
                       activation={props.setSelectedContent}
                       //activation={() => {grabPlaylistCover(response.songs)}}
 
                       selected_playlistID={props.selected_playlistID}
                       setSelectedPlaylistID={props.setSelectedPlaylistID}
-                      rowID={response._id}
-                      imageSource={playlistCovers[response._id]} 
+                      rowID={response}
+                      imageSource={playlistCovers[response]} 
 
                       
                       
@@ -763,13 +813,18 @@ const LibraryRow = (props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
 
+
   // Add this handler function
   const handlePress = () => {
     if (props.activation) {
       props.activation();
     }
+    
 
-    //props.setSelectedPlaylistID(props.rowID);
+    if(props.rowID)
+    {
+      props.setSelectedPlaylistID(props.rowID);
+    }
 
     // Add check to ensure setCurrentSong exists before calling it
     if (props.setCurrentSong && typeof props.setCurrentSong === 'function' && props.songdata) {
@@ -834,10 +889,12 @@ const CollapseLibraryRow = (props) => {
     if (props.activation) {
       props.activation();
     }
-
-    props.setSelectedPlaylistID(props.rowID);
-
-    props.setSelectedPlaylistID(props.rowID);
+    
+    if(props.rowID)
+    {
+      props.setSelectedPlaylistID(props.rowID);
+    }
+    //console.log(props.selected_playlistID, "testplid");
 
     //props.setCurrentSong(props.songdata);
     //console.log(props.songdata, props.setCurrentSong);

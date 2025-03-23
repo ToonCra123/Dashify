@@ -76,7 +76,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
   const [songSearchData, setSongSearchData] = useState([]);
   const [artistSearchData, setArtistSearchData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selected_playlistID, setSelectedPlaylistID] = useState("67d38e527de6a9174989d40e");
+  const [selected_playlistID, setSelectedPlaylistID] = useState("");
 
   let song_search_window = (data) => {
     setSongSearchData(data[0]);
@@ -109,7 +109,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
     if (Platform.OS === 'web') {
 
-      if(isLoggedIn) //for log in page testing <<<<<
+      if(!isLoggedIn) //for log in page testing <<<<<
       {
         return (
         <LoginWindow 
@@ -151,6 +151,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
                         navigation={props.navigation}
                         selected_content={selected_content}
                         currSong={currSong}
+                        
                         setSelectedContent={content_selected}
                         trendingContent={fetchedTrendingSongs}
                         setCurrentSong={set_song}
@@ -159,6 +160,14 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
                         searchQuery={searchQuery}             // Added missing prop
                         setUserData={setUserData}
                         userData={userData}
+
+                        username={username}
+                        setUsername={setUsername}
+                        password={password}
+                        setPassword={setPassword}
+
+                        selected_playlistID={selected_playlistID}
+                        setSelectedPlaylistID={setSelectedPlaylistID}
                       />
                     )}
                   </Stack.Screen>

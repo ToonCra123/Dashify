@@ -655,25 +655,7 @@ function CenterbarWindowCollapsed(props){
     
     
 
-    
-    let testPL = async () => {
-
-      for (let i = 0; i < 4; i++)
-        {
-          await getPlaylist(ids[i]).then((d)=> {
-            console.log(d);
-          });
-
-
-        }
-      
-        await getPlaylist("67d38e527de6a9174989d40e").then((a) => {
-          console.log(a, "oooo")
-        });
-
-    }
-
-    //testPL();
+  
 
     const [playlistCovers, setPlaylistCovers] = useState({});
 

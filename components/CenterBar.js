@@ -852,12 +852,8 @@ const CollapseLibraryRow = (props) => {
     if (props.activation) {
       props.activation();
     }
-    
-    if(props.selected_playlistID)
-      {
-        props.setSelectedPlaylistID(props.rowID);
-      }
 
+    props.setSelectedPlaylistID(props.rowID);
 
     //props.setCurrentSong(props.songdata);
     //console.log(props.songdata, props.setCurrentSong);

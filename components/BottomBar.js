@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, Animated, Easing, TouchableOpacity } fro
 import { BarButton, BarButtonUI, WindowBarButton2UI, WindowBarButtonUI } from './UI/BarButton';
 import { SlideBar } from './SlideBar';
 import { Audio } from 'expo-av';
-import { addSongToPlaylist, getPlaylist, getSong } from './UI/WebRequests';
+import { addSongToPlaylist, getPlaylist, getSong, loginUser} from './UI/WebRequests';
 import useAnimatedValue from "./UI/UIAnimations.js"
 import { ImageBackground } from 'react-native-web';
 
@@ -15,7 +15,7 @@ let BottomBar = (props) => {
     if (sound) {
       stopSound().then(() => {
         playSound().then(()=> {
-          setIsPlaying(true);
+          props.setIsPlaying(true);
         });
       });
     }
@@ -24,7 +24,6 @@ let BottomBar = (props) => {
 
 
   const [sound, setSound] = useState();
-  const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0); // Track current position (0 to 1)
   const [duration, setDuration] = useState(0);
   const [timeMilisecond, setTimeMilisecond] = useState(0);
@@ -34,22 +33,22 @@ let BottomBar = (props) => {
     if (!props.currSong) return;
 
     if(!sound) {
-      if(isPlaying) {
+      if(props.isPlaying) {
         stopSound(); 
-        setIsPlaying(false);
+        props.setIsPlaying(false);
         return;
       } else {
         playSound();
-        setIsPlaying(true);
+        props.setIsPlaying(true);
       }
     } else {
-      if(isPlaying) {
+      if(props.isPlaying) {
         pauseSound();
-        setIsPlaying(false);
+        props.setIsPlaying(false);
         return;
       } else {
         resumeSound();
-        setIsPlaying(true);
+        props.setIsPlaying(true);
       }
     }
   }
@@ -57,13 +56,13 @@ let BottomBar = (props) => {
   const pauseSoundButton = async () => {
     if (!props.currSong) return;
 
-    if(isPlaying) {
+    if(props.isPlaying) {
       pauseSound();
-      setIsPlaying(false);
+      props.setIsPlaying(false);
       return;
     } else {
       pauseSound();
-      setIsPlaying(true);
+      props.setIsPlaying(true);
     }
   }
 
@@ -110,7 +109,7 @@ let BottomBar = (props) => {
       await sound.unloadAsync();  // Unload the sound to release resources.
       setSound(null);  // Clear the sound reference.
     }
-    setIsPlaying(false);
+    props.setIsPlaying(false);
     setPosition(0.001); //DO NOT PUT ZERO IT BREAKS #COCONUTJPEG
     setDuration(0);
     setTimeMilisecond(0);
@@ -171,9 +170,35 @@ let BottomBar = (props) => {
 
   let skip_previous_button = async () =>{
 
-    let plylist = await getPlaylist(props.selected_playlistID);
+    let plylist;
 
-    if(props.selected_playlistID === "" || plylist.songs.length === 0)
+    let noPlaylists = false;
+
+    if(!props.selected_playlistID)
+    {
+      let udata = await loginUser(props.username, props.password);
+
+          
+      if(udata.playlists.length > 0)
+      {
+        plylist = await getPlaylist(udata.playlists[udata.playlists.length - 1]);
+      }
+
+    }
+    else
+    {
+      plylist = await getPlaylist(props.selected_playlistID);
+
+      if(!plylist)
+        {
+          noPlaylists = true;
+        }
+    }
+
+
+
+
+    if(props.selected_playlistID === "" || noPlaylists)
       {
         if((props.trendingContent.length > 0))
           {
@@ -192,21 +217,36 @@ let BottomBar = (props) => {
       }
       else
       {
+        console.log("this please");
         if(plylist.songs.length > 0)
           {
             
+            console.log("this please 2");
+
+            let isInPL = false;
+
             for (let i = 0; i < plylist.songs.length; i++)
               {
     
-    
+                console.log("this please 3", i);
+
                 if((plylist.songs[i] === props.currSong._id))
                   {
+                    isInPL = true;
+
                     let check_i = (i - 1 + plylist.songs.length) % plylist.songs.length;
                     
                     let fetchedsong = await getSong(plylist.songs[check_i]);
                     props.setCurrentSong(fetchedsong);
+
                   }
               }
+
+              if(!isInPL)
+                {
+                  let fetchedsong = await getSong(plylist.songs[0]);
+                  props.setCurrentSong(fetchedsong);
+                }
           }
       }
   
@@ -216,10 +256,32 @@ let BottomBar = (props) => {
 
   let skip_next_button = async () =>{
 
-    setPlylist(await getPlaylist(props.selected_playlistID));
+    let plylist;
+    let noPlaylists = false;
+
+    if(!props.selected_playlistID)
+    {
+      let udata = await loginUser(props.username, props.password);
+
+          
+      if(udata.playlists.length > 0)
+      {
+        plylist = await getPlaylist(udata.playlists[udata.playlists.length - 1]);
+      }
+
+    }
+    else
+    {
+      plylist = await getPlaylist(props.selected_playlistID);
+
+      if(!plylist)
+        {
+          noPlaylists = true;
+        }
+    }
 
 
-    if(props.selected_playlistID === "" || plylist.songs.length === 0)
+    if(props.selected_playlistID === "" || noPlaylists)
       {
         if((props.trendingContent.length > 0))
           {
@@ -242,6 +304,7 @@ let BottomBar = (props) => {
       {
         if(plylist.songs.length > 0)
           {
+            let isInPL = false;
             
             for (let i = 0; i < plylist.songs.length; i++)
               {
@@ -249,12 +312,19 @@ let BottomBar = (props) => {
     
                 if((plylist.songs[i] === props.currSong._id))
                   {
+                    isInPL = true;
                     let check_i = (i + 1) % plylist.songs.length;
                     
                     let fetchedsong = await getSong(plylist.songs[check_i]);
                     props.setCurrentSong(fetchedsong);
                   }
               }
+            
+              if(!isInPL)
+                {
+                  let fetchedsong = await getSong(plylist.songs[0]);
+                  props.setCurrentSong(fetchedsong);
+                }
           }
       }
   }
@@ -352,17 +422,29 @@ let handle_addSongButtonToggled = async (v) => {
     setPlylist(await getPlaylist(props.selected_playlistID));
 
     if (!plylist || !plylist.songs) {
-        console.error("Invalid playlist data");
+      let udata = await loginUser(props.username, props.password);
+          
+      if(udata.playlists.length > 0)
+      {
+        setPlylist(await getPlaylist(udata.playlists[udata.playlists.length - 1]));
+      }
+      else
+      {
         return;
+      }
+      
     }
 
     if (!isSongInPlaylist(plylist, props.currSong._id)) {
         await addSongToPlaylist(props.selected_playlistID, props.currSong._id);
         setIsAddSongButtonToggled(true);
+
     }
     else
     {
       setIsAddSongButtonToggled(false);
+      let udata = await loginUser(props.username, props.password);
+      props.setUserData(udata);
     }
 };
 
@@ -370,21 +452,43 @@ let handle_addSongButtonToggled = async (v) => {
   useEffect(() => {
 
     let sync_pldata = async () => {
-      setPlylist(await getPlaylist(props.selected_playlistID));
+
+      let pl;
+
+      if(!props.selected_playlistID)
+      {
+        let udata = await loginUser(props.username, props.password);
+  
+            
+        if(udata.playlists.length > 0)
+        {
+          pl = await getPlaylist(udata.playlists[udata.playlists.length - 1]);
+          props.setSelectedPlaylistID(udata.playlists[udata.playlists.length - 1]);
+        }
+  
+      }
+      else
+      {
+        pl = await getPlaylist(props.selected_playlistID);
+      }
+
+      setPlylist(pl);
 
       if (!plylist || !plylist.songs) {
-          console.error("Invalid playlist data");
           return;
       }
 
-      
+      //console.log(plylist, props.currSong._id, "bruh");
+      //console.log(isSongInPlaylist(plylist, props.currSong._id), "yesyyse");
   
       if (!isSongInPlaylist(plylist, props.currSong._id)) {
         setIsAddSongButtonToggled(false);
+
       }
       else
       {
         setIsAddSongButtonToggled(true);
+
       }
     }
 
@@ -477,7 +581,7 @@ let handle_addSongButtonToggled = async (v) => {
         <View style={styles.bottomBarGroupCenter_Top}>
           <WindowBarButton2UI imageSource={require('../images/png/skip_previous.png')} activation={skip_previous_button}></WindowBarButton2UI>
           
-          { !isPlaying ? (
+          { !props.isPlaying ? (
                       <WindowBarButton2UI imageSource={require('../images/png/play_arrow.png')} activation={playSoundButton}></WindowBarButton2UI>
                     ) : (
                       <WindowBarButton2UI imageSource={require('../images/png/pause_arrow.png')} activation={pauseSoundButton}></WindowBarButton2UI>

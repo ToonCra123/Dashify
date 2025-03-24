@@ -59,6 +59,8 @@ function Centerbar(props)
 
         selected_playlistID={props.selected_playlistID}
         setSelectedPlaylistID={props.setSelectedPlaylistID}
+        currSong={props.currSong} 
+        isPlaying={props.isPlaying}
 
         /> ) : 
         
@@ -83,6 +85,8 @@ function Centerbar(props)
 
           selected_playlistID={props.selected_playlistID}
           setSelectedPlaylistID={props.setSelectedPlaylistID}
+          currSong={props.currSong} 
+          isPlaying={props.isPlaying}
         />}
       {
 
@@ -95,6 +99,8 @@ function Centerbar(props)
           setCurrentSong={props.setCurrentSong} 
           songSearchData={props.songSearchData} 
           artistSearchData={props.artistSearchData} 
+          currSong={props.currSong} 
+          isPlaying={props.isPlaying}
         />
       ) : (props.selected_content && collapseMenu) ? (
         <CenterbarWindowContentDetails 
@@ -105,6 +111,8 @@ function Centerbar(props)
           artistSearchData={props.artistSearchData} 
           selected_playlistID={props.selected_playlistID}
           setSelectedPlaylistID={props.setSelectedPlaylistID}
+          currSong={props.currSong} 
+          isPlaying={props.isPlaying}
         />
       ) : (
         <CenterbarWindowFeed 
@@ -113,6 +121,7 @@ function Centerbar(props)
           trendingContent={props.trendingContent} 
           setCurrentSong={props.setCurrentSong} 
           currSong={props.currSong} 
+          isPlaying={props.isPlaying}
         />
       )
     }
@@ -146,7 +155,18 @@ function CenterBarWindowSearchResults(props){
               <Text style={{color: "white", fontWeight: "bold", fontSize: "3rem"}}>{search_result_catagories.topResultTitle}</Text>
             </View>
 
-            <LibraryRow rowName={props.songSearchData[0].title} rowDesc={props.songSearchData[0].artist} imageSource={props.songSearchData[0].imagePath} year={props.songSearchData[0].year} listens={props.songSearchData[0].listens} setCurrentSong={props.setCurrentSong} songdata={props.songSearchData[0]} currSong={props.currSong}></LibraryRow>   
+            <LibraryRow 
+              rowName={props.songSearchData[0].title} 
+              rowDesc={props.songSearchData[0].artist} 
+              imageSource={props.songSearchData[0].imagePath} 
+              year={props.songSearchData[0].year} 
+              listens={props.songSearchData[0].listens} 
+              setCurrentSong={props.setCurrentSong} 
+              songdata={props.songSearchData[0]} 
+              currSong={props.currSong}
+              isPlaying={props.isPlaying}>
+              
+            </LibraryRow>   
 
           </View>
         ) : null}
@@ -191,7 +211,17 @@ function CenterBarWindowSearchResults(props){
           <FlatList
                 data={props.artistSearchData}
                 renderItem={({ item }) => (
-                  <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens} setCurrentSong={props.setCurrentSong} songdata={item} currSong={props.currSong}></LibraryRow>   
+                  <LibraryRow 
+                    rowName={item.title} 
+                    rowDesc={item.artist} 
+                    imageSource={item.imagePath} 
+                    year={item.year} 
+                    listens={item.listens} 
+                    setCurrentSong={props.setCurrentSong} 
+                    songdata={item} 
+                    currSong={props.currSong}
+                    isPlaying={props.isPlaying}
+                    ></LibraryRow>   
                 )}
                 keyExtractor={item => item._id}
               >
@@ -217,14 +247,6 @@ function CenterBarWindowSearchResults(props){
 
 function CenterbarWindowFeed(props){
   
-  //fetch the trending data from back end
-  const [fetchedTrendingSongs, setFetchedTrendingSongs] = useState([]) //To update trending songs call 'requestTrendingSongs' DO NOT set 'fetchedTrendingSongs' manually
-
-  let example = { _id: "67d25d6d31ba33534c6a6e31", title: "Flamingo", artist: "Kero Kero Bonito"}
-
-  let na = false;
-
-  //props.setCurrentSong(example);
 
   return(
     <LinearGradient 
@@ -233,19 +255,18 @@ function CenterbarWindowFeed(props){
     start={{x: 0, y:0}}
     end={{x: 0, y:0}}>
 
-      <View style={{paddingLeft: 10, flexDirection: "row", columnGap: 7}}>
-        <Window_Button content="All"></Window_Button>
-        <Window_Button content="Music"></Window_Button>
-        <Window_Button content="Podcasts"></Window_Button>
-        <Window_Button content="Audiobooks"></Window_Button>
-        
+      <View style={{paddingLeft: 10, flexDirection: "row", columnGap: 7}}> 
         <Popup content="Upload Song"></Popup>
       </View>
 
       <ScrollView style={{width:"100%"}} showsHorizontalScrollIndicator={false}>
-        <Catagory name="Trending Songs" sectionContent={props.trendingContent} setCurrentSong={props.setCurrentSong} currSong={props.currSong}></Catagory>
-        <Catagory name="Recently Played"></Catagory>
-        <Catagory name="Dashify's Picks"></Catagory>
+        <Catagory name="Trending Songs" 
+          sectionContent={props.trendingContent} 
+          setCurrentSong={props.setCurrentSong} 
+          currSong={props.currSong}
+          isPlaying={props.isPlaying}>
+
+        </Catagory>
         
       </ScrollView>
 
@@ -329,7 +350,17 @@ function CenterbarWindowContentDetails(props){
           <FlatList
               data={songlist}
               renderItem={({ item }) => (
-                <LibraryRow rowName={item.title} rowDesc={item.artist} imageSource={item.imagePath} year={item.year} listens={item.listens} setCurrentSong={props.setCurrentSong} songdata={item}></LibraryRow>   
+                <LibraryRow 
+                  rowName={item.title} 
+                  rowDesc={item.artist} 
+                  imageSource={item.imagePath} 
+                  year={item.year} listens={item.listens} 
+                  setCurrentSong={props.setCurrentSong} 
+                  songdata={item}
+                  currSong={props.currSong}
+                  isPlaying={props.isPlaying}>
+
+                  </LibraryRow>   
               )}
               keyExtractor={item => item._id} // Unique key for each item
             >
@@ -536,6 +567,7 @@ function CenterbarWindow(props){
                 password={props.password}
                 setPassword={props.setPassword}
                 syncUserData={() => props.syncUserData}
+                
                 />
                 
                 
@@ -552,15 +584,8 @@ function CenterbarWindow(props){
         
         </View>
 
-        <View style={styles.WindowButtonsGroup}>
-          <Window_Button content="Playlists"></Window_Button>
-          <Window_Button content="Artists"></Window_Button>
-        </View>
 
         <View style={styles.PlaylistSearchbar}>
-          <View style={styles.PlaylistBarGroupLeft}>
-            <WindowInput placeholder="Search in Your Library"></WindowInput>
-          </View>
 
           <View style={styles.PlaylistSearchbarGroupRight}>
 
@@ -581,6 +606,8 @@ function CenterbarWindow(props){
                       activation={() =>  navigation.navigate('AlbumView', { 
                         playlist: playlist
                       })}
+                      currSong={props.currSong}
+                      isPlaying={props.isPlaying}
 
                       
                     />
@@ -762,6 +789,8 @@ function CenterbarWindowCollapsed(props){
                       setSelectedPlaylistID={props.setSelectedPlaylistID}
                       rowID={response}
                       imageSource={playlistCovers[response]} 
+                      currSong={props.currSong}
+                      isPlaying={props.isPlaying}
 
                       
                       
@@ -807,6 +836,12 @@ const LibraryRow = (props) => {
     }
   };
 
+
+  console.log(props.currSong, "sssss", props.isPlaying);
+  console.log(props.songdata, "ddddd");
+
+  let isvalid = !(props.currSong === undefined);
+
   return(
     <TouchableOpacity 
       onPress={handlePress} // Fixed: Directly use handler function
@@ -816,14 +851,31 @@ const LibraryRow = (props) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Image
-          source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/default_album_cover.png")}
-          style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
-        />
+        <View>
+          <Image
+            source={props.imageSource ? {uri: props.imageSource} : require("./../images/png/default_album_cover.png")}
+            style={props.isArtist ? styles.libraryArtistImage : styles.libraryPlaylistImage}
+          />
+
+          {isvalid && props.currSong._id === props.songdata._id ? (
+
+          <Image 
+            source={props.isPlaying ? require("./../images/png/pause_circle.png") : require("./../images/png/play_circle.png")}
+            style={{
+            position: "absolute",
+            width: 40,
+            height: 40,
+            bottom: 0,
+            right: 0,
+          }}
+          ></Image>
+
+          ) : null}
+        </View>
         
         <View>
           <View>
-            <Text style={styles.libraryPlaylistTextHeader}>
+            <Text style={isvalid && props.currSong._id === props.songdata._id ? styles.libraryPlaylistTextHeaderPlaying : styles.libraryPlaylistTextHeader}>
               {props.rowName ? props.rowName : "Playlist Name"}
               {props.year ? (" (" + props.year + ")") : null}
 
@@ -927,6 +979,8 @@ let FeedBox = (props) => {
     return str;
   }
 
+  //console.log(props.isPlaying, "testsssss");
+
   return(
     <TouchableOpacity onPress={triggerFeedBox}>
 
@@ -948,11 +1002,28 @@ let FeedBox = (props) => {
                 overflow: "hidden",
               }}
             >
-            
+              
+
               <ImageBackground
                 source={props.imageSource ? props.imageSource : require("./../images/png/default_album_cover.png")}
                 style={{flex:1,}}
-                />
+                >
+                  {props.currSong._id === props.songdata._id ? (
+
+                  <Image 
+                    source={props.isPlaying ? require("./../images/png/pause_circle.png") : require("./../images/png/play_circle.png")}
+                    style={{
+                    position: "absolute",
+                    width: 60,
+                    height: 60,
+                    bottom: 0,
+                    right: 0,
+                  }}
+                  ></Image>
+
+                  ) : null}
+                </ImageBackground>
+
               
             </View>
           </View>
@@ -960,10 +1031,21 @@ let FeedBox = (props) => {
           <View style={{flex: 1}}>
             
             <View style={{paddingTop: 5}}>
-              <Text style={{color:"white", fontWeight: "bold", fontSize: "1.25rem"}}>{props.rowName ? truncateString(props.rowName) : "Playlist Name"}</Text>
+              <Text 
+                style={{
+                  color: props.currSong._id === props.songdata._id ? "#46eba1" : "white",
+                  fontWeight: "bold", 
+                  fontSize: "1.25rem" 
+                }
+              }
+                
+                >{props.rowName ? truncateString(props.rowName) : "Playlist Name"}</Text>
             </View>
             <View style={{}}>
-              <Text style={{color:"white"}}>{props.rowDesc ? truncateString(props.rowDesc) : "Artist Name"}</Text>
+              <Text style={{
+                color: props.currSong._id === props.songdata._id ? "#46eba1" : "white"
+                }}>
+                {props.rowDesc ? truncateString(props.rowDesc) : "Artist Name"}</Text>
             </View>
 
           </View>
@@ -1019,14 +1101,22 @@ let Catagory = (props) => {
               horizontal
               renderItem={({ item }) => (
                       
-                <FeedBox rowName={item.title}rowDesc={item.artist} imageSource={item.imagePath} setCurrentSong={props.setCurrentSong} songdata={item} currSong={props.currSong}></FeedBox>
+                <FeedBox 
+                  rowName={item.title}
+                  rowDesc={item.artist} 
+                  imageSource={item.imagePath} 
+                  setCurrentSong={props.setCurrentSong} 
+                  songdata={item} 
+                  currSong={props.currSong}
+                  isPlaying={props.isPlaying}
+                  ></FeedBox>
                       
               )}
               keyExtractor={item => item._id} // Unique key for each item
             >
         
           </FlatList>
-          : <FeedBox rowName={"EMPTY CATAGROY DATA"}rowDesc={"MAKE SURE YOU ARE REQUESTING DATA"} imageSource={{uri: "https://media.discordapp.net/attachments/982149047563452456/1352577605337092176/default_album_cover.png?ex=67de858e&is=67dd340e&hm=2da92bce7bdd0a0ad6be6409d90a7204a130288e9090c158c0f0bf02a8d5ded9&=&format=webp&quality=lossless"}}></FeedBox>}
+          : null}
         </View>
       </WebScrollView>
     </View>
@@ -1264,6 +1354,12 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
       },
+
+      libraryPlaylistTextHeaderPlaying: {
+        color: "#46eba1",
+        fontWeight: "bold",
+      },
+
       libraryPlaylistTextDescription:{
         color: "white",
       },

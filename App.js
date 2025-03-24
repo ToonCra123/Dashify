@@ -56,6 +56,7 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
   const [currSong, setCurrSong] = useState({});
   const [selected_content, setSelectedContent] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   let content_selected = (v) =>{
     (v === undefined) ? setSelectedContent(!selected_content) : setSelectedContent(v);
@@ -138,6 +139,8 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
                 setQueryData={song_search_window}  // Added missing prop
                 setQuery={setSearchQuery}   
                 syncUserData={() => syncUserData}
+                setIsPlaying={setIsPlaying}
+                isPlaying={isPlaying}
               />
               
               {fetchedTrendingSongs.length > 0 && (
@@ -172,6 +175,9 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
                         selected_playlistID={selected_playlistID}
                         setSelectedPlaylistID={setSelectedPlaylistID}
+
+                        setIsPlaying={setIsPlaying}
+                        isPlaying={isPlaying}
                       />
                     )}
                   </Stack.Screen>
@@ -191,6 +197,15 @@ let requestTrendingSongs = async () => {}; //empty var for all we care
 
                 selected_playlistID={selected_playlistID}
                 setSelectedPlaylistID={setSelectedPlaylistID}
+                setUserData={setUserData}
+                userData={userData}
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+
+                setIsPlaying={setIsPlaying}
+                isPlaying={isPlaying}
               />
             </View>
           </NavigationContainer>

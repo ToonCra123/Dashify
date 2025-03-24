@@ -27,7 +27,7 @@ const PlaylistPopup = (props) => {
           let udata = await loginUser(props.username, props.password);
           props.setUserData(udata);
     
-          console.log(udata, "resuit");
+          //console.log(udata, "resuit");
         }
     });
 
@@ -95,10 +95,6 @@ const PlaylistPopup = (props) => {
               onChangeText={setDescription}
             />
             
-            <TouchableOpacity style={styles.imageButton}>
-              <Image source={require("../../images/png/test_album.png")} style={styles.imagePreview}
-              ></Image>
-            </TouchableOpacity>
             
               <TouchableOpacity
                 style={styles.actionButton}
@@ -171,7 +167,7 @@ const styles = StyleSheet.create({
   },
   popup: {
     backgroundColor: '#272727',
-    width: '40%',
+    width: '15%',
     borderRadius: 12,
     padding: 20,
   },
@@ -188,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 50,
     padding: 10,
-    width: "50%",
+    width: "100%",
     color: "white"
   },
   input2: {
@@ -198,7 +194,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     padding: 10,
     marginBottom: 15,
-    width: "50%",
+    width: "100%",
     color: "white"
   },
   descriptionInput: {
@@ -224,7 +220,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     width: "30%",
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   actionButtonText: {
     color: 'black',
@@ -233,8 +229,8 @@ const styles = StyleSheet.create({
   arrow: {
     position: "absolute",
     right: 5,
-    height: "3vh",
-    width: "3vw",
+    height: 40,
+    width: 40,
   }
 });
 

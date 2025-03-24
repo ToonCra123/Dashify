@@ -174,7 +174,7 @@ const Popup = () => {
                 onMouseEnter={() => setIsUploadBarHovered(true)}
                 onMouseLeave={() => setIsUploadBarHovered(false)}
                 >
-                  <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
+                  <Image style={styles.uploadImg} source={require('../../images/png/upload_icon.png')}/>
                 </TouchableOpacity>
                 </View>
 
@@ -189,7 +189,7 @@ const Popup = () => {
                 onMouseEnter={() => setIsUploadBarHovered2(true)}
                 onMouseLeave={() => setIsUploadBarHovered2(false)}
                 >
-                  <Image style={styles.uploadImg} source={require('../../images/png/Red-icon.png')}/>
+                  <Image style={styles.uploadImg} source={require('../../images/png/upload_icon.png')}/>
                 </TouchableOpacity>
                 </View>
 
@@ -279,8 +279,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   uploadImg: {
-    width: 150,
-    height: 150
+    width: 80,
+    height: 80,
+  },
+  uploadImgHovered: {
+    width: 80,
+    height: 80,
+    tintColor: "#46eba1"
   },
   uploadBar: {
     color: "white",
